@@ -1,0 +1,361 @@
+<title>Musterseite KI in Lehre und Studium</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: wie die Vorlage – links die ausgefüllte Seite, rechts Randnotizen zur Umsetzung */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --note: #1f4fb8;
+  --note-bg: #eef3fd;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --plan: #8a5a00;
+  --plan-bg: #fbf1dc;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+    --note: #8fb0ff; --note-bg: #1b2538; --accent: #5cc4c4; --chip: #1e3333; --plan: #f0c46a; --plan-bg: #2f2716;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+  --note: #8fb0ff; --note-bg: #1b2538; --accent: #5cc4c4; --chip: #1e3333; --plan: #f0c46a; --plan-bg: #2f2716;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--note); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-size: 12px; letter-spacing: .02em; }
+
+.intro { display: grid; gap: 14px; max-width: 720px; }
+.intro .kicker { color: var(--note); text-transform: uppercase; letter-spacing: .08em; }
+.intro h1 { font-size: 30px; line-height: 1.2; font-weight: 700; }
+.intro p { color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 14px; color: var(--muted); }
+.legend .swatch-note { color: var(--note); background: var(--note-bg); padding: 1px 8px; border-radius: 4px; }
+.toggle { font: inherit; font-size: 14px; color: var(--note); background: transparent; border: 1px solid var(--note); border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+.toggle:hover { background: var(--note-bg); }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; grid-template-columns: minmax(0, 1fr) 270px; grid-template-areas: "content note"; gap: 32px; align-items: start; }
+.ch > .content { grid-area: content; min-width: 0; display: grid; gap: 14px; max-width: 660px; }
+.ch > .note { grid-area: note; }
+body.notes-off .ch { grid-template-columns: minmax(0, 1fr); grid-template-areas: "content"; }
+body.notes-off .note { display: none; }
+
+.note { border-left: 2px solid var(--note); background: var(--note-bg); color: var(--ink); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13.5px; line-height: 1.5; display: grid; gap: 6px; }
+.note .num { color: var(--note); font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.note .name { font-weight: 600; font-size: 14.5px; }
+.note .size { font-family: var(--font-mono); font-size: 12px; color: var(--note); }
+
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero { display: grid; gap: 14px; }
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+.callout { border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; display: grid; gap: 4px; font-size: 15px; }
+.callout .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.badge { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--plan); background: var(--plan-bg); padding: 1px 7px; border-radius: 4px; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 480px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 960px) {
+  .ch { grid-template-columns: minmax(0, 1fr); grid-template-areas: "note" "content"; gap: 12px; }
+}
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .intro h1 { font-size: 25px; }
+  .hero .lead { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="intro">
+    <span class="kicker mono">Teaching Hub · Musterbeispiel Ebene 1</span>
+    <h1>Musterbeispiel «KI in Lehre und Studium»</h1>
+    <p>Die Vorlage Kernthema-Seite, ausgefüllt mit echten Inhalten der UniBE. Alle Links führen auf bestehende Seiten, ausser den Kernthemen unter «Siehe auch», die noch geplant sind. Die Randnotizen zeigen, wie die Vorgaben der Vorlage umgesetzt sind.</p>
+    <div class="legend">
+      <span class="swatch-note">Randnotiz: Umsetzung der Vorgabe</span>
+      <button class="toggle" id="toggle-notes" type="button" aria-pressed="false">Randnotizen ausblenden</button>
+    </div>
+  </header>
+
+  <article class="page" aria-label="Musterseite KI in Lehre und Studium">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › KI in Lehre und Studium</div>
+
+      <!-- 1 Einstieg -->
+      <section class="ch" aria-labelledby="c1">
+        <aside class="note">
+          <span class="num">Kapitel 1</span>
+          <span class="name">Einstieg</span>
+          <span>Lead mit 46 Wörtern. Der Hinweis auf die KILOF-Tagung braucht beim Veröffentlichen das Datum der nächsten Tagung.</span>
+          <span class="size">Vorgabe: Lead 40–60 Wörter · Hinweis 1 Satz</span>
+        </aside>
+        <div class="content hero">
+          <h1 id="c1">KI in Lehre und Studium</h1>
+          <p class="lead">Generative KI verändert, wie Studierende lernen, recherchieren und schreiben, und damit auch, wie wir lehren und prüfen. An der Universität Bern ist die Nutzung von KI-Tools grundsätzlich erlaubt. Was in Ihrer Lehrveranstaltung gilt, legen Sie selbst fest. Diese Seite bündelt Regeln, Tools und praktische Hilfen dafür.</p>
+          <div class="callout">
+            <span class="lbl">Aktuell</span>
+            <span>Die jährliche KILOF-Tagung bietet Austausch zu KI in Lehre, Organisation und Forschung an der Universität Bern. <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/fachveranstaltungen/kilof_tagung/index_ger.html">Zur Tagung</a></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 Auf einen Blick -->
+      <section class="ch" aria-labelledby="c2">
+        <aside class="note">
+          <span class="num">Kapitel 2</span>
+          <span class="name">Auf einen Blick</span>
+          <span>Fünf Aussagen, das Verbindliche zuerst. Quellen: UB Bern «AI in Academic Work» und die UniBE-Seite «Generative KIs». Vor der Veröffentlichung mit dem Wortlaut der Leitlinien KI abgleichen.</span>
+          <span class="size">Vorgabe: 3–5 Punkte · je 10–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c2">Auf einen Blick</h2>
+          <ul class="glance">
+            <li>Die Nutzung von KI-Tools ist an der Universität Bern grundsätzlich erlaubt.</li>
+            <li>Sie entscheiden, ob und wie weit KI in Ihrer Lehrveranstaltung und in Leistungsnachweisen genutzt werden darf.</li>
+            <li>Teilen Sie Ihre KI-Regeln zu Beginn des Semesters mit, am besten schriftlich in der Kursbeschreibung.</li>
+            <li>In KI-Tools ohne Universitätslizenz dürfen keine Personendaten und keine schützenswerten Daten eingegeben werden.</li>
+            <li>Wer KI als Hilfsmittel nutzt, weist das in schriftlichen Arbeiten aus und unterzeichnet die Selbständigkeitserklärung.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 Passend zum Thema -->
+      <section class="ch" aria-labelledby="c3">
+        <aside class="note">
+          <span class="num">Kapitel 3</span>
+          <span class="name">Passend zum Thema</span>
+          <span>7 bestehende Seiten zu KI: 2 aus dem Teaching Hub, 3 Dokumente der UniBE, 2 Seiten der Universitätsbibliothek. Keine Seiten aus anderen Kernthemen.</span>
+          <span>Reihenfolge: zuerst die Regeln, dann Prüfen und schriftliche Arbeiten, zuletzt Hilfen zur Entscheidung.</span>
+          <span class="size">Vorgabe: 5–10 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c3">Passend zum Thema</h2>
+          <ul class="links">
+            <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/pruefungsadministration/plagiat_und_plagiatspruefung/leitlinien_ki/index_ger.html">Leitlinien KI</a></span><span>Die verbindlichen Grundsätze der Universität Bern zum Umgang mit Künstlicher Intelligenz in Lehre und Forschung.</span></li>
+            <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption/ki_robust_pruefen/index_ger.html">KI-robust prüfen</a></span><span>Massnahmen, mit denen Sie die Eigenleistung in Prüfungen absichern, geordnet nach Absicherungsgrad und mit ihren Grenzen.</span></li>
+            <li><span class="t"><a href="https://www.unibe.ch/unibe/portal/content/e809/e878/e880/e915/e36136/e1368980/e1368981/251008_HilfestellungRDzuSelbstandigkeitserklarunginkl.KI_ger.pdf">Selbständigkeitserklärung im Kontext von KI</a></span><span>Hilfestellung des Rechtsdiensts, wie die Selbständigkeitserklärung bei schriftlichen Arbeiten mit KI zu verstehen ist (PDF).</span></li>
+            <li><span class="t"><a href="https://www.unibe.ch/unibe/portal/content/e152701/e322683/e325102/e1768151/ul_merkblatt_zitieren_hilfsmittel_ger.pdf">Merkblatt Zitieren und Ausweisen von Hilfsmitteln</a></span><span>Wie Studierende den Einsatz von KI und anderen Hilfsmitteln in ihren Arbeiten korrekt kennzeichnen (PDF).</span></li>
+            <li><span class="t"><a href="https://www.ub.unibe.ch/services/ai_in_academic_work/index_eng.html">AI in Academic Work</a></span><span>Die Übersichtsseite der Universitätsbibliothek zu Leitlinien, Tools und Kursen rund um KI im Studium.</span></li>
+            <li><span class="t"><a href="https://www.ub.unibe.ch/research/fachinformationen/portal_natural_sciences/ai_step_by_step_guide/index_eng.html">Responsible use of GenAI: A Step-by-Step Guide</a></span><span>Vierzehn Leitfragen helfen zu entscheiden, ob der Einsatz generativer KI im konkreten Fall angemessen ist.</span></li>
+            <li><span class="t"><a href="https://www.unibe.ch/unibe/portal/content/e152701/e322683/e325104/e1817279/ul_guidelines_ai_for_research_ger.pdf">Leitlinien KI in der Forschung</a></span><span>Grundsätze für KI in der Forschung, wichtig bei der Betreuung von Abschlussarbeiten und Doktorierenden (PDF).</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4 Tools -->
+      <section class="ch" aria-labelledby="c4">
+        <aside class="note">
+          <span class="num">Kapitel 4</span>
+          <span class="name">Tools</span>
+          <span>Sechs Zeilen aus der Übersicht der Informatikdienste (unibe.ai), dazu Turnitin aus dem Hub. Der Hinweis-Satz nennt die wichtigste Folge für die Lehre.</span>
+          <span class="size">Vorgabe: 3–6 Zeilen · 1 Hinweis · Datum</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c4">Tools</h2>
+          <div class="tablebox">
+            <table class="tools">
+              <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+              <tbody>
+                <tr><td>GitHub Copilot</td><td>Programmieren</td><td>Studierende und Mitarbeitende, kostenpflichtig</td></tr>
+                <tr><td>Microsoft Foundry</td><td>Eigene KI-Anwendungen, Forschung</td><td>Studierende und Mitarbeitende, nach Verbrauch</td></tr>
+                <tr><td>DeepL Pro und Write Pro</td><td>Übersetzen und Texte überarbeiten</td><td>Mitarbeitende, kostenpflichtig</td></tr>
+                <tr><td>Adobe Firefly</td><td>Bilder erzeugen</td><td>Mitarbeitende</td></tr>
+                <tr><td><a href="https://www.dsl.unibe.ch/support/services/">Text Lab auf OnDemand</a></td><td>Texte im Uni-Netz verarbeiten</td><td>über das Data Science Lab</td></tr>
+                <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/turnitin/index_ger.html">Turnitin</a></td><td>Plagiatsprüfung</td><td>Dozierende</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Für allgemeine Chat-Assistenten ist keine Universitätslizenz aufgeführt. Wer KI-Nutzung verlangt, klärt, womit Studierende sie kostenlos und datenschutzkonform erledigen können. <a href="https://www.unibe.ch/universitaet/campus__und__infrastruktur/rund_um_computer/soft_und_hardware/software/generative_kis/index_ger.html">Offizielle Übersicht</a></p>
+          <p class="more">Stand: 19.11.2026</p>
+        </div>
+      </section>
+
+      <!-- 5 Entlang der Journey -->
+      <section class="ch" aria-labelledby="c5">
+        <aside class="note">
+          <span class="num">Kapitel 5</span>
+          <span class="name">Entlang der Journey</span>
+          <span>8 bestehende Journey-Seiten aus 5 Phasen. Die Phase «Lehre evaluieren» hat keinen klaren KI-Bezug und fehlt deshalb.</span>
+          <span class="size">Vorgabe: 5–10 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c5">Entlang der Journey</h2>
+          <ul class="links">
+            <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/didaktische_grundlagen/learning_outcomes/index_ger.html">Learning Outcomes</a></span><span>Prüfen Sie, welche Lernziele sich durch KI verändern und was Studierende weiterhin ohne KI können sollen.</span></li>
+            <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/didaktische_grundlagen/didaktische_kohaerenz/index_ger.html">Didaktische Kohärenz</a></span><span>Stimmen Sie Lernziele, KI-Regeln und Prüfung aufeinander ab, damit die Regeln für Studierende nachvollziehbar sind.</span></li>
+            <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/schreibprozesse_begleiten/index_ger.html">Schreibprozesse begleiten</a></span><span>Begleiten Sie das Schreiben so, dass das Denken sichtbar bleibt, auch wenn KI beim Formulieren hilft.</span></li>
+            <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/feedback_geben_und_einholen/index_ger.html">Feedback geben und einholen</a></span><span>KI liefert schnelle Rückmeldungen; hier erfahren Sie, wann Feedback lernwirksam wird und wo Ihres zählt.</span></li>
+            <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption/index_ger.html">Prüfungskonzeption</a></span><span>Planen Sie Prüfungen von den Learning Outcomes her und entscheiden Sie bewusst, ob KI als Hilfsmittel zugelassen ist.</span></li>
+            <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/muendliche_pruefungen/index_ger.html">Mündliche Prüfungen</a></span><span>Im Gespräch zeigen Studierende ihr eigenes Verständnis, auch als Ergänzung zu einer schriftlichen Arbeit.</span></li>
+            <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/pruefungsadministration/plagiat_und_plagiatspruefung/index_ger.html">Plagiat und Plagiatsprüfung</a></span><span>Was bei Verdacht auf unerlaubte KI-Nutzung gilt und was eine Plagiatsprüfung dabei leisten kann.</span></li>
+            <li><span class="lbl">Curriculum entwickeln</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/curriculum_entwickeln/studienprogramme_weiterentwickeln/index_ger.html">Studienprogramme weiterentwickeln</a></span><span>Verankern Sie KI-Kompetenzen über mehrere Module hinweg, wenn Sie einen Studiengang überarbeiten.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6 Aus der Praxis -->
+      <section class="ch" aria-labelledby="c6">
+        <aside class="note">
+          <span class="num">Kapitel 6</span>
+          <span class="name">Aus der Praxis</span>
+          <span>Drei Projekte aus dem Good Practice Katalog mit KI-Bezug, aus zwei Fakultäten. Namen der Dozierenden ergänzen, sobald sie zustimmen.</span>
+          <span class="size">Vorgabe: 1–3 Beispiele · Text 30–45 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c6">Aus der Praxis</h2>
+          <div class="cases">
+            <div class="case">
+              <h3>Dr. med. vet. KI</h3>
+              <span class="meta">Vetsuisse-Fakultät · FLE-Projekt</span>
+              <p>Studierende der Veterinärmedizin nutzen KI, um ihr Lernen zu unterstützen. Ziel ist ein besseres Clinical Reasoning, also das strukturierte Vorgehen vom Befund zur Diagnose.</p>
+              <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/lehrprojekte/fle_projektpool/dr_med_vet_ki/index_ger.html">Zum Projekt</a>
+            </div>
+            <div class="case">
+              <h3>KI in der Geschichte</h3>
+              <span class="meta">Phil.-hist. Fakultät · eCoaches</span>
+              <p>KI wurde in den Propädeutika unterschiedlich behandelt. Ein Pflichtvideo mit Übungen gibt nun allen Erstsemestrigen einen gemeinsamen, reflektierten Einstieg ins Thema.</p>
+              <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/good_practice_katalog/index_ger.html">Im Good Practice Katalog</a>
+            </div>
+            <div class="case">
+              <h3>AI in medicine: ethical and legal issues</h3>
+              <span class="meta">Ringveranstaltung · interdisziplinär</span>
+              <p>Eine Ringveranstaltung behandelt ethische und rechtliche Fragen von KI in der Medizin. Sie fördert kritisches Urteilen, den Dialog zwischen Fächern und die Analyse von Fällen.</p>
+              <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/good_practice_katalog/index_ger.html">Im Good Practice Katalog</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 Angebote -->
+      <section class="ch" aria-labelledby="c7">
+        <aside class="note">
+          <span class="num">Kapitel 7</span>
+          <span class="name">Angebote</span>
+          <span>Fünf Angebote der UniBE, darunter eines zum Weiterempfehlen an Studierende. Die Seite der Universitätsbibliothek steht unter «Passend zum Thema», damit kein Link doppelt vorkommt.</span>
+          <span class="size">Vorgabe: 3–6 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c7">Angebote</h2>
+          <ul class="links">
+            <li><span class="lbl">Veranstaltung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/fachveranstaltungen/kilof_tagung/index_ger.html">KILOF-Tagung</a></span><span>Jährliche Tagung der Universität Bern zum Einsatz von KI in Lehre, Organisation und Forschung.</span></li>
+            <li><span class="lbl">Community</span><span class="t"><a href="https://kilof.unibe.ch/index_eng.html">KILOF – KI in Lehre, Organisation und Forschung</a></span><span>Die KILOF-Community der Universität Bern befasst sich mit KI in Lehre, Organisation und Forschung.</span></li>
+            <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/hilfestellung_bei_pruefungskonzepten/index_ger.html">Hilfestellung bei Prüfungskonzepten</a></span><span>Beratung, wenn Sie unsicher sind, ob Ihre Prüfung auch mit verfügbarer KI noch misst, was sie soll.</span></li>
+            <li><span class="lbl">Förderung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/foerderprogramme/impuls__lehre/index_ger.html">IMPULS : LEHRE</a></span><span>Flexible und niederschwellige Förderung für innovative Lehrprojekte, zum Beispiel zum Einsatz von KI.</span></li>
+            <li><span class="lbl">Für Studierende</span><span class="t"><a href="https://www.unibe.ch/studies/programs/future_competencies/module/ai_language_tools/index_eng.html">AI Language Tools in Your Studies</a></span><span>Selbstlernkurs auf ILIAS, den Sie Ihren Studierenden als Einführung in KI-Sprachtools empfehlen können.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 8 Hinweise anderer Hochschulen -->
+      <section class="ch" aria-labelledby="c8">
+        <aside class="note">
+          <span class="num">Kapitel 8</span>
+          <span class="name">Hinweise anderer Hochschulen</span>
+          <span>8 Links, davon 6 aus der Schweiz. Alle Seiten am 19.11.2026 aufgerufen, ausser Potsdam und KI-Campus.</span>
+          <span class="size">Vorgabe: 4–8 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+          <ul class="links">
+            <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/ki-in-der-lehre">KI in der Lehre</a></span><span>Klar gegliedert in Lehre vorbereiten mit KI, KI in die Lehre integrieren und KI-kompetente Lehrende.</span></li>
+            <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/ki-und-leistungsnachweise">KI und Leistungsnachweise</a></span><span>Zeigt, wie generative KI die Gestaltung und Bewertung von Leistungsnachweisen verändert.</span></li>
+            <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/ki-kompetenzraster-fuer-dozierende">KI-Kompetenzraster für Dozierende</a></span><span>Ein Raster, mit dem Sie Ihre eigenen KI-Kompetenzen für die Lehre einschätzen können.</span></li>
+            <li><span class="lbl">Universität Basel</span><span class="t"><a href="https://www.unibas.ch/de/Studium/Lernen/KI-in-Studium-und-Lehre.html">KI in Studium und Lehre</a></span><span>Eine Linie ohne generelles Verbot, mit Sprechstunde für Dozierende und kuratierten Praxisbeispielen.</span></li>
+            <li><span class="lbl">EPFL</span><span class="t"><a href="https://www.epfl.ch/education/teaching/index-html/ai-teaching/">(Gen)AI for Teaching and Learning</a></span><span>Klare Grundsätze wie «Protect learning», mit getrennten Leitlinien für Lehrende und Studierende.</span></li>
+            <li><span class="lbl">ETH Zürich</span><span class="t"><a href="https://ethz.ch/staffnet/en/service/lifelong-learning-hub/artificial-intelligence.html">Artificial intelligence</a></span><span>Ein praktischer Leitfaden zum Prompten, dazu Tools, Regeln und Vorlagen für eigene Workshops.</span></li>
+            <li><span class="lbl">Universität Potsdam</span><span class="t"><a href="https://www.uni-potsdam.de/de/zfq/lehre-und-medien/lehre-gestalten/ki-in-der-hochschullehre">KI in der Hochschullehre</a></span><span>Mit einer ausführlichen Handreichung zu KI und Prüfungen, die Orientierung für die eigene Praxis gibt.</span></li>
+            <li><span class="lbl">KI-Campus</span><span class="t"><a href="https://ki-campus.org/lernangebote/kurse/prompt-labor-hochschullehre-grundlagen">Prompt-Labor Hochschullehre</a></span><span>Ein kostenloser Selbstlernkurs, in dem Lehrende generative KI für die eigene Lehre ausprobieren.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 9 Siehe auch -->
+      <section class="ch" aria-labelledby="c9">
+        <aside class="note">
+          <span class="num">Kapitel 9</span>
+          <span class="name">Siehe auch</span>
+          <span>Die drei Kernthemen mit den meisten Querbezügen zu KI. Alle drei sind noch geplant.</span>
+          <span class="size">Vorgabe: 2–3 Kernthemen</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c9">Siehe auch</h2>
+          <div class="chips">
+            <a href="#c9">Digitale und hybride Lehre</a>
+            <a href="#c9">Lernförderliches Prüfen und Feedback</a>
+            <a href="#c9">Zukunftskompetenzen</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </article>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('toggle-notes');
+  function apply(off) {
+    document.body.classList.toggle('notes-off', off);
+    btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+    btn.textContent = off ? 'Randnotizen einblenden' : 'Randnotizen ausblenden';
+  }
+  var saved = false;
+  try { saved = localStorage.getItem('muster-ki-notes-off') === '1'; } catch (e) {}
+  apply(saved);
+  btn.addEventListener('click', function () {
+    var off = !document.body.classList.contains('notes-off');
+    apply(off);
+    try { localStorage.setItem('muster-ki-notes-off', off ? '1' : '0'); } catch (e) {}
+  });
+})();
+</script>

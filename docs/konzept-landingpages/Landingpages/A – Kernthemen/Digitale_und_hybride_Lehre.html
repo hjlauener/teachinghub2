@@ -1,0 +1,212 @@
+<title>Digitale und hybride Lehre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Digitale und hybride Lehre">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Digitale und hybride Lehre</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Digitale und hybride Lehre</h1>
+        <p class="lead">Digitale Elemente machen Lehre flexibler. Inhalte lassen sich vorbereiten und wiederholen, die Präsenzzeit wird frei für Austausch und Übung, und Studierende lernen ein Stück weit unabhängig von Ort und Zeit. Entscheidend ist dabei nicht die Technik, sondern eine durchdachte Kombination. Diese Seite zeigt Formate, Tools und Unterstützung an der Universität Bern.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>ILIAS ist die zentrale Plattform der Universität Bern für die digitale Begleitung von Lehrveranstaltungen.</li>
+          <li>Veranstaltungen in ausgerüsteten Hörsälen lassen sich automatisch aufzeichnen oder live übertragen.</li>
+          <li>Lehrvideos stellen Sie über Opencast in ILIAS bereit oder über Tobira öffentlich und ohne Werbung.</li>
+          <li>Digitale Formate wirken, wenn Online- und Präsenzphasen auf dieselben Lernziele ausgerichtet sind.</li>
+          <li>Für Planung, Produktion und Weiterentwicklung gibt es Schulungen, Beratung und Förderung.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/onlinelehre/index_ger.html">Onlinelehre</a></span><span>Wie Sie digitale Lernräume didaktisch gestalten, damit Studierende auch online aktiv und verbunden lernen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/blended_learning/index_ger.html">Blended Learning</a></span><span>Wie Sie Präsenz- und Onlinephasen so kombinieren, dass sie flexibel und zugleich lernwirksam sind.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/selbstlernkurse/index_ger.html">Selbstlernkurse</a></span><span>Wie Sie Studierenden selbständiges Lernen ermöglichen und es mit passenden Rückmeldungen begleiten.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/microlearning/index_ger.html">Microlearning</a></span><span>Wie Sie Wissen in kleine Einheiten aufteilen, die Studierende zwischendurch und gezielt bearbeiten können.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__lernszenarien/mobiles_lernen/index_ger.html">Mobiles Lernen</a></span><span>Wie digitale Impulse auf dem Smartphone Studierende im passenden Moment beim Lernen unterstützen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__lernszenarien/adaptives_lernen/index_ger.html">Adaptives Lernen</a></span><span>Wie Sie individuelle Lernpfade gestalten, die sich am Vorwissen und Fortschritt der Studierenden ausrichten.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehr__und_lernmaterialien/lehr__und_lernvideos/index_ger.html">Lehr- und Lernvideos</a></span><span>Wie Sie didaktisch wirksame Videos planen, produzieren und sinnvoll in Ihre Lehrveranstaltung einbauen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehr__und_lernmaterialien/extended_reality/index_ger.html">Extended Reality</a></span><span>Was Lernen in erweiterten und virtuellen Welten möglich macht und wann sich der Aufwand lohnt.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden/podcastfaehige_hoersaele/index_ger.html">Podcastfähige Hörsäle</a></span><span>Welche Hörsäle für automatische Aufzeichnung und Livestreaming ausgerüstet sind, wichtig für hybride Formate.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ilias/index_ger.html">ILIAS</a></td><td>Lernplattform für Kurse, Materialien und Aktivitäten</td><td>Dozierende und Studierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/opencast/index_ger.html">Opencast</a></td><td>Video und Audio in ILIAS einbinden</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/tobira/index_ger.html">Tobira</a></td><td>Lehrvideos öffentlich und werbefrei zeigen</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/camtasia/index_ger.html">Camtasia</a></td><td>Bildschirmaufnahmen am eigenen Rechner</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/zoom/index_ger.html">Zoom</a></td><td>Virtuelle Präsenz, interaktive Lehre, Transkription</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/mentimeter/index_ger.html">Mentimeter</a></td><td>Abstimmungen und Live-Feedback</td><td>Dozierende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Weitere Werkzeuge wie iTools, MS Teams und iliasEXAM für Online-Prüfungen finden Sie in der Tool-Übersicht des Teaching Hub. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 19.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/didaktische_grundlagen/didaktische_kohaerenz/index_ger.html">Didaktische Kohärenz</a></span><span>Stimmen Sie Online- und Präsenzphasen auf Lernziele und Prüfung ab, damit beide Teile zusammen wirken.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/praesenzlehre/index_ger.html">Präsenzlehre</a></span><span>Klären Sie, wofür die gemeinsame Zeit vor Ort am wertvollsten ist, wenn Inhalte auch online verfügbar sind.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden/index_ger.html">Podcast an- &amp; abmelden</a></span><span>Bestellen Sie automatisierte Aufzeichnungen und Livestreams Ihrer Veranstaltungen rechtzeitig vor Semesterbeginn.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/raumauswahl_und_raumreservation/index_ger.html">Raumauswahl und Raumreservation</a></span><span>Wählen Sie einen Raum, dessen Technik zu Ihrem hybriden oder aufgezeichneten Format passt.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/verarbeitung_von_inhalten_ermoeglichen/index_ger.html">Verarbeitung von Inhalten ermöglichen</a></span><span>Planen Sie, wie Studierende online erarbeitete Inhalte in der Präsenz aktiv weiterverarbeiten.</span></li>
+          <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/schriftliche_pruefungen/index_ger.html">Schriftliche Prüfungen</a></span><span>Wie Sie Kompetenzen mit Aufgaben auf Papier oder am Bildschirm prüfen, auch in digitalen Prüfungsformaten.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenfeedback/index_ger.html">Zwischenfeedback</a></span><span>Fragen Sie früh im Semester nach, ob Online- und Präsenzphasen für Ihre Studierenden gut zusammenpassen.</span></li>
+          <li><span class="lbl">Curriculum entwickeln</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/curriculum_entwickeln/studienprogramme_weiterentwickeln/index_ger.html">Studienprogramme weiterentwickeln</a></span><span>Prüfen Sie, wo flexible und digitale Formate im Studiengang sinnvoll sind und wo Präsenz unverzichtbar bleibt.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c6">
+        <h2 class="chap" id="c6">Aus der Praxis</h2>
+        <div class="cases">
+          <div class="case">
+            <h3>Physische Labormethoden im Flipped Classroom</h3>
+            <span class="meta">Dr. Moritz Bigalke · Geographisches Institut · Vorlesung</span>
+            <p>Die Theorie erarbeiten Studierende mit Screencasts im Selbststudium. In der Präsenz vertiefen sie die Laborpraktiken in aktiven Lehrsequenzen. Bigalke gehörte zu den Ersten an der UniBE, die das Konzept konsequent umsetzten.</p>
+            <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/lehrprojekte/schaufenster_lehre/veranstaltungsportraet_moritz_bigalke/index_ger.html">Zum Porträt</a>
+          </div>
+          <div class="case">
+            <h3>Knowledge Essentials</h3>
+            <span class="meta">Prof. Dr. Michael Schulte-Mecklenbeck, Prof. Dr. Claude Messner, Prof. Dr. Sebastian Berger · WISO · FLE-Projekt</span>
+            <p>Kurze, didaktisch aufbereitete Videosequenzen vermitteln Grundlagenwissen über Fachgrenzen hinweg. Anschliessende Assessments erlauben es, das Gelernte direkt anzuwenden und zu überprüfen.</p>
+            <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/lehrprojekte/fle_projektpool/knowledge_essentials/index_ger.html">Zum Projekt</a>
+          </div>
+          <div class="case">
+            <h3>Das politische Wesen: Podcasts als Leistungsnachweis</h3>
+            <span class="meta">Nathalie Herren · Politische Psychologie · Blockseminar</span>
+            <p>Studierende produzieren Podcasts zu Themen der politischen Psychologie. Sie setzen sich so fachlich mit dem Thema auseinander und lernen zugleich, Inhalte in einem digitalen Format verständlich aufzubereiten.</p>
+            <a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/lehrprojekte/schaufenster_lehre/veranstaltungsportraet_nathalie_herren/index_ger.html">Zum Porträt</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/ilias_schulungen/index_ger.html">ILIAS Schulungen</a></span><span>Modulare Schulungen vom Einstieg bis zur vertieften Anwendung der Lernplattform ILIAS.</span></li>
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/schulungen_zu_lehr__und_lernvideos/index_ger.html">Schulungen zu Lehr- und Lernvideos</a></span><span>Schritt für Schritt zum didaktisch wirksamen Video, von der Planung bis zur Produktion.</span></li>
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/schulungen_zu_pruefungstools/index_ger.html">Schulungen zu Prüfungstools</a></span><span>Ein praktischer Einstieg in digital gestützte Prüfungen mit den Prüfungstools der Universität Bern.</span></li>
+          <li><span class="lbl">Service</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/podcast__livestreaming_service/index_ger.html">Podcast &amp; Livestreaming Service</a></span><span>Präsenzveranstaltungen automatisiert aufzeichnen oder in Echtzeit online für Studierende bereitstellen.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/individuelles_coaching/index_ger.html">Individuelles Coaching</a></span><span>Persönliche Begleitung, wenn Sie Ihre Lehrveranstaltung digital oder hybrid neu gestalten möchten.</span></li>
+          <li><span class="lbl">Förderung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/foerderprogramme/belearn_foerderungen/index_ger.html">BeLEARN Förderungen</a></span><span>Förderung, um digitale Lehr- und Lernformate gemeinsam mit dem Kompetenzzentrum BeLEARN weiterzuentwickeln.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/blended-learning">Blended Learning</a></span><span>Wie synchrone und asynchrone Elemente didaktisch sinnvoll verbunden werden, mit vielen konkreten Hinweisen.</span></li>
+          <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/asynchrone-lehre">Asynchrone Lehre</a></span><span>Kriterien, nach denen Sie entscheiden, ob sich eine Lehrveranstaltung oder ein Teil davon asynchron eignet.</span></li>
+          <li><span class="lbl">Universität Zürich</span><span class="t"><a href="https://teachingtools.uzh.ch/de/tools/mooc-videos-in-hochschullehre">MOOC zu Videos in der Hochschullehre</a></span><span>Ein offener Onlinekurs dazu, wie Sie Videos als Kommunikationsmedium in der Lehre einsetzen.</span></li>
+          <li><span class="lbl">Universität Wien</span><span class="t"><a href="https://infopool.univie.ac.at/index.php?id=100484&amp;L=0">Blended Learning</a></span><span>Kompakte Einführung im Infopool besser lehren, gut als erster Überblick über das Konzept.</span></li>
+          <li><span class="lbl">Universität Wien</span><span class="t"><a href="https://infopool.univie.ac.at/index.php?id=174962&amp;L=0">Gute Lehrvideos</a></span><span>Worauf es bei wirksamen Lehrvideos ankommt, mit Hinweisen zu Länge, Aufbau und Gestaltung.</span></li>
+          <li><span class="lbl">EPFL</span><span class="t"><a href="https://www.epfl.ch/education/teaching/index-html/flexible-teaching/">Flexible Teaching</a></span><span>Roadmaps und Kurzanleitungen, um Präsenz- und Onlinelehre zu verbinden und Aufzeichnungen sinnvoll zu nutzen.</span></li>
+          <li><span class="lbl">Universität Bremen</span><span class="t"><a href="https://www.uni-bremen.de/informationsportal-hochschullehre">Informationsportal Hochschullehre</a></span><span>Der Bereich «Präsenzlehre flexibilisieren» zeigt, wie digitale Elemente Lehre räumlich und zeitlich flexibler machen.</span></li>
+          <li><span class="lbl">e-teaching.org</span><span class="t"><a href="https://www.e-teaching.org/">e-teaching.org</a></span><span>Das deutschsprachige Portal zum Lehren und Lernen mit digitalen Medien, mit Praxisbeispielen und Themenspecials.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c9">
+        <h2 class="chap" id="c9">Siehe auch</h2>
+        <div class="chips">
+          <a href="#c9">Aktivierende Lehre</a>
+          <a href="#c9">KI in Lehre und Studium</a>
+          <a href="#c9">Diversität, Inklusion und Barrierefreiheit</a>
+        </div>
+      </section>
+
+    </div>
+  </article>
+</div>

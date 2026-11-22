@@ -1,0 +1,381 @@
+<title>Vorlage Kernthema-Seite</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Bauplan – links die Seite in Originallänge, rechts Randnotizen wie auf einem Korrekturbogen */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --ph: #6b7684;
+  --ph-bg: #e9edf2;
+  --note: #1f4fb8;
+  --note-bg: #eef3fd;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+    --ph: #9aa6b4; --ph-bg: #26303a; --note: #8fb0ff; --note-bg: #1b2538; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+  --ph: #9aa6b4; --ph-bg: #26303a; --note: #8fb0ff; --note-bg: #1b2538; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--note); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-size: 12px; letter-spacing: .02em; }
+
+/* Kopf der Vorlage */
+.intro { display: grid; gap: 14px; max-width: 720px; }
+.intro .kicker { color: var(--note); text-transform: uppercase; letter-spacing: .08em; }
+.intro h1 { font-size: 30px; line-height: 1.2; font-weight: 700; }
+.intro p { color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 14px; color: var(--muted); }
+.legend span.ph { font-size: 14px; }
+.legend .swatch-note { color: var(--note); background: var(--note-bg); padding: 1px 8px; border-radius: 4px; }
+.toggle { font: inherit; font-size: 14px; color: var(--note); background: transparent; border: 1px solid var(--note); border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+.toggle:hover { background: var(--note-bg); }
+
+.overview { background: var(--page); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; }
+.overview table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+.overview th, .overview td { text-align: left; padding: 8px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.overview th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.overview tr:last-child td { border-bottom: 0; }
+.overview td:first-child { font-variant-numeric: tabular-nums; color: var(--note); font-family: var(--font-mono); width: 36px; }
+
+/* Die Seite */
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; grid-template-columns: minmax(0, 1fr) 270px; grid-template-areas: "content note"; gap: 32px; align-items: start; }
+.ch > .content { grid-area: content; min-width: 0; display: grid; gap: 14px; max-width: 660px; }
+.ch > .note { grid-area: note; }
+body.notes-off .ch { grid-template-columns: minmax(0, 1fr); grid-template-areas: "content"; }
+body.notes-off .note { display: none; }
+
+.note { border-left: 2px solid var(--note); background: var(--note-bg); color: var(--ink); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13.5px; line-height: 1.5; display: grid; gap: 6px; }
+.note .num { color: var(--note); font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.note .name { font-weight: 600; font-size: 14.5px; }
+.note .size { font-family: var(--font-mono); font-size: 12px; color: var(--note); }
+.note ul { margin: 0; padding-left: 16px; display: grid; gap: 2px; }
+
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+.ph { color: var(--ph); background: var(--ph-bg); border-radius: 3px; padding: 0 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+.hero { display: grid; gap: 14px; }
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+.callout { border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; display: grid; gap: 4px; font-size: 15px; }
+.callout .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 960px) {
+  .ch { grid-template-columns: minmax(0, 1fr); grid-template-areas: "note" "content"; gap: 12px; }
+}
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .intro h1 { font-size: 25px; }
+  .hero .lead { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="intro">
+    <span class="kicker mono">Teaching Hub · Vorlage Ebene 1</span>
+    <h1>Vorlage Kernthema-Seite</h1>
+    <p>So ist eine Kernthema-Seite aufgebaut. Grau hinterlegter Text ist Platzhalter in der Länge, die der echte Text haben soll. Er beschreibt zugleich, was dort hingehört. Die blauen Randnotizen erklären, was jedes Kapitel leisten soll.</p>
+    <div class="legend">
+      <span><span class="ph">Platzhalter in Originallänge</span></span>
+      <span class="swatch-note">Randnotiz: Zweck und Umfang</span>
+      <button class="toggle" id="toggle-notes" type="button" aria-pressed="false">Randnotizen ausblenden</button>
+    </div>
+  </header>
+
+  <div class="overview">
+    <table>
+      <thead><tr><th>#</th><th>Kapitel</th><th>Aufgabe</th><th>Umfang</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Einstieg</td><td>Ins Thema holen</td><td>2–3 Sätze, optional ein Hinweis</td></tr>
+        <tr><td>2</td><td>Auf einen Blick</td><td>Das Wichtigste für Eilige</td><td>3–5 Aussagen</td></tr>
+        <tr><td>3</td><td>Passend zum Thema</td><td>Zu bestehenden Seiten zum Thema führen</td><td>5–10 Links mit je einem Satz</td></tr>
+        <tr><td>4</td><td>Tools</td><td>Verfügbare Werkzeuge zeigen</td><td>3–6 Zeilen, ein Hinweis</td></tr>
+        <tr><td>5</td><td>Entlang der Journey</td><td>Thema mit dem Lehrzyklus verbinden</td><td>5–10 Links mit je einem Satz</td></tr>
+        <tr><td>6</td><td>Aus der Praxis</td><td>Zeigen, dass es an der UniBE funktioniert</td><td>1–3 Beispiele</td></tr>
+        <tr><td>7</td><td>Angebote</td><td>Unterstützung an der UniBE</td><td>3–6 Links mit je einem Satz</td></tr>
+        <tr><td>8</td><td>Hinweise anderer Hochschulen</td><td>Gute Seiten anderswo</td><td>4–8 Links mit je einem Satz</td></tr>
+        <tr><td>9</td><td>Siehe auch</td><td>Zu verwandten Kernthemen</td><td>2–3 Links</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <article class="page" aria-label="Vorlage der Kernthema-Seite">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › <span class="ph">Name des Kernthemas</span></div>
+
+      <!-- 1 Einstieg -->
+      <section class="ch" aria-labelledby="c1">
+        <aside class="note">
+          <span class="num">Kapitel 1</span>
+          <span class="name">Einstieg</span>
+          <span>Holt Dozierende ab: Worum geht es, und warum ist das Thema für die Lehre an der UniBE wichtig? Ohne Fachjargon.</span>
+          <span>Der Hinweis-Kasten ist optional und nur für Aktuelles da. Er braucht ein Ablaufdatum.</span>
+          <span class="size">Titel 2–5 Wörter · Lead 40–60 Wörter · Hinweis 1 Satz</span>
+        </aside>
+        <div class="content hero">
+          <h1 id="c1"><span class="ph">Name des Kernthemas</span></h1>
+          <p class="lead"><span class="ph">Zwei bis drei Sätze führen ins Thema ein. Der erste sagt, worum es geht, und zwar in Worten, die alle Dozierenden verstehen. Der zweite erklärt, warum das Thema für die Lehre an der Universität Bern gerade wichtig ist. Ein dritter Satz kann sagen, was man auf dieser Seite findet.</span></p>
+          <div class="callout">
+            <span class="lbl">Aktuell</span>
+            <span><span class="ph">Ein Satz zu einem aktuellen Anlass, etwa einer Tagung oder einer neuen Regelung, mit Datum.</span> <a href="#c1">Mehr dazu</a></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 Auf einen Blick -->
+      <section class="ch" aria-labelledby="c2">
+        <aside class="note">
+          <span class="num">Kapitel 2</span>
+          <span class="name">Auf einen Blick</span>
+          <span>Das Wichtigste für Eilige. Wer nur diesen Block liest, kennt die Kernpunkte und die verbindlichen Regeln.</span>
+          <ul><li>Aussagen, keine Fragen</li><li>Keine Links nötig</li><li>Verbindliches vor Empfehlungen</li></ul>
+          <span class="size">3–5 Punkte · je 10–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c2">Auf einen Blick</h2>
+          <ul class="glance">
+            <li><span class="ph">Eine Kernaussage pro Punkt, als vollständiger Satz und so kurz wie möglich formuliert.</span></li>
+            <li><span class="ph">Regeln und Zuständigkeiten der UniBE stehen vor Empfehlungen, damit Eilige das Verbindliche zuerst lesen.</span></li>
+            <li><span class="ph">Jede Aussage gilt für alle Dozierenden und ist ohne weiteren Link verständlich.</span></li>
+            <li><span class="ph">Höchstens fünf Punkte, und keiner ist länger als zwei Zeilen.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 Passend zum Thema -->
+      <section class="ch" aria-labelledby="c3">
+        <aside class="note">
+          <span class="num">Kapitel 3</span>
+          <span class="name">Passend zum Thema</span>
+          <span>Führt zu bestehenden Seiten, die genau dieses Thema behandeln: im Teaching Hub, auf unibe.ch oder bei der Universitätsbibliothek.</span>
+          <span>Nur Seiten, die es schon gibt. Geplante Seiten kommen erst dazu, wenn sie online sind.</span>
+          <span>Keine Seiten aus anderen Kernthemen. Diese stehen nur unter «Siehe auch».</span>
+          <span>Der Satz sagt, welche Frage die Seite beantwortet.</span>
+          <span class="size">5–10 Links · Titel 2–5 Wörter · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c3">Passend zum Thema</h2>
+          <ul class="links">
+            <li><span class="t"><a href="#c3"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Ein Satz sagt, welche Frage diese Seite beantwortet, zum Beispiel: Wie lege ich Regeln für meine Lehrveranstaltung fest?</span></span></li>
+            <li><span class="t"><a href="#c3"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Der Satz beginnt beim Nutzen für die Dozierenden und beschreibt nicht die Seite selbst.</span></span></li>
+            <li><span class="t"><a href="#c3"><span class="ph">Titel einer Seite der UniBE</span></a></span><span><span class="ph">Neben dem Teaching Hub kommen auch Seiten und Dokumente anderer Stellen der UniBE in Frage.</span></span></li>
+            <li><span class="t"><a href="#c3"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Pro Link steht genau ein Satz von etwa zwölf bis zwanzig Wörtern, ohne Aufzählung und ohne zweiten Satz.</span></span></li>
+            <li><span class="t"><a href="#c3"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Die Reihenfolge folgt den Fragen der Dozierenden: zuerst die Grundlagen, dann die Spezialfälle.</span></span></li>
+            <li><span class="t"><a href="#c3"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Bei mehr als acht Links lohnt es sich zu prüfen, ob zwei Seiten zusammengelegt werden können.</span></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4 Tools -->
+      <section class="ch" aria-labelledby="c4">
+        <aside class="note">
+          <span class="num">Kapitel 4</span>
+          <span class="name">Tools</span>
+          <span>Zeigt, welche an der UniBE verfügbaren Werkzeuge beim Thema helfen, wofür und für wen.</span>
+          <span>Mit Stand-Datum, weil sich das Angebot ändert. Für die vollständige Liste auf die offizielle Übersicht verlinken.</span>
+          <span class="size">3–6 Zeilen · 1 Hinweis-Satz · Datum</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c4">Tools</h2>
+          <div class="tablebox">
+            <table class="tools">
+              <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+              <tbody>
+                <tr><td><span class="ph">Name des Tools</span></td><td><span class="ph">Zweck in drei Wörtern</span></td><td><span class="ph">Studierende und Mitarbeitende</span></td></tr>
+                <tr><td><span class="ph">Name des Tools</span></td><td><span class="ph">Zweck in zwei Wörtern</span></td><td><span class="ph">Mitarbeitende</span></td></tr>
+                <tr><td><span class="ph">Name des Tools</span></td><td><span class="ph">Zweck in vier Wörtern</span></td><td><span class="ph">Dozierende, mit Schulung</span></td></tr>
+                <tr><td><span class="ph">Name des Tools</span></td><td><span class="ph">Zweck in drei Wörtern</span></td><td><span class="ph">Studierende</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><span class="ph">Ein Satz mit dem wichtigsten Hinweis für die Lehre, etwa zu Lizenzen, Kosten oder Datenschutz.</span> <a href="#c4">Offizielle Übersicht</a></p>
+          <p class="more">Stand: <span class="ph">TT.MM.JJJJ</span></p>
+        </div>
+      </section>
+
+      <!-- 5 Entlang der Journey -->
+      <section class="ch" aria-labelledby="c5">
+        <aside class="note">
+          <span class="num">Kapitel 5</span>
+          <span class="name">Entlang der Journey</span>
+          <span>Verbindet das Thema mit dem Lehrzyklus. Jeder Link führt auf eine Journey-Seite, auf der das Thema in einer Phase konkret wird.</span>
+          <span>Die Phase steht als Label über dem Link. Phasen ohne Bezug weglassen.</span>
+          <span class="size">5–10 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c5">Entlang der Journey</h2>
+          <ul class="links">
+            <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Ein Satz sagt, was das Thema in dieser Phase konkret bedeutet, etwa: Regeln in die Kursbeschreibung aufnehmen.</span></span></li>
+            <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Hier geht es um Formulare, Fristen und Zuständigkeiten, die das Thema in dieser Phase betreffen.</span></span></li>
+            <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Der Satz nennt die Handlung im Semester, nicht die Phase noch einmal.</span></span></li>
+            <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Eine Phase darf mehrere Links haben, wenn dort mehrere Seiten wirklich zum Thema gehören.</span></span></li>
+            <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Ein Satz zeigt, wie man prüft, ob die Umsetzung des Themas in der Lehre gewirkt hat.</span></span></li>
+            <li><span class="lbl">Curriculum entwickeln</span><span class="t"><a href="#c5"><span class="ph">Titel der Journey-Seite</span></a></span><span><span class="ph">Ein Satz zeigt, wie das Thema über eine einzelne Lehrveranstaltung hinaus im Studiengang verankert wird.</span></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6 Aus der Praxis -->
+      <section class="ch" aria-labelledby="c6">
+        <aside class="note">
+          <span class="num">Kapitel 6</span>
+          <span class="name">Aus der Praxis</span>
+          <span>Zeigt, dass es an der UniBE funktioniert: echte Beispiele mit Person, Fach und Lehrformat, wenn möglich aus dem Good Practice Katalog.</span>
+          <span class="size">1–3 Beispiele · Text 30–45 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c6">Aus der Praxis</h2>
+          <div class="cases">
+            <div class="case">
+              <h3><span class="ph">Titel des Praxisbeispiels</span></h3>
+              <span class="meta"><span class="ph">Name · Fach · Lehrformat und Gruppengrösse</span></span>
+              <p><span class="ph">Zwei Sätze beschreiben, was in der Lehrveranstaltung gemacht wurde und was es den Studierenden gebracht hat. Ein kurzes Zitat der dozierenden Person macht das Beispiel lebendig, ist aber freiwillig.</span></p>
+              <a href="#c6">Zum Beispiel</a>
+            </div>
+            <div class="case">
+              <h3><span class="ph">Titel des Praxisbeispiels</span></h3>
+              <span class="meta"><span class="ph">Name · Fach · Lehrformat und Gruppengrösse</span></span>
+              <p><span class="ph">Ein zweites Beispiel stammt idealerweise aus einer anderen Fakultät oder einem anderen Lehrformat, damit möglichst viele Dozierende sich darin wiederfinden.</span></p>
+              <a href="#c6">Zum Beispiel</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 Angebote -->
+      <section class="ch" aria-labelledby="c7">
+        <aside class="note">
+          <span class="num">Kapitel 7</span>
+          <span class="name">Angebote</span>
+          <span>Wo Dozierende an der UniBE Unterstützung bekommen: Kurse, Beratung, Veranstaltungen und Förderung. Die Art des Angebots steht als Label über dem Link.</span>
+          <span class="size">3–6 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c7">Angebote</h2>
+          <ul class="links">
+            <li><span class="lbl">Kurs</span><span class="t"><a href="#c7"><span class="ph">Name des Angebots</span></a></span><span><span class="ph">Ein Satz sagt, für wen der Kurs gedacht ist und was man danach kann.</span></span></li>
+            <li><span class="lbl">Beratung</span><span class="t"><a href="#c7"><span class="ph">Name des Angebots</span></a></span><span><span class="ph">Ein Satz sagt, bei welchen Fragen die Beratung hilft und wie man sie anfragt.</span></span></li>
+            <li><span class="lbl">Veranstaltung</span><span class="t"><a href="#c7"><span class="ph">Name des Angebots</span></a></span><span><span class="ph">Ein Satz nennt Format und nächsten Termin, damit die Information nicht schnell veraltet.</span></span></li>
+            <li><span class="lbl">Förderung</span><span class="t"><a href="#c7"><span class="ph">Name des Angebots</span></a></span><span><span class="ph">Ein Satz sagt, welche Lehrprojekte gefördert werden und bis wann man sich bewerben kann.</span></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 8 Hinweise anderer Hochschulen -->
+      <section class="ch" aria-labelledby="c8">
+        <aside class="note">
+          <span class="num">Kapitel 8</span>
+          <span class="name">Hinweise anderer Hochschulen</span>
+          <span>Gut gemachte Seiten anderer Hochschulen und Netzwerke zum Weiterlesen. Die Hochschule steht als Label über dem Link.</span>
+          <span>Der Satz sagt, was diese Seite besonders gut macht. Links jedes Semester prüfen.</span>
+          <span class="size">4–8 Links · Satz 12–20 Wörter</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+          <ul class="links">
+            <li><span class="lbl"><span class="ph">Name der Hochschule</span></span><span class="t"><a href="#c8"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Ein Satz sagt, was diese Seite besonders gut macht und warum sich der Klick lohnt.</span></span></li>
+            <li><span class="lbl"><span class="ph">Name der Hochschule</span></span><span class="t"><a href="#c8"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Bevorzugt werden Hochschulen aus der Schweiz und dem deutschsprachigen Raum mit vergleichbaren Rahmenbedingungen.</span></span></li>
+            <li><span class="lbl"><span class="ph">Name der Hochschule</span></span><span class="t"><a href="#c8"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Englischsprachige Seiten sind willkommen, wenn sie etwas bieten, das es auf Deutsch nicht gibt.</span></span></li>
+            <li><span class="lbl"><span class="ph">Name des Netzwerks</span></span><span class="t"><a href="#c8"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Auch hochschulübergreifende Netzwerke und frei zugängliche Selbstlernkurse gehören in diese Liste.</span></span></li>
+            <li><span class="lbl"><span class="ph">Name der Hochschule</span></span><span class="t"><a href="#c8"><span class="ph">Titel der Seite</span></a></span><span><span class="ph">Ein Satz nennt das Besondere, zum Beispiel ein Kompetenzraster, eine Checkliste oder gute Praxisbeispiele.</span></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 9 Siehe auch -->
+      <section class="ch" aria-labelledby="c9">
+        <aside class="note">
+          <span class="num">Kapitel 9</span>
+          <span class="name">Siehe auch</span>
+          <span>Der einzige Ort für Verweise auf andere Kernthemen. So bleibt «Passend zum Thema» klar auf dieses Thema beschränkt.</span>
+          <span class="size">2–3 Kernthemen · nur Titel</span>
+        </aside>
+        <div class="content">
+          <h2 class="chap" id="c9">Siehe auch</h2>
+          <div class="chips">
+            <a href="#c9"><span class="ph">Verwandtes Kernthema</span></a>
+            <a href="#c9"><span class="ph">Verwandtes Kernthema</span></a>
+            <a href="#c9"><span class="ph">Verwandtes Kernthema</span></a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </article>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('toggle-notes');
+  function apply(off) {
+    document.body.classList.toggle('notes-off', off);
+    btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+    btn.textContent = off ? 'Randnotizen einblenden' : 'Randnotizen ausblenden';
+  }
+  var saved = false;
+  try { saved = localStorage.getItem('vorlage-notes-off') === '1'; } catch (e) {}
+  apply(saved);
+  btn.addEventListener('click', function () {
+    var off = !document.body.classList.contains('notes-off');
+    apply(off);
+    try { localStorage.setItem('vorlage-notes-off', off ? '1' : '0'); } catch (e) {}
+  });
+})();
+</script>

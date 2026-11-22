@@ -1,0 +1,28 @@
+# Abhängigkeiten und Builds
+node_modules/
+.next/
+out/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+
+# Umgebungsvariablen / Secrets (Entscheidung 5.2)
+.env
+.env.*
+!.env.example
+
+# Uploads und lokale Daten
+media/
+data/
+pgdata/
+
+# Gecrawlte Rohinhalte der Altsite gehören nicht ins Repo (Entscheidung 5.2)
+docs/methodenkompass.csv
+docs/seiteninventar.csv
+
+# System
+.DS_Store
+*.log

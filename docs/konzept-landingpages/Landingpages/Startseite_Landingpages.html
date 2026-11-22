@@ -1,0 +1,392 @@
+<title>Themen der Lehre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: Einführung oben, Umschalter, darunter entweder Themenkarten (2 Spalten) oder Matrix Kernthemen × Journey mit Detailband */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --accent-soft: #d9ecec;
+  --sel: #f3f8f8;
+  --warn: #8a5a00;
+  --warn-soft: #f7ecd6;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+    --accent: #5cc4c4; --accent-soft: #1f3a3b; --sel: #1f2a33; --warn: #f0c46a; --warn-soft: #3a2f17; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843;
+  --accent: #5cc4c4; --accent-soft: #1f3a3b; --sel: #1f2a33; --warn: #f0c46a; --warn-soft: #3a2f17; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 24px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Einführung */
+.intro { display: grid; gap: 12px; max-width: 720px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.intro h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; line-height: 1.15; }
+.intro .lead { font-size: 16.5px; line-height: 1.6; }
+.contains { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.contains strong { font-weight: 600; color: var(--ink); margin-right: 2px; }
+.contains span.c { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; background: var(--page); }
+
+/* Umschalter */
+.switchbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.tabs { display: inline-flex; background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding: 4px; gap: 4px; }
+.tabs button { border: 0; background: none; padding: 8px 16px; border-radius: 7px; font-weight: 600; font-size: 14px; cursor: pointer; color: var(--muted); }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--page); }
+.switchbar .hint { font-size: 13.5px; color: var(--muted); max-width: 520px; }
+
+/* Ansicht: Nach Thema */
+.groups { display: grid; gap: 16px; }
+.group { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding: 18px clamp(16px, 3vw, 24px) 20px; display: grid; gap: 14px; }
+.group h2 { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.group h2 b { color: var(--accent); font-weight: 700; margin-right: 6px; }
+.tlist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 32px; }
+.tlist li { display: grid; gap: 2px; min-width: 0; }
+.tlist .tt { font-size: 16px; font-weight: 600; }
+.tlist a.tt { text-decoration: none; }
+.tlist a.tt:hover { text-decoration: underline; }
+.tlist span.tt { color: var(--ink); }
+.tlist .soon { font-size: 12.5px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.tlist p { font-size: 14px; color: var(--muted); }
+
+/* Ansicht: Themen × Journey */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); align-items: center; }
+.legend .dot { display: inline-block; vertical-align: middle; margin-right: 6px; }
+.card { background: var(--page); border: 1px solid var(--line); border-radius: 10px; }
+.matrix-box { overflow-x: auto; }
+table.matrix { width: 100%; border-collapse: collapse; min-width: 760px; font-variant-numeric: tabular-nums; }
+.matrix th, .matrix td { border-bottom: 1px solid var(--line); padding: 0; }
+.matrix thead th { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: center; vertical-align: bottom; }
+.matrix thead th button { width: 100%; background: none; border: 0; padding: 12px 6px 10px; cursor: pointer; text-transform: inherit; letter-spacing: inherit; font-weight: inherit; color: inherit; line-height: 1.3; }
+.matrix thead th button:hover { color: var(--accent); }
+.matrix thead th.corner { text-align: left; padding: 12px 16px 10px; }
+.matrix tbody th { text-align: left; font-weight: 600; width: 260px; }
+.matrix tbody th button { width: 100%; text-align: left; background: none; border: 0; padding: 10px 16px; cursor: pointer; display: grid; gap: 2px; }
+.matrix tbody th button:hover .tname { color: var(--accent); }
+.tname { font-size: 14.5px; }
+.tstate { font-size: 12px; font-weight: 500; color: var(--muted); }
+.tstate.draft { color: var(--accent); }
+.matrix td { text-align: center; }
+.cell { width: 100%; min-height: 54px; background: none; border: 0; cursor: pointer; display: grid; place-items: center; padding: 6px; }
+.cell:disabled { cursor: default; }
+.dot { border-radius: 50%; background: var(--accent); color: var(--page); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.cell:not(:disabled):hover .dot { box-shadow: 0 0 0 3px var(--accent-soft); }
+.empty { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+.total { font-weight: 600; font-size: 14px; width: 64px; }
+.total.thin { color: var(--warn); }
+.matrix tfoot td, .matrix tfoot th { padding: 10px 6px; font-size: 13px; color: var(--muted); text-align: center; font-weight: 600; border-bottom: 0; }
+.matrix tfoot th { text-align: left; padding-left: 16px; }
+tr.is-sel th, tr.is-sel td { background: var(--sel); }
+td.is-sel .dot { box-shadow: 0 0 0 3px var(--accent-soft), 0 0 0 5px var(--accent); }
+tr.thinrow .tname { color: var(--muted); }
+
+.detail { padding: 20px clamp(16px, 3vw, 28px) 24px; display: grid; gap: 16px; }
+.detail-head { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; justify-content: space-between; }
+.detail-head h2 { font-size: 20px; font-weight: 650; }
+.detail-head .meta { font-size: 13px; color: var(--muted); }
+.band { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.phase { padding: 12px 12px 14px; border-right: 1px solid var(--line); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.phase:last-child { border-right: 0; }
+.phase.is-sel { background: var(--sel); box-shadow: inset 0 3px 0 var(--accent); }
+.phase h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: flex; gap: 6px; align-items: baseline; }
+.phase h3 .step { color: var(--accent); }
+.phase ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.phase li a { font-size: 14px; text-decoration: none; overflow-wrap: anywhere; }
+.phase li a:hover { text-decoration: underline; }
+.none { font-size: 13px; color: var(--muted); }
+.phaselist { display: grid; gap: 14px; }
+.phaselist .row { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 4px 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.phaselist .row:last-child { border-bottom: 0; padding-bottom: 0; }
+.phaselist .row strong { font-size: 14.5px; }
+.phaselist .row ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.warnline { font-size: 13px; color: var(--warn); background: var(--warn-soft); border-radius: 6px; padding: 6px 10px; }
+.view { display: grid; gap: 16px; }
+.note { font-size: 13px; color: var(--muted); }
+
+@media (max-width: 860px) {
+  .tlist { grid-template-columns: minmax(0, 1fr); }
+  .band { grid-template-columns: minmax(0, 1fr); }
+  .phase { border-right: 0; border-bottom: 1px solid var(--line); }
+  .phase:last-child { border-bottom: 0; }
+  .phaselist .row { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="eyebrow">Teaching Hub · Themen</span>
+    <h1>Themen der Lehre</h1>
+    <p class="lead">Viele Anliegen in der Lehre betreffen mehr als einen Schritt der Journey. Wer zum Beispiel KI in der eigenen Lehrveranstaltung regeln will, braucht Leitlinien, passende Prüfungsformen und geeignete Tools. Die Themenseiten bündeln, was dazu im Teaching Hub und an der Universität Bern an verschiedenen Orten steht. Die Journey der Lehre zeigt weiterhin den Ablauf, die Themen zeigen, was zu einem Anliegen gehört.</p>
+    <div class="contains" aria-label="Inhalt jeder Themenseite">
+      <strong>Auf jeder Themenseite:</strong>
+      <span class="c">Passende Seiten</span><span class="c">Tools</span><span class="c">Entlang der Journey</span><span class="c">Aus der Praxis</span><span class="c">Angebote</span><span class="c">Hinweise anderer Hochschulen</span>
+    </div>
+  </header>
+
+  <div class="switchbar">
+    <div class="tabs" role="tablist" aria-label="Darstellung wählen">
+      <button type="button" role="tab" id="tab-themen" aria-controls="view-themen" aria-selected="true" data-view="themen">Nach Thema</button>
+      <button type="button" role="tab" id="tab-matrix" aria-controls="view-matrix" aria-selected="false" data-view="matrix">Themen × Journey</button>
+    </div>
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <section class="view" id="view-themen" role="tabpanel" aria-labelledby="tab-themen">
+    <div id="groups" class="groups"></div>
+  </section>
+
+  <section class="view" id="view-matrix" role="tabpanel" aria-labelledby="tab-matrix" hidden>
+    <div class="legend">
+      <span><span class="dot" style="width:14px;height:14px"></span>Kreisgrösse = Anzahl Seiten</span>
+      <span><span class="empty dot"></span>keine Seite</span>
+      <span style="color:var(--warn)">Gesamt unter 5 = zu dünn für eine eigene Themenseite</span>
+    </div>
+    <div class="card matrix-box">
+      <table class="matrix" id="matrix" aria-label="Kernthemen nach Journey-Phasen"></table>
+    </div>
+    <section class="card detail" id="detail" aria-live="polite"></section>
+  </section>
+
+  <p class="note">Prototyp, Stand 19.11.2026. Die Zuordnung zu den Journey-Phasen stammt bei KI und Digitaler Lehre aus den Entwürfen der Themenseiten, bei den übrigen Themen ist sie vorläufig. Die Zahlen umfassen nur Seiten der Journey, keine Seiten der Universitätsbibliothek oder von unibe.ai. Die Matrix zeigt nur die Kernthemen (A).</p>
+</div>
+
+<script>
+(function () {
+  var J = 'https://teachinghub.unibe.ch/journey_der_lehre/';
+  var P = {
+    lo: ['Learning Outcomes', 'lehre_konzipieren/didaktische_grundlagen/learning_outcomes'],
+    koh: ['Didaktische Kohärenz', 'lehre_konzipieren/didaktische_grundlagen/didaktische_kohaerenz'],
+    chg: ['Chancengleichheit', 'lehre_konzipieren/didaktische_grundlagen/chancengleichheit'],
+    tax: ['Taxonomiestufen', 'lehre_konzipieren/didaktische_grundlagen/taxonomiestufen'],
+    pra: ['Präsenzlehre', 'lehre_konzipieren/unterrichtsformen/praesenzlehre'],
+    onl: ['Onlinelehre', 'lehre_konzipieren/unterrichtsformen/onlinelehre'],
+    bl: ['Blended Learning', 'lehre_konzipieren/unterrichtsformen/blended_learning'],
+    slk: ['Selbstlernkurse', 'lehre_konzipieren/unterrichtsformen/selbstlernkurse'],
+    mic: ['Microlearning', 'lehre_konzipieren/unterrichtsformen/microlearning'],
+    vor: ['Vorlesung', 'lehre_konzipieren/lehrformate/vorlesung'],
+    pse: ['Projektseminar', 'lehre_konzipieren/lehrformate/projektseminar'],
+    wsh: ['Workshop', 'lehre_konzipieren/lehrformate/workshop'],
+    exk: ['Exkursion', 'lehre_konzipieren/lehrformate/exkursion'],
+    lab: ['Laborpraktikum', 'lehre_konzipieren/lehrformate/laborpraktikum'],
+    tut: ['Tutorium', 'lehre_konzipieren/lehrformate/tutorium'],
+    ada: ['Adaptives Lernen', 'lehre_konzipieren/lehr__lernszenarien/adaptives_lernen'],
+    mob: ['Mobiles Lernen', 'lehre_konzipieren/lehr__lernszenarien/mobiles_lernen'],
+    kol: ['Kollaboratives Lernen', 'lehre_konzipieren/lehr__lernszenarien/kollaboratives_lernen'],
+    for: ['Forschendes Lernen', 'lehre_konzipieren/lehr__lernszenarien/forschendes_lernen'],
+    pol: ['Problemorientiertes Lernen', 'lehre_konzipieren/lehr__lernszenarien/problemorientiertes_lernen___challenge_based_education'],
+    spi: ['Spielbasiertes Lernen', 'lehre_konzipieren/lehr__lernszenarien/spielbasiertes_lernen'],
+    pod: ['Podcast an- & abmelden', 'lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden'],
+    hoe: ['Podcastfähige Hörsäle', 'lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden/podcastfaehige_hoersaele'],
+    ksl: ['Lehrveranstaltungen im KSL administrieren', 'lehre_administrieren/veranstaltungsadministration/lehrveranstaltungen_im_ksl_administrieren'],
+    raum: ['Raumauswahl und Raumreservation', 'lehre_administrieren/veranstaltungsadministration/raumauswahl_und_raumreservation'],
+    pla: ['Plagiat und Plagiatsprüfung', 'lehre_administrieren/pruefungsadministration/plagiat_und_plagiatspruefung'],
+    lki: ['Leitlinien KI', 'lehre_administrieren/pruefungsadministration/plagiat_und_plagiatspruefung/leitlinien_ki'],
+    ein: ['Prüfungseinsicht', 'lehre_administrieren/pruefungsadministration/pruefungseinsicht'],
+    rec: ['Rechtliches zu Prüfungen', 'lehre_administrieren/pruefungsadministration/rechtliches_zu_pruefungen'],
+    est: ['Einstimmen und Orientierung geben', 'lehre_durchfuehren/lehrmethoden/einstimmen_und_orientierung_geben'],
+    vwa: ['Vorwissen aktivieren', 'lehre_durchfuehren/lehrmethoden/vorwissen_aktivieren'],
+    wvm: ['Wissen vermitteln', 'lehre_durchfuehren/lehrmethoden/wissen_vermitteln'],
+    ver: ['Verarbeitung von Inhalten ermöglichen', 'lehre_durchfuehren/lehrmethoden/verarbeitung_von_inhalten_ermoeglichen'],
+    fb: ['Feedback geben und einholen', 'lehre_durchfuehren/lehrmethoden/feedback_geben_und_einholen'],
+    sch: ['Schreibprozesse begleiten', 'lehre_durchfuehren/lehrmethoden/schreibprozesse_begleiten'],
+    lvo: ['Lehrvortrag', 'lehre_durchfuehren/lehr__und_lernmaterialien/lehrvortrag'],
+    fol: ['Vortragsfolien', 'lehre_durchfuehren/lehr__und_lernmaterialien/vortragsfolien'],
+    vid: ['Lehr- und Lernvideos', 'lehre_durchfuehren/lehr__und_lernmaterialien/lehr__und_lernvideos'],
+    xr: ['Extended Reality', 'lehre_durchfuehren/lehr__und_lernmaterialien/extended_reality'],
+    exa: ['Examplers', 'lehre_durchfuehren/lehr__und_lernmaterialien/examplers'],
+    pko: ['Prüfungskonzeption', 'pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption'],
+    kir: ['KI-robust prüfen', 'pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption/ki_robust_pruefen'],
+    lbw: ['Leistungsbewertung', 'pruefungen_gestalten/pruefungen_entwickeln/leistungsbewertung'],
+    mue: ['Mündliche Prüfungen', 'pruefungen_gestalten/pruefungen_entwickeln/muendliche_pruefungen'],
+    prp: ['Praktische Prüfungen', 'pruefungen_gestalten/pruefungen_entwickeln/praktische_pruefungen'],
+    scp: ['Schriftliche Prüfungen', 'pruefungen_gestalten/pruefungen_entwickeln/schriftliche_pruefungen'],
+    auf: ['Prüfungsaufsicht', 'pruefungen_gestalten/pruefungen_durchfuehren/pruefungsaufsicht'],
+    zev: ['Zwischenevaluation', 'lehre_evaluieren/lehrbegleitendes_feedback/zwischenevaluation'],
+    zfb: ['Zwischenfeedback', 'lehre_evaluieren/lehrbegleitendes_feedback/zwischenfeedback'],
+    sev: ['Schlussevaluation', 'lehre_evaluieren/standardisierte_evaluationen/schlussevaluation'],
+    elk: ['Evaluation der Leistungskontrolle', 'lehre_evaluieren/standardisierte_evaluationen/evaluation_der_leistungskontrolle'],
+    spe: ['Studienprogramme evaluieren', 'curriculum_entwickeln/studienprogramme_evaluieren'],
+    spw: ['Studienprogramme weiterentwickeln', 'curriculum_entwickeln/studienprogramme_weiterentwickeln'],
+    spn: ['Studienprogramme neu konzipieren', 'curriculum_entwickeln/studienprogramme_neu_konzipieren']
+  };
+  var PHASES = ['Lehre konzipieren', 'Lehre administrieren', 'Lehre durchführen', 'Prüfungen gestalten', 'Lehre evaluieren', 'Curriculum entwickeln'];
+  var THEMES = [
+    { name: 'KI in Lehre und Studium', page: 'https://claude.ai/artifact/8P9pjwKkuSAasGx7a1fXYr',
+      desc: 'Regeln, Tools und Prüfungsformen für generative KI in Lehrveranstaltungen und schriftlichen Arbeiten.',
+      subs: ['KI-Regeln für die Lehrveranstaltung', 'KI als Lernwerkzeug', 'Prüfen im KI-Zeitalter', 'Datenschutz und Urheberrecht'],
+      m: [['lo', 'koh'], ['lki', 'pla'], ['sch', 'fb'], ['pko', 'kir', 'mue'], [], ['spw']] },
+    { name: 'Digitale und hybride Lehre', page: 'https://claude.ai/artifact/C7ynuqYWVqp36MtPAo5Qw1',
+      desc: 'Onlinephasen, Videos und Lernplattformen so einsetzen, dass sie die Präsenzlehre sinnvoll ergänzen.',
+      subs: ['Flipped Classroom', 'Blended Learning', 'Lehr- und Lernvideos', 'E-Prüfungen'],
+      m: [['onl', 'bl', 'slk', 'mic', 'mob', 'ada', 'koh', 'pra'], ['pod', 'hoe', 'raum'], ['vid', 'xr', 'ver'], ['scp'], ['zfb'], ['spw']] },
+    { name: 'Aktivierende Lehre', page: null,
+      desc: 'Studierende in Vorlesung und Seminar zum Mitdenken, Diskutieren und Zusammenarbeiten bringen.',
+      subs: ['Aktivierung in Grossveranstaltungen', 'Kooperatives Lernen', 'Diskussionen moderieren'],
+      m: [['vor', 'kol', 'spi', 'wsh', 'tut'], [], ['est', 'vwa', 'wvm', 'ver', 'lvo', 'fol'], [], [], []] },
+    { name: 'Lernförderliches Prüfen und Feedback', page: null,
+      desc: 'Prüfungen und Rückmeldungen so gestalten, dass Studierende daraus für ihr Lernen etwas mitnehmen.',
+      subs: ['Formatives Assessment', 'Peer-Feedback', 'Kompetenzorientiertes Prüfen'],
+      m: [['tax', 'koh'], ['ein', 'rec'], ['fb', 'exa'], ['pko', 'lbw', 'mue', 'prp', 'scp', 'auf'], ['zev', 'zfb', 'elk'], ['spe']] },
+    { name: 'Praxis- und forschungsnahes Lernen', page: null,
+      desc: 'Lernen an realen Fällen, Projekten und Forschungsfragen, vom Laborpraktikum bis zum Service Learning.',
+      subs: ['Problem- und fallbasiertes Lernen', 'Projektbasiertes Lernen', 'Forschendes Lernen'],
+      m: [['for', 'pol', 'pse', 'exk', 'lab'], [], [], ['prp'], [], ['spn']] },
+    { name: 'Diversität, Inklusion und Barrierefreiheit', page: null,
+      desc: 'Lehre, Unterlagen und Prüfungen so planen, dass alle Studierenden die gleichen Chancen haben.',
+      subs: ['Diversitätssensible Lehre', 'Barrierefreie Unterlagen', 'Nachteilsausgleich'],
+      m: [['chg'], [], [], [], [], []] },
+    { name: 'Einstieg in die Lehre', page: null,
+      desc: 'Das Wichtigste für die ersten Semester als Dozentin oder Dozent: planen, starten, sich weiterbilden.',
+      subs: ['Lernziele und Constructive Alignment', 'Erste Sitzung und Lernklima', 'Weiterbildung und Lehrportfolio'],
+      m: [['lo', 'koh', 'tax', 'vor'], ['ksl', 'raum'], ['est', 'lvo', 'fol'], ['pko'], ['sev'], []] },
+    { name: 'Bildung für nachhaltige Entwicklung', page: null,
+      desc: 'Nachhaltigkeit im eigenen Fach aufgreifen und Kompetenzen für eine nachhaltige Zukunft fördern.',
+      subs: ['BNE-Kompetenzen', 'Nachhaltigkeit im Fach verankern', 'Transformative Lernformate'],
+      m: [[], [], [], [], [], []] }
+  ];
+  var MIN = 5;
+  var HINTS = {
+    themen: 'Alle Themen mit einem Satz dazu. Ein Klick auf den Titel öffnet die Themenseite.',
+    matrix: 'Wo jedes Thema im Lehrzyklus vorkommt. Ein Klick auf ein Thema, eine Phase oder einen Kreis zeigt die Seiten darunter.'
+  };
+  var sel = { t: 0, p: null, mode: 'theme' };
+  var maxCount = 0;
+  THEMES.forEach(function (t) { t.total = 0; t.m.forEach(function (c) { t.total += c.length; if (c.length > maxCount) maxCount = c.length; }); });
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function link(k) { var p = P[k]; return '<a href="' + J + p[1] + '/index_ger.html">' + esc(p[0]) + '</a>'; }
+  function size(n) { return Math.round(18 + (n / maxCount) * 22); }
+  function seiten(n) { return n === 1 ? '1 Seite' : n + ' Seiten'; }
+
+  /* Ansicht: Nach Thema (A und B) */
+  var B_THEMES = [
+    { name: 'Internationale Lehre', page: null, desc: 'In englischer Sprache und mit internationalen Gruppen unterrichten, auch gemeinsam mit Partnerhochschulen.' },
+    { name: 'Lernbegleitung und Wohlbefinden', page: null, desc: 'Studierende beim Planen und Reflektieren begleiten, Abschlussarbeiten betreuen und Belastungen ernst nehmen.' },
+    { name: 'Inter- und transdisziplinäre Lehre', page: null, desc: 'Mehrere Fächer in einer Lehrveranstaltung verbinden und mit Partnern aus der Praxis zusammenarbeiten.' },
+    { name: 'Zukunftskompetenzen', page: null, desc: 'Schreiben, kritisches Denken und den Umgang mit Daten gezielt im Studium fördern.' }
+  ];
+  function renderGroups() {
+    function list(arr) {
+      return '<ul class="tlist">' + arr.map(function (t) {
+        var title = t.page ? '<a class="tt" href="' + t.page + '">' + esc(t.name) + '</a>' : '<span class="tt">' + esc(t.name) + '</span><span class="soon">folgt</span>';
+        return '<li><div>' + title + '</div><p>' + esc(t.desc) + '</p></li>';
+      }).join('') + '</ul>';
+    }
+    document.getElementById('groups').innerHTML =
+      '<section class="group" aria-labelledby="gA"><h2 id="gA"><b>A</b>Kernthemen</h2>' + list(THEMES) + '</section>' +
+      '<section class="group" aria-labelledby="gB"><h2 id="gB"><b>B</b>Ergänzende Themen</h2>' + list(B_THEMES) + '</section>';
+  }
+
+  /* Ansicht: Themen × Journey */
+  function renderMatrix() {
+    var h = '<thead><tr><th class="corner" scope="col">Kernthema</th>';
+    PHASES.forEach(function (ph, i) { h += '<th scope="col"><button type="button" data-phase="' + i + '" aria-label="Phase ' + esc(ph) + ' zeigen">' + esc(ph).replace(' ', '<br>') + '</button></th>'; });
+    h += '<th scope="col" class="total">Gesamt</th></tr></thead><tbody>';
+    THEMES.forEach(function (t, ti) {
+      var thin = t.total < MIN;
+      var rowSel = (sel.mode !== 'phase' && sel.t === ti);
+      h += '<tr class="' + (rowSel ? 'is-sel ' : '') + (thin ? 'thinrow' : '') + '"><th scope="row"><button type="button" data-theme="' + ti + '"><span class="tname">' + esc(t.name) + '</span><span class="tstate' + (t.page ? ' draft' : '') + '">' + (t.page ? 'Themenseite' : 'in Vorbereitung') + '</span></button></th>';
+      t.m.forEach(function (c, pi) {
+        var n = c.length, isSel = rowSel && sel.p === pi;
+        h += '<td class="' + (isSel ? 'is-sel' : '') + '">';
+        if (n) { var s = size(n); h += '<button type="button" class="cell" data-theme="' + ti + '" data-cellphase="' + pi + '" aria-label="' + esc(t.name) + ', ' + esc(PHASES[pi]) + ': ' + seiten(n) + '"><span class="dot" style="width:' + s + 'px;height:' + s + 'px">' + n + '</span></button>'; }
+        else { h += '<button type="button" class="cell" disabled aria-label="' + esc(t.name) + ', ' + esc(PHASES[pi]) + ': keine Seite"><span class="empty"></span></button>'; }
+        h += '</td>';
+      });
+      h += '<td class="total' + (thin ? ' thin' : '') + '">' + t.total + '</td></tr>';
+    });
+    h += '</tbody><tfoot><tr><th scope="row">Themen mit Seiten</th>';
+    PHASES.forEach(function (ph, pi) { var k = 0; THEMES.forEach(function (t) { if (t.m[pi].length) k++; }); h += '<td>' + k + ' von ' + THEMES.length + '</td>'; });
+    h += '<td></td></tr></tfoot>';
+    document.getElementById('matrix').innerHTML = h;
+  }
+
+  function renderTheme() {
+    var t = THEMES[sel.t];
+    var h = '<div class="detail-head"><h2>' + esc(t.name) + '</h2><span class="meta">' + seiten(t.total) + ' in der Journey' + (t.page ? ' · <a href="' + t.page + '">Zur Themenseite →</a>' : ' · Themenseite in Vorbereitung') + '</span></div>';
+    if (t.total < MIN) h += '<p class="warnline">Weniger als ' + MIN + ' bestehende Seiten. Für eine eigene Themenseite braucht es zuerst mehr Inhalt.</p>';
+    h += '<div class="band">';
+    t.m.forEach(function (c, pi) {
+      h += '<div class="phase' + (sel.p === pi ? ' is-sel' : '') + '"><h3><span class="step">' + (pi + 1) + '</span>' + esc(PHASES[pi]) + '</h3>';
+      h += c.length ? '<ul>' + c.map(function (k) { return '<li>' + link(k) + '</li>'; }).join('') + '</ul>' : '<span class="none">keine Seite</span>';
+      h += '</div>';
+    });
+    return h + '</div>';
+  }
+
+  function renderPhase() {
+    var pi = sel.p;
+    var h = '<div class="detail-head"><h2>' + (pi + 1) + ' · ' + esc(PHASES[pi]) + '</h2><span class="meta">Welche Kernthemen in dieser Phase Seiten haben</span></div><div class="phaselist">';
+    THEMES.forEach(function (t) {
+      var c = t.m[pi];
+      h += '<div class="row"><strong>' + esc(t.name) + '</strong>' + (c.length ? '<ul>' + c.map(function (k) { return '<li>' + link(k) + '</li>'; }).join('') + '</ul>' : '<span class="none">keine Seite</span>') + '</div>';
+    });
+    return h + '</div>';
+  }
+
+  function renderDetail() {
+    renderMatrix();
+    document.getElementById('detail').innerHTML = sel.mode === 'phase' ? renderPhase() : renderTheme();
+  }
+
+  /* Umschalter mit #themen / #matrix */
+  function setView(v, push) {
+    if (v !== 'matrix') v = 'themen';
+    document.getElementById('view-themen').hidden = v !== 'themen';
+    document.getElementById('view-matrix').hidden = v !== 'matrix';
+    document.querySelectorAll('.tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-view') === v ? 'true' : 'false'); });
+    document.getElementById('hint').textContent = HINTS[v];
+    if (push && location.hash !== '#' + v) { try { history.replaceState(null, '', '#' + v); } catch (e) { location.hash = v; } }
+  }
+
+  document.querySelector('.tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-view]');
+    if (b) setView(b.getAttribute('data-view'), true);
+  });
+  document.querySelector('.tabs').addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var next = document.getElementById('tab-matrix').getAttribute('aria-selected') === 'true' ? 'themen' : 'matrix';
+    setView(next, true);
+    document.getElementById('tab-' + next).focus();
+  });
+
+  document.getElementById('matrix').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || b.disabled) return;
+    if (b.hasAttribute('data-phase')) { sel = { t: sel.t, p: +b.getAttribute('data-phase'), mode: 'phase' }; }
+    else if (b.hasAttribute('data-cellphase')) { sel = { t: +b.getAttribute('data-theme'), p: +b.getAttribute('data-cellphase'), mode: 'theme' }; }
+    else if (b.hasAttribute('data-theme')) { sel = { t: +b.getAttribute('data-theme'), p: null, mode: 'theme' }; }
+    renderDetail();
+  });
+
+  window.addEventListener('hashchange', function () { setView(location.hash.slice(1), false); });
+
+  renderGroups();
+  renderDetail();
+  setView(location.hash.slice(1), false);
+})();
+</script>
