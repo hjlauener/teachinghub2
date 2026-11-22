@@ -9,6 +9,8 @@ const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Nur vom Importer genutzt – nicht in den Server-Bundle packen
+  serverExternalPackages: ['jsdom'],
   poweredByHeader: false,
   // Sicherheits-Header (Entscheidung 9.1); CSP folgt, sobald externe Einbettungen feststehen
   async headers() {

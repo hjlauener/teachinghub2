@@ -6,9 +6,21 @@ import { getPayload } from 'payload'
 
 import config from '@payload-config'
 
-import { runInitialImport } from '../../src/migration/run'
+import { emptyReport, loadSources, prepareContext, reconvertImported, runInitialImport } from '../../src/migration/run'
 
 const payload = await getPayload({ config })
+
+// LEGACY_RECONVERT=1: bereits importierte Seiten mit dem aktuellen Konverter neu umwandeln
+if (process.env.LEGACY_RECONVERT === '1') {
+  const sources = await loadSources()
+  const report = emptyReport()
+  const ctx = await prepareContext(payload, sources, report, (msg) => payload.logger.info(msg), { downloadAssets: false })
+  const updated = await reconvertImported(payload, sources, ctx, report)
+  payload.logger.info(`Neu umgewandelt: ${updated} Seiten, Fehler: ${report.errors.length}`)
+  for (const e of report.errors.slice(0, 20)) payload.logger.warn(`Fehler ${e.path}: ${e.error}`)
+  process.exit(report.errors.length > 0 ? 1 : 0)
+}
+
 const started = Date.now()
 const report = await runInitialImport(payload, (msg) => payload.logger.info(msg))
 

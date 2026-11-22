@@ -1,4 +1,9 @@
-import { BlocksFeature, EXPERIMENTAL_TableFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import {
+  BlocksFeature,
+  EXPERIMENTAL_TableFeature,
+  type FeatureProviderServer,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
 import type { Block } from 'payload'
 
 import { l } from './admin'
@@ -16,13 +21,12 @@ export const VideoEmbedBlock: Block = {
   ],
 }
 
-/**
- * Standard-Editor: Payload-Standard plus Tabellen (536 Tabellen auf der Altsite) und Video-Einbettungen (59).
- */
-export const editor = lexicalEditor({
-  features: ({ defaultFeatures }) => [
-    ...defaultFeatures,
-    EXPERIMENTAL_TableFeature(),
-    BlocksFeature({ blocks: [VideoEmbedBlock] }),
-  ],
-})
+/** Editor-Features: Payload-Standard plus Tabellen (536 auf der Altsite) und Video-Einbettungen (59). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const editorFeatures = ({ defaultFeatures }: { defaultFeatures: FeatureProviderServer<any, any, any>[] }) => [
+  ...defaultFeatures,
+  EXPERIMENTAL_TableFeature(),
+  BlocksFeature({ blocks: [VideoEmbedBlock] }),
+]
+
+export const editor = lexicalEditor({ features: editorFeatures })

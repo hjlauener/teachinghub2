@@ -207,7 +207,8 @@ export function extractPage(html: string, url: string): ExtractedDoc {
       // Rubrikseiten: Themen-Tabs werden in Phase 3 aus den Zuordnungen erzeugt, nicht kopiert
       if (classified.pageKind === 'rubric') continue
       for (const pane of col.querySelectorAll('.panel')) {
-        const label = text(pane.querySelector('.panel-body h2.visible-print, .panel-title')?.textContent)
+        const label =
+          text(pane.querySelector('.panel-body h2.visible-print')?.textContent) || text(pane.querySelector('.panel-title')?.textContent)
         const body = pane.querySelector('.panel-body')
         if (!body) continue
         const htmlPart = cleanHtml(body, url, assets)

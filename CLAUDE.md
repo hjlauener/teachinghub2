@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phase 0 (Setup) gemergt; **Phase 1 (Inhaltsmodell)** auf Branch `phase-1-inhaltsmodell`; nächste Phase: 2 Migration.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–1 gemergt; **Phase 2 (Migration)** auf Branch `phase-2-migration`; nächste Phase: 3 Öffentliche Site.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -28,3 +28,9 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 ## Arbeitsweise
 - Offene Fragen mit dem Skill `grill-me-teachinghub` klären: eine Frage pro Nachricht, immer mit Empfehlung, Antworten in `docs/entscheidungen.md` protokollieren.
 - Sprache der Dokumente: Deutsch (Schweizer Schreibweise, kein ß).
+
+## Migration
+- Rohdaten der Altsite nur in `data/legacy/` (gitignored), nie committen. Tests nutzen künstliche Seiten in `tests/fixtures/legacy/`.
+- Importer verantwortet nur die Felder in `src/migration/fields.ts` (`importedFields`); alles andere pflegt die Redaktion.
+- Konverter muss dieselben Editor-Features nutzen wie die Website (`src/lib/editor.ts`), sonst gehen Tabellen verloren.
+- Hashes immer über `hashValue` (normalisiert null/fehlend, IDs, Schlüsselreihenfolge).

@@ -3,6 +3,8 @@ import { JSDOM } from 'jsdom'
 import { randomUUID } from 'crypto'
 import type { Payload } from 'payload'
 
+import { editorFeatures } from '@/lib/editor'
+
 /** Mediathek-Eintrag einer übernommenen Altsite-Datei. */
 export type MediaRef = { id: number; url: string }
 
@@ -16,7 +18,8 @@ const VIDEO_MARKER = /^§§VIDEO§§(.*?)§§(.*?)§§$/
  * Bilder werden mit Mediathek-Einträgen verknüpft, Dokument-Links auf die Mediathek umgeschrieben.
  */
 export async function createHtmlConverter(payload: Payload) {
-  const editorConfig = await editorConfigFactory.default({ config: payload.config })
+  // Gleiche Features wie der Editor der Website – sonst gingen Tabellen verloren
+  const editorConfig = await editorConfigFactory.fromFeatures({ config: payload.config, features: editorFeatures })
 
   return function htmlToLexical(html: string, media: Map<string, MediaRef>): LexicalState | null {
     if (!html || !html.replace(/<[^>]+>/g, '').trim() && !/<img|§§VIDEO/.test(html)) return null

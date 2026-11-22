@@ -3,8 +3,6 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    CREATE TYPE "public"."enum_legacy_snapshots_target_collection" AS ENUM('articles', 'methods', 'tools', 'pages', 'news');
-  ALTER TYPE "public"."enum_news_link_link_type" ADD VALUE 'none' BEFORE 'internal';
-  ALTER TYPE "public"."enum__news_v_version_link_link_type" ADD VALUE 'none' BEFORE 'internal';
   CREATE TABLE "methods_alternatives" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
@@ -49,7 +47,19 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
+  -- Enum neu anlegen statt ADD VALUE: ein neuer Wert darf in derselben Transaktion nicht verwendet werden
+  ALTER TABLE "news" ALTER COLUMN "link_link_type" DROP DEFAULT;
+  ALTER TABLE "news" ALTER COLUMN "link_link_type" SET DATA TYPE text;
+  DROP TYPE "public"."enum_news_link_link_type";
+  CREATE TYPE "public"."enum_news_link_link_type" AS ENUM('none', 'internal', 'external');
+  ALTER TABLE "news" ALTER COLUMN "link_link_type" SET DATA TYPE "public"."enum_news_link_link_type" USING "link_link_type"::"public"."enum_news_link_link_type";
   ALTER TABLE "news" ALTER COLUMN "link_link_type" SET DEFAULT 'none';
+  -- Enum neu anlegen statt ADD VALUE: ein neuer Wert darf in derselben Transaktion nicht verwendet werden
+  ALTER TABLE "_news_v" ALTER COLUMN "version_link_link_type" DROP DEFAULT;
+  ALTER TABLE "_news_v" ALTER COLUMN "version_link_link_type" SET DATA TYPE text;
+  DROP TYPE "public"."enum__news_v_version_link_link_type";
+  CREATE TYPE "public"."enum__news_v_version_link_link_type" AS ENUM('none', 'internal', 'external');
+  ALTER TABLE "_news_v" ALTER COLUMN "version_link_link_type" SET DATA TYPE "public"."enum__news_v_version_link_link_type" USING "version_link_link_type"::"public"."enum__news_v_version_link_link_type";
   ALTER TABLE "_news_v" ALTER COLUMN "version_link_link_type" SET DEFAULT 'none';
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "legacy_snapshots_id" integer;
   ALTER TABLE "methods_alternatives" ADD CONSTRAINT "methods_alternatives_method_id_methods_id_fk" FOREIGN KEY ("method_id") REFERENCES "public"."methods"("id") ON DELETE set null ON UPDATE no action;

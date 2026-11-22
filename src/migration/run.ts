@@ -2,12 +2,21 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import type { Payload } from 'payload'
 
-import { buildData, loadLookups, teaserNewsData } from './build'
+import { buildData, loadLookups, type Lookups, teaserNewsData } from './build'
 import { METHODS_CSV_FILE, PAGES_DIR, SEARCH_FILE } from './config'
 import { readManifest } from './crawl'
-import { type ExtractedDoc, extractHomeTeasers, extractPage, parseMethodsCsv, parseSearchIndex } from './extract'
-import { fieldHashes, type ImportCollection } from './fields'
-import { createHtmlConverter } from './lexical'
+import {
+  type ExtractedDoc,
+  extractHomeTeasers,
+  extractPage,
+  type HomeTeaser,
+  type MethodCsvRow,
+  parseMethodsCsv,
+  parseSearchIndex,
+  type SearchTag,
+} from './extract'
+import { fieldHashes, hashValue, type ImportCollection, importedFields, locallyModified } from './fields'
+import { createHtmlConverter, type LexicalState, type MediaRef } from './lexical'
 import { importAssets } from './media'
 
 export type ImportReport = {
@@ -19,31 +28,60 @@ export type ImportReport = {
   errors: { path: string; error: string }[]
 }
 
-const ORDER: ImportCollection[] = ['pages', 'articles', 'tools', 'methods', 'news']
+export const emptyReport = (): ImportReport => ({ created: {}, skipped: 0, teaserNews: 0, warnings: [], failedAssets: [], errors: [] })
 
-/** Alle Seiten der letzten Crawl-Daten extrahieren. */
-export async function extractAll(): Promise<{ docs: ExtractedDoc[]; homeHtml: string; homeUrl: string }> {
-  const manifest = await readManifest()
-  const docs: ExtractedDoc[] = []
-  let homeHtml = ''
-  let homeUrl = ''
-  for (const page of manifest.pages) {
-    const html = await fs.readFile(path.join(PAGES_DIR, page.file), 'utf-8')
-    if (page.path === '/') {
-      homeHtml = html
-      homeUrl = page.url
-    }
-    docs.push(extractPage(html, page.url))
-  }
-  return { docs, homeHtml, homeUrl }
+export type Sources = { docs: ExtractedDoc[]; teasers: HomeTeaser[]; search: Map<string, SearchTag[]>; csv: MethodCsvRow[] }
+
+export type ImportContext = {
+  lookups: Lookups
+  media: Map<string, MediaRef>
+  toLexical: (html: string, media: Map<string, MediaRef>) => LexicalState | null
 }
 
-/** Speichert den Import-Stand (Basis für den Delta-Abgleich). */
+const ORDER: ImportCollection[] = ['pages', 'articles', 'tools', 'methods', 'news']
+
+/** Rohdaten des letzten Crawls von der Festplatte lesen und extrahieren. */
+export async function loadSources(): Promise<Sources> {
+  const manifest = await readManifest()
+  const docs: ExtractedDoc[] = []
+  let teasers: HomeTeaser[] = []
+  for (const page of manifest.pages) {
+    const html = await fs.readFile(path.join(PAGES_DIR, page.file), 'utf-8')
+    if (page.path === '/') teasers = extractHomeTeasers(html, page.url)
+    docs.push(extractPage(html, page.url))
+  }
+  return {
+    docs,
+    teasers,
+    search: parseSearchIndex(await fs.readFile(SEARCH_FILE, 'utf-8')),
+    csv: parseMethodsCsv(await fs.readFile(METHODS_CSV_FILE, 'utf-8')),
+  }
+}
+
+/** Nachschlagetabellen, Mediathek (lädt fehlende Dateien) und HTML-Konverter. */
+export async function prepareContext(
+  payload: Payload,
+  sources: Sources,
+  report: ImportReport,
+  log: (msg: string) => void = () => undefined,
+  options: { downloadAssets?: boolean } = {},
+): Promise<ImportContext> {
+  const lookups = await loadLookups(payload, sources.search, sources.csv, sources.teasers)
+  const assets = options.downloadAssets === false
+    ? []
+    : [...sources.docs.flatMap((d) => d.assets), ...sources.teasers.filter((t) => t.image).map((t) => ({ url: t.image as string, alt: '' }))]
+  const { media, failed } = await importAssets(payload, assets, log)
+  report.failedAssets.push(...failed)
+  return { lookups, media, toLexical: await createHtmlConverter(payload) }
+}
+
+/** Speichert den Import-Stand (Basis für den Delta-Abgleich). `hashes` überschreibt einzelne Feld-Hashes. */
 export async function writeSnapshot(
   payload: Payload,
-  doc: ExtractedDoc,
+  doc: Pick<ExtractedDoc, 'path' | 'legacyUrl' | 'legacyDate' | 'hash'>,
   collection: ImportCollection,
   saved: Record<string, unknown> & { id: number },
+  hashes: Record<string, string> = {},
 ) {
   const data = {
     path: doc.path,
@@ -54,76 +92,52 @@ export async function writeSnapshot(
     hash: doc.hash,
     importedAt: new Date().toISOString(),
     data: saved,
-    fieldHashes: fieldHashes(collection, saved),
+    fieldHashes: { ...fieldHashes(collection, saved), ...hashes },
   }
   const existing = await payload.find({ collection: 'legacy-snapshots', where: { path: { equals: doc.path } }, limit: 1, overrideAccess: true })
   if (existing.docs[0]) await payload.update({ collection: 'legacy-snapshots', id: existing.docs[0].id, data, overrideAccess: true })
   else await payload.create({ collection: 'legacy-snapshots', data, overrideAccess: true })
 }
 
-/**
- * Erstimport (Plan Abschnitt 6, Schritt 1–2). Bereits importierte Pfade werden übersprungen –
- * spätere Änderungen laufen über den Delta-Abgleich und die Migrations-Inbox.
- */
-export async function runInitialImport(payload: Payload, log: (msg: string) => void = () => undefined): Promise<ImportReport> {
-  const report: ImportReport = { created: {}, skipped: 0, teaserNews: 0, warnings: [], failedAssets: [], errors: [] }
-  const { docs, homeHtml, homeUrl } = await extractAll()
-  const teasers = homeHtml ? extractHomeTeasers(homeHtml, homeUrl) : []
-  const search = parseSearchIndex(await fs.readFile(SEARCH_FILE, 'utf-8'))
-  const csv = parseMethodsCsv(await fs.readFile(METHODS_CSV_FILE, 'utf-8'))
-  const lookups = await loadLookups(payload, search, csv, teasers)
-  log(`${docs.length} Seiten extrahiert, ${teasers.length} Startseiten-Teaser`)
+/** Legt ein extrahiertes Dokument an und speichert den Import-Stand. */
+export async function createFromLegacy(payload: Payload, doc: ExtractedDoc, ctx: ImportContext, report: ImportReport) {
+  const built = buildData(doc, ctx.lookups, ctx.toLexical, ctx.media)
+  built.warnings.forEach((message) => report.warnings.push({ path: doc.path, message }))
+  const saved = (await payload.create({
+    collection: built.collection,
+    data: built.data as never,
+    locale: 'de',
+    depth: 0,
+    overrideAccess: true,
+  })) as unknown as Record<string, unknown> & { id: number }
+  await writeSnapshot(payload, doc, built.collection, saved)
+  report.created[built.collection] = (report.created[built.collection] ?? 0) + 1
+  return { collection: built.collection, id: saved.id }
+}
 
-  const assets = [
-    ...docs.flatMap((d) => d.assets),
-    ...teasers.filter((t) => t.image).map((t) => ({ url: t.image as string, alt: '' })),
-  ]
-  const { media, failed } = await importAssets(payload, assets, log)
-  report.failedAssets = failed
-  log(`Mediathek: ${media.size} Dateien verfügbar, ${failed.length} fehlgeschlagen`)
-
-  const toLexical = await createHtmlConverter(payload)
+/** Pfad → Dokument aller importierten Seiten. */
+export async function importedIndex(payload: Payload) {
   const snapshots = await payload.find({ collection: 'legacy-snapshots', limit: 0, pagination: false, depth: 0, overrideAccess: true })
-  const known = new Set(snapshots.docs.map((s) => s.path))
-  const snapshotData = new Map(snapshots.docs.map((s) => [s.path, (s.data ?? {}) as Record<string, unknown>]))
-  const idByPath = new Map<string, { collection: ImportCollection; id: number }>(
-    snapshots.docs.map((s) => [s.path, { collection: s.targetCollection as ImportCollection, id: s.docId as number }]),
-  )
-
-  // Durchgang 1: Dokumente anlegen
-  for (const collection of ORDER) {
-    for (const doc of docs.filter((d) => d.collection === collection)) {
-      if (known.has(doc.path)) {
-        report.skipped++
-        continue
-      }
-      try {
-        const built = buildData(doc, lookups, toLexical, media)
-        built.warnings.forEach((message) => report.warnings.push({ path: doc.path, message }))
-        const saved = (await payload.create({
-          collection: built.collection,
-          data: built.data as never,
-          locale: 'de',
-          depth: 0,
-          overrideAccess: true,
-        })) as unknown as Record<string, unknown> & { id: number }
-        await writeSnapshot(payload, doc, built.collection, saved)
-        idByPath.set(doc.path, { collection: built.collection, id: saved.id })
-        report.created[collection] = (report.created[collection] ?? 0) + 1
-      } catch (error) {
-        report.errors.push({ path: doc.path, error: errorMessage(error) })
-      }
-    }
-    log(`${collection}: ${report.created[collection] ?? 0} angelegt`)
+  return {
+    snapshots: new Map(snapshots.docs.map((s) => [s.path, s])),
+    idByPath: new Map<string, { collection: ImportCollection; id: number }>(
+      snapshots.docs.map((s) => [s.path, { collection: s.targetCollection as ImportCollection, id: s.docId as number }]),
+    ),
   }
+}
 
-  // Durchgang 2: Eltern-Seiten und alternative Methoden verknüpfen – für neue Dokumente und für
-  // ältere, deren Import-Stand die Verknüpfung noch nicht enthält (z. B. nach abgebrochenem Lauf)
+/**
+ * Eltern-Seiten und alternative Methoden verknüpfen – für neue Dokumente und für ältere,
+ * deren Import-Stand die Verknüpfung noch nicht enthält (z. B. nach abgebrochenem Lauf).
+ */
+export async function linkRelations(payload: Payload, docs: ExtractedDoc[], report: ImportReport) {
+  const { snapshots, idByPath } = await importedIndex(payload)
   for (const doc of docs) {
     const target = idByPath.get(doc.path)
     if (!target) continue
-    const base = known.has(doc.path) ? snapshotData.get(doc.path) : undefined
-    const missing = (field: string) => !base || base[field] === null || base[field] === undefined || (Array.isArray(base[field]) && (base[field] as unknown[]).length === 0)
+    const base = (snapshots.get(doc.path)?.data ?? {}) as Record<string, unknown>
+    const missing = (field: string) =>
+      base[field] === null || base[field] === undefined || (Array.isArray(base[field]) && (base[field] as unknown[]).length === 0)
     const data: Record<string, unknown> = {}
     if (doc.parentPath && (target.collection === 'articles' || target.collection === 'tools') && missing('parent')) {
       const parent = idByPath.get(doc.parentPath)
@@ -149,17 +163,38 @@ export async function runInitialImport(payload: Payload, log: (msg: string) => v
       report.errors.push({ path: doc.path, error: `Verknüpfung: ${errorMessage(error)}` })
     }
   }
+}
+
+/** Erstimport: legt alle noch nicht importierten Seiten an (Plan Abschnitt 6, Schritt 1–2). */
+export async function importDocs(payload: Payload, sources: Sources, ctx: ImportContext, report: ImportReport, log: (msg: string) => void = () => undefined) {
+  const { snapshots, idByPath } = await importedIndex(payload)
+  for (const collection of ORDER) {
+    for (const doc of sources.docs.filter((d) => d.collection === collection)) {
+      if (snapshots.has(doc.path)) {
+        report.skipped++
+        continue
+      }
+      try {
+        idByPath.set(doc.path, await createFromLegacy(payload, doc, ctx, report))
+      } catch (error) {
+        report.errors.push({ path: doc.path, error: errorMessage(error) })
+      }
+    }
+    log(`${collection}: ${report.created[collection] ?? 0} angelegt`)
+  }
+  await linkRelations(payload, sources.docs, report)
 
   // Startseiten-Teaser ohne eigene News-Seite → News mit Link
-  const newsPaths = new Set(docs.filter((d) => d.collection === 'news').map((d) => d.path))
+  const newsPaths = new Set(sources.docs.filter((d) => d.collection === 'news').map((d) => d.path))
   const existingNews = await payload.find({ collection: 'news', limit: 0, pagination: false, depth: 0, locale: 'de', overrideAccess: true })
   const newsTitles = new Set(existingNews.docs.map((n) => n.title))
-  for (const teaser of teasers) {
+  const { idByPath: ids } = await importedIndex(payload)
+  for (const teaser of sources.teasers) {
     if (newsPaths.has(teaser.href) || newsTitles.has(teaser.title)) continue
-    const data = teaserNewsData(teaser, media)
-    const internal = teaser.href.startsWith('/') ? idByPath.get(teaser.href) : undefined
+    const data = teaserNewsData(teaser, ctx.media)
     const link = data.link as Record<string, unknown>
     if (teaser.href.startsWith('/')) {
+      const internal = ids.get(teaser.href)
       if (internal) link.internal = { relationTo: internal.collection, value: internal.id }
       else {
         link.linkType = 'external'
@@ -173,6 +208,15 @@ export async function runInitialImport(payload: Payload, log: (msg: string) => v
       report.errors.push({ path: `Teaser „${teaser.title}“`, error: errorMessage(error) })
     }
   }
+}
+
+export async function runInitialImport(payload: Payload, log: (msg: string) => void = () => undefined): Promise<ImportReport> {
+  const report = emptyReport()
+  const sources = await loadSources()
+  log(`${sources.docs.length} Seiten extrahiert, ${sources.teasers.length} Startseiten-Teaser`)
+  const ctx = await prepareContext(payload, sources, report, log)
+  log(`Mediathek: ${ctx.media.size} Dateien verfügbar, ${report.failedAssets.length} fehlgeschlagen`)
+  await importDocs(payload, sources, ctx, report, log)
   return report
 }
 
@@ -180,4 +224,35 @@ export function errorMessage(error: unknown): string {
   const data = (error as { data?: { errors?: { path?: string; message?: string }[] } })?.data
   if (data?.errors?.length) return data.errors.map((e) => `${e.path}: ${e.message}`).join('; ')
   return error instanceof Error ? error.message : String(error)
+}
+
+/**
+ * Bereits importierte Seiten mit dem aktuellen Konverter neu umwandeln (z. B. nach Verbesserungen).
+ * Lokal geänderte Felder bleiben unangetastet; die Altsite-Rohdaten müssen unverändert sein.
+ */
+export async function reconvertImported(payload: Payload, sources: Sources, ctx: ImportContext, report: ImportReport) {
+  const { snapshots } = await importedIndex(payload)
+  let updated = 0
+  for (const doc of sources.docs) {
+    const snapshot = snapshots.get(doc.path)
+    if (!snapshot || snapshot.hash !== doc.hash) continue
+    const collection = snapshot.targetCollection as ImportCollection
+    try {
+      const current = (await payload.findByID({ collection, id: snapshot.docId as number, depth: 0, locale: 'de', draft: true, overrideAccess: true })) as unknown as Record<string, unknown>
+      const baseHashes = (snapshot.fieldHashes ?? {}) as Record<string, string>
+      const local = locallyModified(collection, current, baseHashes)
+      const built = buildData(doc, ctx.lookups, ctx.toLexical, ctx.media)
+      // Relationen (Alternativen, Eltern) unverändert lassen – der Konverter betrifft nur Texte
+      const fields = importedFields[collection].filter((f) => f !== 'alternatives' && !local.includes(f))
+      const data = Object.fromEntries(fields.filter((f) => hashValue(built.data[f]) !== hashValue(current[f])).map((f) => [f, built.data[f]]))
+      if (Object.keys(data).length === 0) continue
+      const saved = (await payload.update({ collection, id: snapshot.docId as number, data: data as never, locale: 'de', depth: 0, overrideAccess: true })) as unknown as Record<string, unknown> & { id: number }
+      // Basis für lokal geänderte Felder unverändert lassen
+      await writeSnapshot(payload, doc, collection, saved, Object.fromEntries(local.map((f) => [f, baseHashes[f]])))
+      updated++
+    } catch (error) {
+      report.errors.push({ path: doc.path, error: `Neu umwandeln: ${errorMessage(error)}` })
+    }
+  }
+  return updated
 }

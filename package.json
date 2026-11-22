@@ -22,7 +22,9 @@
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "legacy:crawl": "tsx scripts/migration/crawl.ts",
-    "legacy:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import.ts"
+    "legacy:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import.ts",
+    "legacy:delta": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/delta.ts",
+    "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.94.1",
@@ -34,6 +36,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
+    "jsdom": "28.0.0",
     "next": "16.4.6",
     "next-intl": "4.15.3",
     "payload": "3.94.1",
@@ -52,7 +55,6 @@
     "@vitejs/plugin-react": "4.5.2",
     "eslint": "^9.16.0",
     "eslint-config-next": "16.4.6",
-    "jsdom": "28.0.0",
     "prettier": "^3.4.2",
     "tsx": "4.23.15",
     "typescript": "5.7.3",
