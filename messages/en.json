@@ -1,0 +1,47 @@
+{
+  "Site": {
+    "title": "Teaching Hub",
+    "university": "University of Bern",
+    "description": "Your hub for good teaching at the University of Bern",
+    "skipToContent": "Skip to content",
+    "prototypeNotice": "Prototype – not an official website of the University of Bern",
+    "logoAlt": "University of Bern – to the portal home page"
+  },
+  "Nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "journey": "Teaching Journey",
+    "topics": "Topics",
+    "methods": "Method Compass",
+    "search": "Search",
+    "about": "About us",
+    "portal": "UniBE Portal"
+  },
+  "Language": {
+    "label": "Language",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français"
+  },
+  "Home": {
+    "heading": "Your hub for good teaching at the University of Bern",
+    "lead": "The Teaching Hub supports you in designing and administering your teaching. Find foundations, methods, tools, advice and funding opportunities – quickly and matched to your current concern.",
+    "ctaJourney": "Start the journey",
+    "ctaTopics": "Explore topics",
+    "ctaSearch": "Search content"
+  },
+  "Placeholder": {
+    "heading": "This page is in preparation",
+    "text": "The content will be added in a later phase of the prototype.",
+    "back": "Back to home"
+  },
+  "Footer": {
+    "contactHeading": "Contact",
+    "contactName": "Teaching Hub editorial team | Vice-Rectorate Teaching",
+    "contactStreet": "Hochschulstrasse 6",
+    "contactCity": "3012 Bern",
+    "legal": "Legal notice",
+    "imprint": "Imprint",
+    "portal": "University of Bern portal"
+  }
+}

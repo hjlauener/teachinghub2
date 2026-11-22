@@ -1,0 +1,16 @@
+# Abhängigkeiten automatisch aktuell halten (Entscheidung 9.1)
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      payload:
+        patterns: ['payload', '@payloadcms/*']
+      next:
+        patterns: ['next', 'eslint-config-next', 'react', 'react-dom', '@types/react*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

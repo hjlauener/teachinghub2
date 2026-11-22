@@ -1,0 +1,47 @@
+{
+  "Site": {
+    "title": "Teaching Hub",
+    "university": "Université de Berne",
+    "description": "Votre hub pour un bon enseignement à l'Université de Berne",
+    "skipToContent": "Aller au contenu",
+    "prototypeNotice": "Prototype – pas un site officiel de l'Université de Berne",
+    "logoAlt": "Université de Berne – vers la page d'accueil du portail"
+  },
+  "Nav": {
+    "label": "Navigation principale",
+    "home": "Accueil",
+    "journey": "Parcours d'enseignement",
+    "topics": "Thèmes",
+    "methods": "Boussole des méthodes",
+    "search": "Recherche",
+    "about": "À propos",
+    "portal": "Portail UniBE"
+  },
+  "Language": {
+    "label": "Choix de la langue",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français"
+  },
+  "Home": {
+    "heading": "Votre hub pour un bon enseignement à l'Université de Berne",
+    "lead": "Le Teaching Hub vous accompagne dans la conception et l'administration de votre enseignement. Trouvez des bases, des méthodes, des outils ainsi que des offres de conseil et de soutien, rapidement et selon votre besoin du moment.",
+    "ctaJourney": "Commencer le parcours",
+    "ctaTopics": "Découvrir les thèmes",
+    "ctaSearch": "Rechercher des contenus"
+  },
+  "Placeholder": {
+    "heading": "Cette page est en préparation",
+    "text": "Les contenus seront repris dans une phase ultérieure du prototype.",
+    "back": "Retour à l'accueil"
+  },
+  "Footer": {
+    "contactHeading": "Contact",
+    "contactName": "Rédaction du Teaching Hub | Vice-rectorat Enseignement",
+    "contactStreet": "Hochschulstrasse 6",
+    "contactCity": "3012 Berne",
+    "legal": "Mentions légales",
+    "imprint": "Impressum",
+    "portal": "Portail de l'Université de Berne"
+  }
+}

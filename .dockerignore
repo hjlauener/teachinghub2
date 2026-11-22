@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env
+.env.*
+docs
+media
+test-results
+playwright-report

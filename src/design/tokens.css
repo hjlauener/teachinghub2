@@ -1,0 +1,86 @@
+/*
+ * UniBE-CD als Design-Tokens (Entscheidung 1.3).
+ * Werte aus dem Portal-Theme 2022 von teachinghub.unibe.ch (main.min.css, Stand 22.11.2026).
+ * Bei einer Übergabe wird nur diese Datei gegen die offiziellen Tokens getauscht.
+ *
+ * Schrift (Entscheidung 1.3a): Die Hausschrift „Frutiger Neue“ ist lizenzpflichtig und wird
+ * nicht mitgeliefert. Sie wird nur genutzt, wenn sie lokal installiert ist; sonst Arial/Helvetica –
+ * dieselbe Ersatzschrift, die das UniBE-Portal selbst angibt.
+ */
+:root {
+  /* Farben */
+  --color-red: #d6002b;
+  --color-red-dark: #bc0026;
+  --color-red-logo: #ff0033;
+  --color-red-background: #fcf1f3;
+  --color-black: #121212;
+  --color-anthrazit: #262626;
+  --color-grey-dark: #464646;
+  --color-grey: #666666;
+  --color-grey-mid-darker: #999999;
+  --color-grey-mid: #dbdbdb;
+  --color-grey-light: #e5e5e5;
+  --color-grey-very-light: #f5f5f5;
+  --color-white: #ffffff;
+  --color-link: #0074c4;
+  --color-link-underline: #bfdcf0;
+  --color-blue: #1d83c7;
+  --color-blue-dark: #074f81;
+  --color-blue-background: #eff5f9;
+  --color-yellow: #ffad00;
+  --color-yellow-dark: #b15400;
+  --color-yellow-background: #fdf8ee;
+  --color-green: #11922d;
+  --color-green-dark: #0e7f27;
+  --color-green-background: #f0f6f1;
+
+  /* Semantische Rollen */
+  --color-text: var(--color-black);
+  --color-text-muted: var(--color-grey);
+  --color-background: var(--color-white);
+  --color-surface: var(--color-grey-very-light);
+  --color-border: var(--color-grey-mid);
+  --color-accent: var(--color-red);
+  --color-accent-hover: var(--color-red-dark);
+  --color-focus: var(--color-link);
+
+  /* Schrift */
+  --font-family-regular: 'FrutigerNeueLTW06-Regular', 'Frutiger Neue', Arial, Helvetica, sans-serif;
+  --font-family-bold: 'FrutigerNeueLTW06-Bold', 'Frutiger Neue', Arial, Helvetica, sans-serif;
+  --font-family-light: 'FrutigerNeueLTW06-Light', 'Frutiger Neue', Arial, Helvetica, sans-serif;
+  --font-size-12: 12px;
+  --font-size-15: 15px;
+  --font-size-18: 18px;
+  --font-size-24: 24px;
+  --font-size-27: 27px;
+  --font-size-33: 33px;
+  --line-height-body: 1.55;
+  --line-height-heading: 1.2;
+
+  /* Abstände (UniBE: 3er-Raster) */
+  --space-3: 3px;
+  --space-6: 6px;
+  --space-9: 9px;
+  --space-12: 12px;
+  --space-15: 15px;
+  --space-18: 18px;
+  --space-24: 24px;
+  --space-30: 30px;
+  --space-36: 36px;
+  --space-48: 48px;
+  --space-60: 60px;
+  --space-90: 90px;
+
+  /* Rahmen und Layout */
+  --border-width-default: 2px;
+  --border-width-input: 1px;
+  --border-radius: 6px;
+  --container-max-width: 1200px;
+  --gutter: 16px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 30px;
+  }
+}
