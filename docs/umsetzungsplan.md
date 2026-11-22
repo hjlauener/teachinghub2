@@ -124,7 +124,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | Meilenstein | Phase | Inhalt | Abnahme |
 |---|---|---|---|
 | **M1 Inhalte & Parität** | 0 Setup ✅ (22.11.2026) | Git/GitHub, Docker (App, Postgres, Mailpit), CI, UniBE-CD-Tokens, i18n-Gerüst, Prototyp-Hinweis | `docker compose up` → leere Site DE/EN/FR, CI grün |
-| | 1 Inhaltsmodell | Collections, Taxonomien, Rollen, Admin-Views | Redaktion legt Artikel/Methode/Thema an |
+| | 1 Inhaltsmodell ✅ (22.11.2026) | Collections, Taxonomien, Rollen, Admin-Views | Redaktion legt Artikel/Methode/Thema an |
 | | 2 Migration | Importer, Medien, Migrations-Inbox, 3-Wege-Konflikt, Redirect-Regel | alle 257 Seiten + 67 Methoden importiert, Delta-Lauf erkennt Teständerung |
 | | 3 Öffentliche Site | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
 | | 3b Landingpages | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |

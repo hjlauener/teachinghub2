@@ -10,6 +10,13 @@ updates:
         patterns: ['payload', '@payloadcms/*']
       next:
         patterns: ['next', 'eslint-config-next', 'react', 'react-dom', '@types/react*']
+    ignore:
+      # Payload 3 verlangt graphql ^16 (peerDependency)
+      - dependency-name: 'graphql'
+        update-types: ['version-update:semver-major']
+      # Hauptversionen von Next.js nur zusammen mit einem Payload-Update, das sie unterstützt
+      - dependency-name: 'next'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:

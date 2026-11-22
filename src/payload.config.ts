@@ -9,8 +9,19 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
+import { Articles } from './collections/Articles'
+import { Contacts } from './collections/Contacts'
 import { Media } from './collections/Media'
+import { Methods } from './collections/Methods'
+import { News } from './collections/News'
+import { Pages } from './collections/Pages'
+import { Subtopics } from './collections/Subtopics'
+import { Taxonomies } from './collections/Taxonomies'
+import { Tools } from './collections/Tools'
+import { Topics } from './collections/Topics'
 import { Users } from './collections/Users'
+import { Navigation } from './globals/Navigation'
+import { migrations } from './migrations'
 import { defaultLocale, locales } from './i18n/routing'
 
 const filename = fileURLToPath(import.meta.url)
@@ -43,7 +54,24 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Users, Media],
+  collections: [
+    // Inhalte
+    Pages,
+    Articles,
+    Methods,
+    Tools,
+    News,
+    // Themen der Lehre
+    Topics,
+    Subtopics,
+    // Struktur
+    Taxonomies,
+    Contacts,
+    Media,
+    // Verwaltung
+    Users,
+  ],
+  globals: [Navigation],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -53,6 +81,9 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Lokal (dev/test): Schema-Push. Produktion: Migrationen aus src/migrations beim Start.
+    migrationDir: path.resolve(dirname, 'migrations'),
+    prodMigrations: migrations,
   }),
   // Mailversand: lokal an Mailpit (http://localhost:8025), später SMTP des Hosters
   email: nodemailerAdapter({

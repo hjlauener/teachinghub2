@@ -21,6 +21,7 @@ export default defineConfig([
     'playwright-report/**',
     'test-results/**',
     'src/payload-types.ts',
+    'src/migrations/**',
     'src/app/(payload)/admin/importMap.js',
   ]),
 ])

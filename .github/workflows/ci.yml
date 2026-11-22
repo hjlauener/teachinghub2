@@ -56,6 +56,9 @@ jobs:
       - name: Unit-Tests
         run: npm run test:unit
 
+      - name: Migrationen auf leerer Datenbank anwenden
+        run: npm run migrate
+
       - name: Integrationstests (Payload + PostgreSQL)
         run: npm run test:int
 
