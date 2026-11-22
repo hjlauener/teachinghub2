@@ -67,8 +67,17 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    pages: Page;
+    articles: Article;
+    methods: Method;
+    tools: Tool;
+    news: News;
+    topics: Topic;
+    subtopics: Subtopic;
+    taxonomies: Taxonomy;
+    contacts: Contact;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,8 +85,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    methods: MethodsSelect<false> | MethodsSelect<true>;
+    tools: ToolsSelect<false> | ToolsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    topics: TopicsSelect<false> | TopicsSelect<true>;
+    subtopics: SubtopicsSelect<false> | SubtopicsSelect<true>;
+    taxonomies: TaxonomiesSelect<false> | TaxonomiesSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +105,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('de' | 'en' | 'fr') | ('de' | 'en' | 'fr')[];
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: 'de' | 'en' | 'fr';
   widgets: {
     collections: CollectionsWidget;
@@ -119,10 +141,1551 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  intro?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  layout?:
+    | (
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            title?: string | null;
+            source?: ('news' | 'manual') | null;
+            items?:
+              | {
+                  title: string;
+                  text?: string | null;
+                  image?: (number | null) | Media;
+                  linkType?: ('internal' | 'external') | null;
+                  internal?:
+                    | ({
+                        relationTo: 'articles';
+                        value: number | Article;
+                      } | null)
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'methods';
+                        value: number | Method;
+                      } | null)
+                    | ({
+                        relationTo: 'tools';
+                        value: number | Tool;
+                      } | null)
+                    | ({
+                        relationTo: 'topics';
+                        value: number | Topic;
+                      } | null)
+                    | ({
+                        relationTo: 'subtopics';
+                        value: number | Subtopic;
+                      } | null);
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'teaserList';
+          }
+        | {
+            rubric: number | Taxonomy;
+            heading?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'rubricTabs';
+          }
+        | {
+            showThemes?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'journeyMenu';
+          }
+        | {
+            title?: string | null;
+            contacts: (number | Contact)[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'contactList';
+          }
+        | {
+            defaultView?: ('themen' | 'matrix') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'topicsOverview';
+          }
+        | {
+            title?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'infobox';
+          }
+        | {
+            left?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            right?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'twoColumns';
+          }
+        | {
+            platform?: ('tobira' | 'opencast' | 'other') | null;
+            url: string;
+            title: string;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'video';
+          }
+        | {
+            variant?: ('info' | 'warning' | 'success') | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'alertbox';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  label: string;
+                  linkType?: ('internal' | 'external') | null;
+                  internal?:
+                    | ({
+                        relationTo: 'articles';
+                        value: number | Article;
+                      } | null)
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'methods';
+                        value: number | Method;
+                      } | null)
+                    | ({
+                        relationTo: 'tools';
+                        value: number | Tool;
+                      } | null)
+                    | ({
+                        relationTo: 'topics';
+                        value: number | Topic;
+                      } | null)
+                    | ({
+                        relationTo: 'subtopics';
+                        value: number | Subtopic;
+                      } | null);
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'linkList';
+          }
+      )[]
+    | null;
+  /**
+   * Home page: /
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  credit?: string | null;
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  title: string;
+  lead?: string | null;
+  kind: 'article' | 'offer' | 'archive';
+  rubrics?: (number | Taxonomy)[] | null;
+  themes?: (number | Taxonomy)[] | null;
+  /**
+   * Only for sub-pages.
+   */
+  parent?: (number | null) | Article;
+  whatIsBehind?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  insights?:
+    | {
+        title: string;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  gettingStarted?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  resources?: {
+    literature?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    guides?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    support?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  contacts?: (number | Contact)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'infobox';
+          }
+        | {
+            left?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            right?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'twoColumns';
+          }
+        | {
+            platform?: ('tobira' | 'opencast' | 'other') | null;
+            url: string;
+            title: string;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'video';
+          }
+        | {
+            variant?: ('info' | 'warning' | 'success') | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'alertbox';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  label: string;
+                  linkType?: ('internal' | 'external') | null;
+                  internal?:
+                    | ({
+                        relationTo: 'articles';
+                        value: number | Article;
+                      } | null)
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'methods';
+                        value: number | Method;
+                      } | null)
+                    | ({
+                        relationTo: 'tools';
+                        value: number | Tool;
+                      } | null)
+                    | ({
+                        relationTo: 'topics';
+                        value: number | Topic;
+                      } | null)
+                    | ({
+                        relationTo: 'subtopics';
+                        value: number | Subtopic;
+                      } | null);
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'linkList';
+          }
+      )[]
+    | null;
+  /**
+   * Without language prefix, e.g. /journey_der_lehre/…
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "taxonomies".
+ */
+export interface Taxonomy {
+  id: number;
+  type: 'rubrik' | 'thema' | 'zweck' | 'modalitaet' | 'sozialform' | 'aufwand' | 'linkLabel';
+  name: string;
+  /**
+   * Generated from the German name.
+   */
+  slug: string;
+  /**
+   * e.g. text of the theme tab
+   */
+  description?: string | null;
+  parent?: (number | null) | Taxonomy;
+  order?: number | null;
+  /**
+   * z. B. LEHREKONZIPIEREN1758245
+   */
+  legacyKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: number;
+  topic?: string | null;
+  name: string;
+  unit?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  url?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "methods".
+ */
+export interface Method {
+  id: number;
+  title: string;
+  lead?: string | null;
+  purposes: (number | Taxonomy)[];
+  modalities: (number | Taxonomy)[];
+  socialForms: (number | Taxonomy)[];
+  effort: number | Taxonomy;
+  whatIsBehind?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  insights?:
+    | {
+        title: string;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  gettingStarted?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  resources?: {
+    literature?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    guides?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    support?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  alternatives?: (number | Method)[] | null;
+  contacts?: (number | Contact)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'infobox';
+          }
+        | {
+            left?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            right?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'twoColumns';
+          }
+        | {
+            platform?: ('tobira' | 'opencast' | 'other') | null;
+            url: string;
+            title: string;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'video';
+          }
+        | {
+            variant?: ('info' | 'warning' | 'success') | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'alertbox';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  label: string;
+                  linkType?: ('internal' | 'external') | null;
+                  internal?:
+                    | ({
+                        relationTo: 'articles';
+                        value: number | Article;
+                      } | null)
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'methods';
+                        value: number | Method;
+                      } | null)
+                    | ({
+                        relationTo: 'tools';
+                        value: number | Tool;
+                      } | null)
+                    | ({
+                        relationTo: 'topics';
+                        value: number | Topic;
+                      } | null)
+                    | ({
+                        relationTo: 'subtopics';
+                        value: number | Subtopic;
+                      } | null);
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'linkList';
+          }
+      )[]
+    | null;
+  /**
+   * e.g. /methodenkompass/think_pair_share
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools".
+ */
+export interface Tool {
+  id: number;
+  title: string;
+  lead?: string | null;
+  accessUrl?: string | null;
+  requestUrl?: string | null;
+  rubrics?: (number | Taxonomy)[] | null;
+  themes?: (number | Taxonomy)[] | null;
+  /**
+   * Only for sub-pages like “Zoom FAQ”.
+   */
+  parent?: (number | null) | Tool;
+  faq?:
+    | {
+        question: string;
+        answer: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  whatIsBehind?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  insights?:
+    | {
+        title: string;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  gettingStarted?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  resources?: {
+    literature?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    guides?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    support?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  contacts?: (number | Contact)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'infobox';
+          }
+        | {
+            left?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            right?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'twoColumns';
+          }
+        | {
+            platform?: ('tobira' | 'opencast' | 'other') | null;
+            url: string;
+            title: string;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'video';
+          }
+        | {
+            variant?: ('info' | 'warning' | 'success') | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'alertbox';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  label: string;
+                  linkType?: ('internal' | 'external') | null;
+                  internal?:
+                    | ({
+                        relationTo: 'articles';
+                        value: number | Article;
+                      } | null)
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'methods';
+                        value: number | Method;
+                      } | null)
+                    | ({
+                        relationTo: 'tools';
+                        value: number | Tool;
+                      } | null)
+                    | ({
+                        relationTo: 'topics';
+                        value: number | Topic;
+                      } | null)
+                    | ({
+                        relationTo: 'subtopics';
+                        value: number | Subtopic;
+                      } | null);
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'linkList';
+          }
+      )[]
+    | null;
+  /**
+   * e.g. /journey_der_lehre/tools/zoom
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics".
+ */
+export interface Topic {
+  id: number;
+  title: string;
+  shortTitle?: string | null;
+  summary: string;
+  intro: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  currentNotice?: string | null;
+  keyPoints?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  relatedLinks?:
+    | {
+        label?: (number | null) | Taxonomy;
+        title: string;
+        /**
+         * What will people find there? Exactly one sentence.
+         */
+        sentence: string;
+        linkType?: ('internal' | 'external') | null;
+        internal?:
+          | ({
+              relationTo: 'articles';
+              value: number | Article;
+            } | null)
+          | ({
+              relationTo: 'pages';
+              value: number | Page;
+            } | null)
+          | ({
+              relationTo: 'methods';
+              value: number | Method;
+            } | null)
+          | ({
+              relationTo: 'tools';
+              value: number | Tool;
+            } | null)
+          | ({
+              relationTo: 'topics';
+              value: number | Topic;
+            } | null)
+          | ({
+              relationTo: 'subtopics';
+              value: number | Subtopic;
+            } | null);
+        url?: string | null;
+        asOf?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tools?:
+    | {
+        name: string;
+        tool?: (number | null) | Tool;
+        purpose?: string | null;
+        audience?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  toolsNote?: string | null;
+  toolsAsOf?: string | null;
+  journeyLinks?:
+    | {
+        label?: (number | null) | Taxonomy;
+        title: string;
+        /**
+         * What will people find there? Exactly one sentence.
+         */
+        sentence: string;
+        linkType?: ('internal' | 'external') | null;
+        internal?:
+          | ({
+              relationTo: 'articles';
+              value: number | Article;
+            } | null)
+          | ({
+              relationTo: 'pages';
+              value: number | Page;
+            } | null)
+          | ({
+              relationTo: 'methods';
+              value: number | Method;
+            } | null)
+          | ({
+              relationTo: 'tools';
+              value: number | Tool;
+            } | null)
+          | ({
+              relationTo: 'topics';
+              value: number | Topic;
+            } | null)
+          | ({
+              relationTo: 'subtopics';
+              value: number | Subtopic;
+            } | null);
+        url?: string | null;
+        asOf?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  practice?:
+    | {
+        title: string;
+        context?: string | null;
+        text?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  offerLinks?:
+    | {
+        label?: (number | null) | Taxonomy;
+        title: string;
+        /**
+         * What will people find there? Exactly one sentence.
+         */
+        sentence: string;
+        linkType?: ('internal' | 'external') | null;
+        internal?:
+          | ({
+              relationTo: 'articles';
+              value: number | Article;
+            } | null)
+          | ({
+              relationTo: 'pages';
+              value: number | Page;
+            } | null)
+          | ({
+              relationTo: 'methods';
+              value: number | Method;
+            } | null)
+          | ({
+              relationTo: 'tools';
+              value: number | Tool;
+            } | null)
+          | ({
+              relationTo: 'topics';
+              value: number | Topic;
+            } | null)
+          | ({
+              relationTo: 'subtopics';
+              value: number | Subtopic;
+            } | null);
+        url?: string | null;
+        asOf?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  externalLinks?:
+    | {
+        label?: (number | null) | Taxonomy;
+        title: string;
+        /**
+         * What will people find there? Exactly one sentence.
+         */
+        sentence: string;
+        linkType?: ('internal' | 'external') | null;
+        internal?:
+          | ({
+              relationTo: 'articles';
+              value: number | Article;
+            } | null)
+          | ({
+              relationTo: 'pages';
+              value: number | Page;
+            } | null)
+          | ({
+              relationTo: 'methods';
+              value: number | Method;
+            } | null)
+          | ({
+              relationTo: 'tools';
+              value: number | Tool;
+            } | null)
+          | ({
+              relationTo: 'topics';
+              value: number | Topic;
+            } | null)
+          | ({
+              relationTo: 'subtopics';
+              value: number | Subtopic;
+            } | null);
+        url?: string | null;
+        asOf?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seeAlso?: (number | Topic)[] | null;
+  category: 'A' | 'B' | 'C';
+  pageStatus?: ('planned' | 'live') | null;
+  order?: number | null;
+  journeyPhases?: (number | Taxonomy)[] | null;
+  /**
+   * e.g. /themen/ki_in_lehre_und_studium
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics".
+ */
+export interface Subtopic {
+  id: number;
+  title: string;
+  summary?: string | null;
+  whatIsIt: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  whenUseful: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  steps?:
+    | {
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  methods?:
+    | {
+        method: number | Method;
+        purposeHere?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tools?:
+    | {
+        tool?: (number | null) | Tool;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  practice?: {
+    title?: string | null;
+    text?: string | null;
+    url?: string | null;
+  };
+  pitfalls?:
+    | {
+        problem: string;
+        solution: string;
+        id?: string | null;
+      }[]
+    | null;
+  support: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  seeAlso?: (number | Subtopic)[] | null;
+  topic: number | Topic;
+  journeyPhase?: (number | null) | Taxonomy;
+  order?: number | null;
+  /**
+   * e.g. /themen/…/flipped_classroom
+   */
+  path: string;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  lead?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  link?: {
+    label?: string | null;
+    linkType?: ('internal' | 'external') | null;
+    internal?:
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null)
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'methods';
+          value: number | Method;
+        } | null)
+      | ({
+          relationTo: 'tools';
+          value: number | Tool;
+        } | null)
+      | ({
+          relationTo: 'topics';
+          value: number | Topic;
+        } | null)
+      | ({
+          relationTo: 'subtopics';
+          value: number | Subtopic;
+        } | null);
+    url?: string | null;
+  };
+  placement?: ('focus' | 'news' | 'framework') | null;
+  date: string;
+  visibleUntil?: string | null;
+  /**
+   * z. B. /ablage/news/sub_motion
+   */
+  path?: string | null;
+  /**
+   * Set by the importer.
+   */
+  legacy?: {
+    url?: string | null;
+    date?: string | null;
+    hash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  name?: string | null;
+  /**
+   * The very first account automatically becomes admin.
+   */
+  roles: ('admin' | 'redaktion' | 'uebersetzer')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -142,25 +1705,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -187,12 +1731,48 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
+        relationTo: 'methods';
+        value: number | Method;
+      } | null)
+    | ({
+        relationTo: 'tools';
+        value: number | Tool;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'topics';
+        value: number | Topic;
+      } | null)
+    | ({
+        relationTo: 'subtopics';
+        value: number | Subtopic;
+      } | null)
+    | ({
+        relationTo: 'taxonomies';
+        value: number | Taxonomy;
+      } | null)
+    | ({
+        relationTo: 'contacts';
+        value: number | Contact;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -238,9 +1818,703 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
+  layout?:
+    | T
+    | {
+        richText?:
+          | T
+          | {
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        teaserList?:
+          | T
+          | {
+              title?: T;
+              source?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    image?: T;
+                    linkType?: T;
+                    internal?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        rubricTabs?:
+          | T
+          | {
+              rubric?: T;
+              heading?: T;
+              id?: T;
+              blockName?: T;
+            };
+        journeyMenu?:
+          | T
+          | {
+              showThemes?: T;
+              id?: T;
+              blockName?: T;
+            };
+        contactList?:
+          | T
+          | {
+              title?: T;
+              contacts?: T;
+              id?: T;
+              blockName?: T;
+            };
+        topicsOverview?:
+          | T
+          | {
+              defaultView?: T;
+              id?: T;
+              blockName?: T;
+            };
+        infobox?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        twoColumns?:
+          | T
+          | {
+              left?: T;
+              right?: T;
+              id?: T;
+              blockName?: T;
+            };
+        video?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              title?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        alertbox?:
+          | T
+          | {
+              variant?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        linkList?:
+          | T
+          | {
+              title?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    internal?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  kind?: T;
+  rubrics?: T;
+  themes?: T;
+  parent?: T;
+  whatIsBehind?: T;
+  insights?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  gettingStarted?: T;
+  resources?:
+    | T
+    | {
+        literature?: T;
+        guides?: T;
+        support?: T;
+      };
+  contacts?: T;
+  blocks?:
+    | T
+    | {
+        infobox?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        twoColumns?:
+          | T
+          | {
+              left?: T;
+              right?: T;
+              id?: T;
+              blockName?: T;
+            };
+        video?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              title?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        alertbox?:
+          | T
+          | {
+              variant?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        linkList?:
+          | T
+          | {
+              title?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    internal?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "methods_select".
+ */
+export interface MethodsSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  purposes?: T;
+  modalities?: T;
+  socialForms?: T;
+  effort?: T;
+  whatIsBehind?: T;
+  insights?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  gettingStarted?: T;
+  resources?:
+    | T
+    | {
+        literature?: T;
+        guides?: T;
+        support?: T;
+      };
+  alternatives?: T;
+  contacts?: T;
+  blocks?:
+    | T
+    | {
+        infobox?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        twoColumns?:
+          | T
+          | {
+              left?: T;
+              right?: T;
+              id?: T;
+              blockName?: T;
+            };
+        video?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              title?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        alertbox?:
+          | T
+          | {
+              variant?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        linkList?:
+          | T
+          | {
+              title?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    internal?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools_select".
+ */
+export interface ToolsSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  accessUrl?: T;
+  requestUrl?: T;
+  rubrics?: T;
+  themes?: T;
+  parent?: T;
+  faq?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  whatIsBehind?: T;
+  insights?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  gettingStarted?: T;
+  resources?:
+    | T
+    | {
+        literature?: T;
+        guides?: T;
+        support?: T;
+      };
+  contacts?: T;
+  blocks?:
+    | T
+    | {
+        infobox?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        twoColumns?:
+          | T
+          | {
+              left?: T;
+              right?: T;
+              id?: T;
+              blockName?: T;
+            };
+        video?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              title?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        alertbox?:
+          | T
+          | {
+              variant?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        linkList?:
+          | T
+          | {
+              title?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    internal?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  body?: T;
+  image?: T;
+  link?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        internal?: T;
+        url?: T;
+      };
+  placement?: T;
+  date?: T;
+  visibleUntil?: T;
+  path?: T;
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics_select".
+ */
+export interface TopicsSelect<T extends boolean = true> {
+  title?: T;
+  shortTitle?: T;
+  summary?: T;
+  intro?: T;
+  currentNotice?: T;
+  keyPoints?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  relatedLinks?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        sentence?: T;
+        linkType?: T;
+        internal?: T;
+        url?: T;
+        asOf?: T;
+        id?: T;
+      };
+  tools?:
+    | T
+    | {
+        name?: T;
+        tool?: T;
+        purpose?: T;
+        audience?: T;
+        id?: T;
+      };
+  toolsNote?: T;
+  toolsAsOf?: T;
+  journeyLinks?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        sentence?: T;
+        linkType?: T;
+        internal?: T;
+        url?: T;
+        asOf?: T;
+        id?: T;
+      };
+  practice?:
+    | T
+    | {
+        title?: T;
+        context?: T;
+        text?: T;
+        url?: T;
+        id?: T;
+      };
+  offerLinks?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        sentence?: T;
+        linkType?: T;
+        internal?: T;
+        url?: T;
+        asOf?: T;
+        id?: T;
+      };
+  externalLinks?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        sentence?: T;
+        linkType?: T;
+        internal?: T;
+        url?: T;
+        asOf?: T;
+        id?: T;
+      };
+  seeAlso?: T;
+  category?: T;
+  pageStatus?: T;
+  order?: T;
+  journeyPhases?: T;
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics_select".
+ */
+export interface SubtopicsSelect<T extends boolean = true> {
+  title?: T;
+  summary?: T;
+  whatIsIt?: T;
+  whenUseful?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  methods?:
+    | T
+    | {
+        method?: T;
+        purposeHere?: T;
+        id?: T;
+      };
+  tools?:
+    | T
+    | {
+        tool?: T;
+        note?: T;
+        id?: T;
+      };
+  practice?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        url?: T;
+      };
+  pitfalls?:
+    | T
+    | {
+        problem?: T;
+        solution?: T;
+        id?: T;
+      };
+  support?: T;
+  seeAlso?: T;
+  topic?: T;
+  journeyPhase?: T;
+  order?: T;
+  path?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "taxonomies_select".
+ */
+export interface TaxonomiesSelect<T extends boolean = true> {
+  type?: T;
+  name?: T;
+  slug?: T;
+  description?: T;
+  parent?: T;
+  order?: T;
+  legacyKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  topic?: T;
+  name?: T;
+  unit?: T;
+  phone?: T;
+  email?: T;
+  url?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  credit?: T;
+  legacy?:
+    | T
+    | {
+        url?: T;
+        date?: T;
+        hash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -258,24 +2532,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +2572,52 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  mainMenu?:
+    | {
+        label: string;
+        path: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  mainMenu?:
+    | T
+    | {
+        label?: T;
+        path?: T;
+        id?: T;
+      };
+  footerLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
