@@ -1,0 +1,47 @@
+{
+  "Site": {
+    "title": "Teaching Hub",
+    "university": "Universität Bern",
+    "description": "Ihr Hub für gute Lehre an der Universität Bern",
+    "skipToContent": "Zum Inhalt springen",
+    "prototypeNotice": "Prototyp – keine offizielle Seite der Universität Bern",
+    "logoAlt": "Universität Bern – zur Startseite des Portals"
+  },
+  "Nav": {
+    "label": "Hauptnavigation",
+    "home": "Startseite",
+    "journey": "Journey der Lehre",
+    "topics": "Themen",
+    "methods": "Methodenkompass",
+    "search": "Suche",
+    "about": "Über uns",
+    "portal": "Portal UniBE"
+  },
+  "Language": {
+    "label": "Sprachwahl",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français"
+  },
+  "Home": {
+    "heading": "Ihr Hub für gute Lehre an der Universität Bern",
+    "lead": "Der Teaching Hub bietet Ihnen Unterstützung bei der Gestaltung und Administration Ihrer Lehre. Finden Sie Grundlagen, Methoden, Tools sowie Beratung und Förderangebote, schnell und passend zu Ihrem aktuellen Anliegen.",
+    "ctaJourney": "Journey starten",
+    "ctaTopics": "Themen entdecken",
+    "ctaSearch": "Inhalte suchen"
+  },
+  "Placeholder": {
+    "heading": "Diese Seite ist in Vorbereitung",
+    "text": "Die Inhalte werden in einer späteren Phase des Prototyps übernommen.",
+    "back": "Zur Startseite"
+  },
+  "Footer": {
+    "contactHeading": "Kontakt",
+    "contactName": "Teaching Hub Redaktion | Vizerektorat Lehre",
+    "contactStreet": "Hochschulstrasse 6",
+    "contactCity": "3012 Bern",
+    "legal": "Rechtliche Hinweise",
+    "imprint": "Impressum",
+    "portal": "Portal Universität Bern"
+  }
+}

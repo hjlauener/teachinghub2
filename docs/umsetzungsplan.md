@@ -123,7 +123,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 
 | Meilenstein | Phase | Inhalt | Abnahme |
 |---|---|---|---|
-| **M1 Inhalte & Parität** | 0 Setup | Git/GitHub, Docker (App, Postgres, Mailpit), CI, UniBE-CD-Tokens, i18n-Gerüst, Prototyp-Hinweis | `docker compose up` → leere Site DE/EN/FR, CI grün |
+| **M1 Inhalte & Parität** | 0 Setup ✅ (22.11.2026) | Git/GitHub, Docker (App, Postgres, Mailpit), CI, UniBE-CD-Tokens, i18n-Gerüst, Prototyp-Hinweis | `docker compose up` → leere Site DE/EN/FR, CI grün |
 | | 1 Inhaltsmodell | Collections, Taxonomien, Rollen, Admin-Views | Redaktion legt Artikel/Methode/Thema an |
 | | 2 Migration | Importer, Medien, Migrations-Inbox, 3-Wege-Konflikt, Redirect-Regel | alle 257 Seiten + 67 Methoden importiert, Delta-Lauf erkennt Teständerung |
 | | 3 Öffentliche Site | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
@@ -173,4 +173,6 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Briefing für die Redaktion (3.3a), danach Phase 0.
+Phase 0 ist umgesetzt (Branch `phase-0-setup`). Nächste Schritte: Briefing für die Redaktion (3.3a) und Phase 1 Inhaltsmodell.
+
+**Hinweise aus Phase 0:** `/` leitet immer auf `/de` (keine Browsersprachen-Erkennung, wie Altsite). Hausschrift Frutiger Neue nicht eingebunden (Lizenz, 1.3a) → Arial/Helvetica. Payload-Migrationen werden ab Phase 1 nötig (bisher Schema-Push im Dev-Modus).
