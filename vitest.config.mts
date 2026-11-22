@@ -23,6 +23,8 @@ export default defineConfig({
           name: 'int',
           environment: 'node',
           include: ['tests/int/**/*.int.spec.ts'],
+          // Nacheinander: Auf leerer DB würden parallele Dateien gleichzeitig das Schema anlegen
+          fileParallelism: false,
           testTimeout: 60_000,
           hookTimeout: 120_000,
         },
