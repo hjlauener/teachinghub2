@@ -31,7 +31,7 @@ Neubau von teachinghub.unibe.ch als **Prototyp, der übergabefähig gebaut wird*
 | Maschinelle Übersetzung | Google Cloud Translation über austauschbaren Adapter, Cache pro Abschnitt + DE-Hash |
 | Styling | UniBE-CD als Design-Tokens, Komponenten nach Portal-Theme 2022 |
 | Container lokal | App · Postgres · Mailpit · Ollama (+ Keycloak ab Phase 7) |
-| Code | Git + privates GitHub-Repo, GitHub Actions, Branch + PR pro Feature; Secrets nur in `.env`/GitHub Secrets |
+| Code | Git + öffentliches GitHub-Repo `hjlauener/teachinghub2` (5.2b), GitHub Actions, Branch + PR pro Feature; Secrets nur in `.env`/GitHub Secrets |
 
 ## 3. Inhaltsmodell
 
