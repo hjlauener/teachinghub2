@@ -74,15 +74,16 @@ export function taxonomyField(
   } as Field
 }
 
-/** Interner Link (Relation) oder externer Link (URL). */
-export function linkFields(): Field[] {
+/** Interner Link (Relation) oder externer Link (URL); mit `optional` zusätzlich „kein Link“. */
+export function linkFields(options: { optional?: boolean } = {}): Field[] {
   return [
     {
       name: 'linkType',
       type: 'radio',
       label: l('Linkart', 'Link type', 'Type de lien'),
-      defaultValue: 'internal',
+      defaultValue: options.optional ? 'none' : 'internal',
       options: [
+        ...(options.optional ? [{ value: 'none', label: l('Kein Link', 'No link', 'Aucun lien') }] : []),
         { value: 'internal', label: l('Intern', 'Internal', 'Interne') },
         { value: 'external', label: l('Extern', 'External', 'Externe') },
       ],
@@ -93,9 +94,9 @@ export function linkFields(): Field[] {
       type: 'relationship',
       label: l('Interne Seite', 'Internal page', 'Page interne'),
       relationTo: [...linkableCollections],
-      admin: { condition: (_, sibling) => sibling?.linkType !== 'external' },
+      admin: { condition: (_, sibling) => sibling?.linkType === 'internal' },
       validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-        siblingData?.linkType === 'external' || value ? true : 'Bitte eine interne Seite wählen.',
+        siblingData?.linkType !== 'internal' || value ? true : 'Bitte eine interne Seite wählen.',
     } as Field,
     {
       name: 'url',

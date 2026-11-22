@@ -78,6 +78,7 @@ export interface Config {
     contacts: Contact;
     media: Media;
     users: User;
+    'legacy-snapshots': LegacySnapshot;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +97,7 @@ export interface Config {
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'legacy-snapshots': LegacySnapshotsSelect<false> | LegacySnapshotsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -840,7 +842,13 @@ export interface Method {
       [k: string]: unknown;
     } | null;
   };
-  alternatives?: (number | Method)[] | null;
+  alternatives?:
+    | {
+        method: number | Method;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   contacts?: (number | Contact)[] | null;
   blocks?:
     | (
@@ -1628,7 +1636,7 @@ export interface News {
   image?: (number | null) | Media;
   link?: {
     label?: string | null;
-    linkType?: ('internal' | 'external') | null;
+    linkType?: ('none' | 'internal' | 'external') | null;
     internal?:
       | ({
           relationTo: 'articles';
@@ -1708,6 +1716,49 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legacy-snapshots".
+ */
+export interface LegacySnapshot {
+  id: number;
+  path: string;
+  targetCollection: 'articles' | 'methods' | 'tools' | 'pages' | 'news';
+  docId?: number | null;
+  legacyUrl?: string | null;
+  legacyDate?: string | null;
+  /**
+   * Inhalts-Hash der Altsite-Seite
+   */
+  hash?: string | null;
+  importedAt?: string | null;
+  /**
+   * Feldwerte (DE) wie importiert
+   */
+  data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Hash je Feld – erkennt lokale Änderungen
+   */
+  fieldHashes?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1773,6 +1824,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'legacy-snapshots';
+        value: number | LegacySnapshot;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -2078,7 +2133,13 @@ export interface MethodsSelect<T extends boolean = true> {
         guides?: T;
         support?: T;
       };
-  alternatives?: T;
+  alternatives?:
+    | T
+    | {
+        method?: T;
+        note?: T;
+        id?: T;
+      };
   contacts?: T;
   blocks?:
     | T
@@ -2532,6 +2593,23 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legacy-snapshots_select".
+ */
+export interface LegacySnapshotsSelect<T extends boolean = true> {
+  path?: T;
+  targetCollection?: T;
+  docId?: T;
+  legacyUrl?: T;
+  legacyDate?: T;
+  hash?: T;
+  importedAt?: T;
+  data?: T;
+  fieldHashes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

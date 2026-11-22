@@ -1,6 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { de } from '@payloadcms/translations/languages/de'
 import { en } from '@payloadcms/translations/languages/en'
 import { fr } from '@payloadcms/translations/languages/fr'
@@ -11,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { Articles } from './collections/Articles'
 import { Contacts } from './collections/Contacts'
+import { LegacySnapshots } from './collections/LegacySnapshots'
 import { Media } from './collections/Media'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
@@ -21,6 +21,7 @@ import { Tools } from './collections/Tools'
 import { Topics } from './collections/Topics'
 import { Users } from './collections/Users'
 import { Navigation } from './globals/Navigation'
+import { editor } from './lib/editor'
 import { migrations } from './migrations'
 import { defaultLocale, locales } from './i18n/routing'
 
@@ -70,9 +71,11 @@ export default buildConfig({
     Media,
     // Verwaltung
     Users,
+    // Migration Altsite
+    LegacySnapshots,
   ],
   globals: [Navigation],
-  editor: lexicalEditor(),
+  editor,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
