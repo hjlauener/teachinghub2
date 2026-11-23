@@ -8,6 +8,9 @@ import { findByPath } from '@/lib/content'
 
 type Props = { params: Promise<{ locale: string }> }
 
+// Inhalte kommen aus dem CMS: bei jedem Aufruf rendern, nicht beim Build (kein Datenbankzugriff im Build)
+export const dynamic = 'force-dynamic'
+
 /** Startseite: Intro mit Einstiegen, darunter News und Teaser aus dem CMS (Analyse 4). */
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
