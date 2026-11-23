@@ -359,6 +359,7 @@ export type InboxRow = {
   senderName: string | null
   ref: { collection: HubCollection; docId: number } | null
   collectionId: string | null
+  questionId: string | null
   message: string
   readAt: Date | null
   createdAt: Date
@@ -405,6 +406,7 @@ export async function listInbox(db: Queryable, memberId: string): Promise<InboxR
     ref_collection: HubCollection | null
     ref_doc_id: number | null
     shared_collection_id: string | null
+    shared_question_id: string | null
     message: string
     read_at: Date | null
     created_at: Date
@@ -421,6 +423,7 @@ export async function listInbox(db: Queryable, memberId: string): Promise<InboxR
         ? { collection: r.ref_collection, docId: r.ref_doc_id }
         : null,
     collectionId: r.shared_collection_id,
+    questionId: r.shared_question_id,
     message: r.message,
     readAt: r.read_at,
     createdAt: r.created_at,

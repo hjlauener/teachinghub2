@@ -31,6 +31,7 @@ docker compose exec app npm test                 # Unit- und Integrationstests
 docker compose --profile e2e run --rm e2e        # Playwright + axe gegen die laufende App
 docker compose exec app npm run seed             # Schlagwörter + Navigation einspielen (idempotent)
 docker compose exec app npm run auth:migrate     # Tabellen der Mitgliederkonten (Schema auth) und ihrer Daten (Schema hub); läuft beim Start automatisch
+docker compose exec app npm run ai:reindex       # KI-Index für Ask-a-question aufbauen/abgleichen (lädt beim ersten Mal bge-m3)
 docker compose exec app npm run generate:types   # nach Änderungen an Collections
 docker compose exec app npm run migrate:create -- <name>  # Migration für Produktion erzeugen
 docker compose exec app npm run generate:importmap
@@ -71,6 +72,7 @@ src/migration/                 Crawler, Extraktion, Import, Delta-Abgleich
 scripts/migration/             CLI für Crawl, Import, Delta
 src/components/                Layout-Komponenten (Header, Navigation, Footer, Prototyp-Hinweis), hub/ (Like, Merken, Feedback, Teilen, Sammlungen)
 src/auth/                      Mitgliederkonten (Better Auth, Schema auth)
+src/ai/                        Ask-a-question: KI-Index (pgvector), Embeddings (Ollama), Anbieter-Adapter
 src/hub/                       Persönliche Funktionen (Schema hub, Regeln, SQL, Feedback/Vorschläge, Mails)
 src/app/api/hub/               API der persönlichen Funktionen (schreibend nur same-origin + Session)
 src/config/navigation.ts       Hauptnavigation (alte Pfade, Entscheidung 7.2)

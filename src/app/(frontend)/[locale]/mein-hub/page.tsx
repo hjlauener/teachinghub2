@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { getKey, getQuestionFor, keyInfo, listQuestions } from '@/ai/repo'
+import { testProviderEnabled } from '@/ai/providers'
+import { AiSettingsForm } from '@/components/ai/AiSettingsForm'
+import { DeleteAllQuestions, QuestionItem } from '@/components/ai/QuestionItem'
 import { BookmarkItem, LikeItem } from '@/components/hub/HubItems'
 import {
   FeedbackItem,
@@ -38,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /**
  * „Mein Hub“: Gemerktes, Meine Methoden/Tools, Mit mir geteilt, eigene Likes, Feedback, Vorschläge,
- * Benachrichtigungen und Daten-Export (Phase 5).
+ * Benachrichtigungen, Fragen an den Hub, KI-Einstellungen und Daten-Export (Phasen 5 und 6).
  */
 export default async function MyHubPage({ params }: Props) {
   const { locale } = await params
@@ -53,7 +57,7 @@ export default async function MyHubPage({ params }: Props) {
 
   const db = hubDatabase()
   const payload = await getPayloadClient()
-  const [bookmarks, likes, own, shared, inbox, feedback, suggestions, prefs] = await Promise.all([
+  const [bookmarks, likes, own, shared, inbox, feedback, suggestions, prefs, questions, aiKey, aiSettings] = await Promise.all([
     listBookmarks(db, member.id),
     listLikes(db, member.id),
     listOwnCollections(db, member.id),
@@ -62,7 +66,18 @@ export default async function MyHubPage({ params }: Props) {
     listMemberFeedback(payload, member.id),
     listMemberSuggestions(payload, member.id),
     getPreferences(db, member.id),
+    listQuestions(db, member.id, 100),
+    getKey(db, member.id),
+    payload.findGlobal({ slug: 'ai-settings', depth: 0 }).catch(() => null),
   ])
+  // Geteilte Antworten (Phase 6): Fragetext für „Mit mir geteilt“
+  const sharedQuestions = new Map(
+    (
+      await Promise.all(
+        inbox.flatMap((e) => (e.questionId ? [getQuestionFor(db, e.questionId, member.id)] : [])),
+      )
+    ).flatMap((q) => (q ? [[q.question.id, q.question.question] as const] : [])),
+  )
   // Sprache für Mails an diese Person (z. B. „… hat etwas mit Ihnen geteilt“) merken
   if (prefs.locale !== locale) await savePreferences(db, member.id, { locale })
   const inboxRefs = inbox.flatMap((e) => (e.ref ? [e.ref] : []))
@@ -71,6 +86,8 @@ export default async function MyHubPage({ params }: Props) {
   const tc = await getTranslations('Collections')
   const tf = await getTranslations('Feedback')
   const ti = await getTranslations('Inbox')
+  const ta = await getTranslations('AskHistory')
+  const tk = await getTranslations('AiSettings')
 
   const sharedById = new Map(shared.map((c) => [c.id, c]))
   const inboxEntries: InboxEntry[] = inbox.flatMap((e): InboxEntry[] => {
@@ -80,6 +97,12 @@ export default async function MyHubPage({ params }: Props) {
       message: e.message,
       read: Boolean(e.readAt),
       createdAt: e.createdAt.toISOString(),
+    }
+    if (e.questionId) {
+      const text = sharedQuestions.get(e.questionId)
+      return text
+        ? [{ ...base, title: text, typeLabel: ta('sharedAnswer'), href: `/mein-hub/frage/${e.questionId}`, collectionId: null }]
+        : []
     }
     if (e.collectionId) {
       const c = sharedById.get(e.collectionId)
@@ -113,10 +136,12 @@ export default async function MyHubPage({ params }: Props) {
     ['methoden', tc('kind_methods')],
     ['tools', tc('kind_tools')],
     ['geteilt', ti('heading')],
+    ['fragen', ta('heading')],
     ['hilfreich', t('likesHeading')],
     ['feedback', tf('myFeedback')],
     ['vorschlaege', tc('mySuggestions')],
     ['einstellungen', t('preferencesHeading')],
+    ['ki', tk('heading')],
     ['daten', t('exportHeading')],
   ] as const
 
@@ -188,6 +213,28 @@ export default async function MyHubPage({ params }: Props) {
               <InboxItem key={entry.id} entry={entry} />
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="content-section" aria-labelledby="questions-heading" id="fragen">
+        <h2 id="questions-heading">{ta('heading')}</h2>
+        <p className="meta">{ta('lead')}</p>
+        {questions.length === 0 ? (
+          <p>
+            {ta('empty')} <Link href={{ pathname: '/suche', query: { modus: 'fragen' } }}>{ta('askNow')}</Link>
+          </p>
+        ) : (
+          <>
+            <ul className="hub-list">
+              {questions.map((q) => (
+                <QuestionItem
+                  key={q.id}
+                  entry={{ id: q.id, question: q.question, outcome: q.outcome, createdAt: q.createdAt.toISOString(), tokens: q.inputTokens + q.outputTokens }}
+                />
+              ))}
+            </ul>
+            <DeleteAllQuestions />
+          </>
         )}
       </section>
 
@@ -268,6 +315,15 @@ export default async function MyHubPage({ params }: Props) {
       <section className="content-section" aria-labelledby="preferences-heading" id="einstellungen">
         <h2 id="preferences-heading">{t('preferencesHeading')}</h2>
         <PreferencesForm notifyShares={prefs.notifyShares} />
+      </section>
+
+      <section className="content-section" aria-labelledby="ai-heading" id="ki">
+        <h2 id="ai-heading">{tk('heading')}</h2>
+        <AiSettingsForm
+          initialKey={keyInfo(aiKey)}
+          models={(aiSettings?.models ?? []).map((m) => ({ provider: m.provider, model: m.model, label: m.label }))}
+          testProvider={testProviderEnabled()}
+        />
       </section>
 
       <section className="content-section" aria-labelledby="export-heading" id="daten">

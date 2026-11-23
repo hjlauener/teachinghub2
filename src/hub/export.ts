@@ -3,6 +3,7 @@ import 'server-only'
 import { AUTH_SCHEMA, AUTH_TABLES } from '@/auth/database'
 
 import { hubDatabase } from './database'
+import { getKey, keyInfo, listQuestions } from '@/ai/repo'
 import { getPayloadClient } from '@/lib/content'
 
 import { listMemberFeedback, listMemberSuggestions } from './payload-data'
@@ -33,7 +34,7 @@ export async function exportMemberData(member: Member) {
     inbox,
     preferences,
     feedback,
-    suggestions,
+    suggestions, questions, aiKey,
     passkeys,
   ] = await Promise.all([
     listLikes(db, member.id),
@@ -45,6 +46,8 @@ export async function exportMemberData(member: Member) {
     getPreferences(db, member.id),
     listMemberFeedback(payload, member.id),
     listMemberSuggestions(payload, member.id),
+    listQuestions(db, member.id, 10_000),
+    getKey(db, member.id),
     db.query<{ name: string | null; createdAt: Date }>(
       `select name, "createdAt" from ${AUTH_SCHEMA}.${AUTH_TABLES.passkey} where "userId" = $1 order by "createdAt"`,
       [member.id],
@@ -121,5 +124,17 @@ export async function exportMemberData(member: Member) {
     preferences,
     feedback: feedback.map(({ id: _id, ...f }) => f),
     suggestions: suggestions.map(({ id: _id, ...s }) => s),
+    // Ask-a-question (Phase 6): Schlüssel nur als Kennung, nie im Klartext
+    aiSettings: keyInfo(aiKey),
+    questions: questions.map((q) => ({
+      question: q.question,
+      answer: q.answer,
+      outcome: q.outcome,
+      sources: q.sources.map((s) => ({ n: s.n, title: s.title, path: s.path, anchor: s.anchor })),
+      model: q.model,
+      inputTokens: q.inputTokens,
+      outputTokens: q.outputTokens,
+      createdAt: q.createdAt.toISOString(),
+    })),
   }
 }

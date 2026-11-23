@@ -24,6 +24,8 @@ services:
         condition: service_healthy
       mailpit:
         condition: service_started
+      ollama:
+        condition: service_started
 
   db:
     # PostgreSQL 17 mit pgvector (für Ask-a-question ab Phase 6, Entscheidung 8.6)
@@ -41,6 +43,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+
+  ollama:
+    # Lokales Embedding-Modell für den KI-Index (Entscheidung 8.6): `npm run ai:reindex` lädt bge-m3 beim ersten Mal
+    image: ollama/ollama:0.40.16
+    volumes:
+      - ollama:/root/.ollama
 
   mailpit:
     # Fängt alle ausgehenden Mails ab (Magic Links ab Phase 4, Entscheidung 6.1)
@@ -71,6 +79,7 @@ services:
 
 volumes:
   pgdata:
+  ollama:
   node_modules:
   node_modules_e2e:
   next_cache:

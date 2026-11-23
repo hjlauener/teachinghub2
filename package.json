@@ -26,12 +26,14 @@
     "legacy:delta": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/delta.ts",
     "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts",
     "search:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/reindex.ts",
+    "ai:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/ai/reindex.ts",
     "legacy:parity": "tsx scripts/migration/parity.ts",
     "e2e:fixtures": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import-fixtures.ts",
     "topics:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/topics/import.ts",
     "auth:migrate": "tsx scripts/auth/migrate.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.11.0",
     "@better-auth/passkey": "1.7.27",
     "@payloadcms/db-postgres": "3.94.1",
     "@payloadcms/email-nodemailer": "3.94.1",

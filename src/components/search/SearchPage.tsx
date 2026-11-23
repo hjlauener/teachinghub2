@@ -2,7 +2,10 @@ import { getTranslations } from 'next-intl/server'
 import type { Where } from 'payload'
 import React from 'react'
 
+import { isSearchMode, type SearchMode } from '@/ai/rules'
+import { AskPanel } from '@/components/ai/AskPanel'
 import { TermChips } from '@/components/content/parts'
+import { SearchModes } from '@/components/search/SearchModes'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { hubDatabase } from '@/hub/database'
@@ -44,6 +47,7 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
   const t = await getTranslations('Search')
   const h = await getTranslations('Hub')
   const q = one(searchParams.q)
+  const modeParam = isSearchMode(one(searchParams.modus)) ? (one(searchParams.modus) as SearchMode) : null
   const popular = one(searchParams.sortierung) === 'beliebt'
   const type = SEARCH_TYPES.find((ty) => ty === one(searchParams.typ)) ?? null
   const [rubrics, themes] = await Promise.all([listTaxonomies('rubrik', locale), listTaxonomies('thema', locale)])
@@ -86,6 +90,8 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
       <header className="page-header">
         <h1 id="page-heading">{t('heading')}</h1>
       </header>
+      {/* Suchen oder Fragen (Entscheidung 8.8) */}
+      <SearchModes initialMode={modeParam ?? 'suchen'} explicit={modeParam !== null} ask={<AskPanel initialQuestion={q} />} search={<>
       <form className="filters" role="search" method="get">
         <div className="filters__field filters__field--wide">
           <label htmlFor="search-q">{t('label')}</label>
@@ -166,6 +172,7 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
           )}
         </>
       )}
+      </>} />
     </article>
   )
 }

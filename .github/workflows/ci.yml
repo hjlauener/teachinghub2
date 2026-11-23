@@ -22,6 +22,10 @@ env:
   # Tests senden mehrere Anmeldelinks hintereinander (inkl. Wiederholungen)
   AUTH_RATE_LIMIT: 'off'
   MAILPIT_URL: http://localhost:8025
+  # Ask-a-question (Phase 6): Embeddings und Antworten ohne externe Dienste
+  AI_EMBEDDER: fake
+  AI_TEST_PROVIDER: '1'
+  AI_KEY_SECRET: ci-only-not-secret-ai-key-0123456789abcdef
 
 jobs:
   check:
@@ -83,7 +87,9 @@ jobs:
       - name: Testinhalte für E2E einspielen
         env:
           NODE_ENV: production
-        run: npm run e2e:fixtures
+        run: |
+          npm run e2e:fixtures
+          npm run ai:reindex
 
       - name: Build
         run: npm run build

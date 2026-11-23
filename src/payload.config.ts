@@ -16,6 +16,8 @@ import { Media } from './collections/Media'
 import { MemberInvites, MemberSettings } from './collections/MemberInvites'
 import { Feedback, FeedbackImages } from './collections/Feedback'
 import { Suggestions } from './collections/Suggestions'
+import { withAiIndex } from './ai/indexer'
+import { AiSettings } from './globals/AiSettings'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
 import { Pages } from './collections/Pages'
@@ -69,6 +71,7 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
+  // Inhalts-Collections erhalten zusätzlich die Hooks des KI-Index (Phase 6)
   collections: [
     // Inhalte
     Pages,
@@ -94,8 +97,8 @@ export default buildConfig({
     // Migration Altsite
     MigrationInbox,
     LegacySnapshots,
-  ],
-  globals: [Navigation, MemberSettings],
+  ].map(withAiIndex),
+  globals: [Navigation, MemberSettings, AiSettings],
   // Wöchentlicher Delta-Abgleich (Entscheidung 3.2), nur wenn LEGACY_DELTA_WEEKLY=true
   jobs: {
     tasks: [
