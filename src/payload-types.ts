@@ -1308,7 +1308,7 @@ export interface Topic {
   title: string;
   shortTitle?: string | null;
   summary: string;
-  intro: {
+  intro?: {
     root: {
       type: string;
       children: {
@@ -1322,7 +1322,7 @@ export interface Topic {
       version: number;
     };
     [k: string]: unknown;
-  };
+  } | null;
   currentNotice?: string | null;
   keyPoints?:
     | {
@@ -1510,6 +1510,22 @@ export interface Topic {
   category: 'A' | 'B' | 'C';
   pageStatus?: ('planned' | 'live') | null;
   order?: number | null;
+  /**
+   * Drives the topics × journey matrix. Fewer than 5 pages: too thin for a topic page.
+   */
+  journeyPages?:
+    | (
+        | {
+            relationTo: 'articles';
+            value: number | Article;
+          }
+        | {
+            relationTo: 'tools';
+            value: number | Tool;
+          }
+      )[]
+    | null;
+  journeyPageCount?: number | null;
   journeyPhases?: (number | Taxonomy)[] | null;
   /**
    * e.g. /themen/ki_in_lehre_und_studium
@@ -1531,7 +1547,7 @@ export interface Subtopic {
   id: number;
   title: string;
   summary?: string | null;
-  whatIsIt: {
+  whatIsIt?: {
     root: {
       type: string;
       children: {
@@ -1545,8 +1561,8 @@ export interface Subtopic {
       version: number;
     };
     [k: string]: unknown;
-  };
-  whenUseful: {
+  } | null;
+  whenUseful?: {
     root: {
       type: string;
       children: {
@@ -1560,7 +1576,7 @@ export interface Subtopic {
       version: number;
     };
     [k: string]: unknown;
-  };
+  } | null;
   steps?:
     | {
         title: string;
@@ -1594,7 +1610,7 @@ export interface Subtopic {
         id?: string | null;
       }[]
     | null;
-  support: {
+  support?: {
     root: {
       type: string;
       children: {
@@ -1608,10 +1624,11 @@ export interface Subtopic {
       version: number;
     };
     [k: string]: unknown;
-  };
+  } | null;
   seeAlso?: (number | Subtopic)[] | null;
   topic: number | Topic;
   journeyPhase?: (number | null) | Taxonomy;
+  pageStatus?: ('planned' | 'live') | null;
   order?: number | null;
   /**
    * e.g. /themen/…/flipped_classroom
@@ -2648,6 +2665,8 @@ export interface TopicsSelect<T extends boolean = true> {
   category?: T;
   pageStatus?: T;
   order?: T;
+  journeyPages?: T;
+  journeyPageCount?: T;
   journeyPhases?: T;
   path?: T;
   seo?:
@@ -2708,6 +2727,7 @@ export interface SubtopicsSelect<T extends boolean = true> {
   seeAlso?: T;
   topic?: T;
   journeyPhase?: T;
+  pageStatus?: T;
   order?: T;
   path?: T;
   seo?:

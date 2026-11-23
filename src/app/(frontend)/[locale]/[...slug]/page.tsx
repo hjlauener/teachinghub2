@@ -10,6 +10,8 @@ import { NewsView } from '@/components/content/views/NewsView'
 import { PageView } from '@/components/content/views/PageView'
 import { ToolView } from '@/components/content/views/ToolView'
 import { SearchPage } from '@/components/search/SearchPage'
+import { TopicsOverview } from '@/components/topics/TopicsOverview'
+import { SubtopicView, TopicView } from '@/components/topics/TopicView'
 import { mainNavigation } from '@/config/navigation'
 import { Link } from '@/i18n/navigation'
 import { isLocale, type Locale } from '@/i18n/routing'
@@ -23,7 +25,7 @@ type Props = {
 }
 
 /** Felder, die maschinell übersetzt werden – nur öffentliche Inhalte. */
-const MACHINE_FIELDS = ['title', 'lead', 'whatIsBehind', 'insights', 'gettingStarted', 'resources', 'faq', 'intro', 'body']
+const MACHINE_FIELDS = ['title', 'lead', 'whatIsBehind', 'insights', 'gettingStarted', 'resources', 'faq', 'intro', 'body', 'summary', 'keyPoints', 'currentNotice', 'relatedLinks', 'journeyLinks', 'offerLinks', 'externalLinks', 'tools', 'toolsNote', 'practice']
 
 const toPath = (slug: string[]) => `/${slug.map(decodeURIComponent).join('/')}`
 
@@ -44,11 +46,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Breadcrumb: Titel aller Elternpfade, die es als Seite gibt. */
 async function crumbs(path: string, locale: Locale) {
+  const nav = await getTranslations({ locale, namespace: 'Nav' })
   const parts = path.split('/').filter(Boolean)
   const items: { href: string; label: string }[] = []
   for (let i = 1; i <= parts.length; i++) {
     const href = `/${parts.slice(0, i).join('/')}`
-    const label = await titleForPath(href, locale)
+    // Menüseiten ohne CMS-Dokument (z. B. „Themen“) über die Navigation benennen
+    const section = mainNavigation.find((item) => item.href === href)
+    const label = (await titleForPath(href, locale)) ?? (section ? nav(section.key) : null)
     if (label) items.push({ href, label })
   }
   return items
@@ -63,6 +68,7 @@ export default async function ContentRoute({ params, searchParams }: Props) {
   // Seiten mit eigener Funktion
   if (path === '/methodenkompass') return <MethodsCompass locale={locale} />
   if (path === '/suche') return <SearchPage locale={locale} searchParams={await searchParams} />
+  if (path === '/themen') return <TopicsOverview locale={locale} />
 
   const found = (await findByPath(path, locale)) as ContentDoc | null
   if (!found) {
@@ -104,6 +110,8 @@ export default async function ContentRoute({ params, searchParams }: Props) {
       {found.collection === 'tools' && <ToolView doc={found.doc} locale={locale} />}
       {found.collection === 'news' && <NewsView doc={found.doc} locale={locale} />}
       {found.collection === 'pages' && <PageView doc={found.doc} locale={locale} />}
+      {found.collection === 'topics' && <TopicView doc={found.doc} locale={locale} />}
+      {found.collection === 'subtopics' && <SubtopicView doc={found.doc} locale={locale} />}
     </>
   )
 }

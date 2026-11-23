@@ -178,7 +178,7 @@ describe('Redaktion legt Inhalte an (Abnahme Phase 1)', () => {
     expect(method._status).toBe('published')
   })
 
-  it('Kernthema: Entwurf ohne Pflichtkapitel möglich, Publizieren nur vollständig', async () => {
+  it('Kernthema: Entwurf ohne Pflichtkapitel möglich, Live-Schalten nur vollständig', async () => {
     const topic = await payload.create({
       collection: 'topics',
       data: { title: `Testthema ${run}`, summary: 'Ein Satz.', path: `/themen/test_${run}`, category: 'A' },
@@ -194,7 +194,7 @@ describe('Redaktion legt Inhalte an (Abnahme Phase 1)', () => {
       payload.update({
         collection: 'topics',
         id: topic.id,
-        data: { _status: 'published', intro: lexical('Einstieg.'), keyPoints: [{ text: 'Nur eine Aussage' }] },
+        data: { _status: 'published', pageStatus: 'live', intro: lexical('Einstieg.'), keyPoints: [{ text: 'Nur eine Aussage' }] },
         user: users.editor,
         overrideAccess: false,
       }),

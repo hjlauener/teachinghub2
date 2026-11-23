@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; **Phase 3 (Öffentliche Site)** auf Branch `phase-3-site`; nächste Phase: 3b Landingpages.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; Phase 3 auf `phase-3-site` (PR #13), **Phase 3b (Landingpages)** auf `phase-3b-landingpages`; M1 erreicht, nächste Phase: 4 Accounts.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -41,3 +41,8 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Keine Block-Elemente (`figure`, `div`) innerhalb von Absätzen rendern – Altsite-Bilder stehen oft in `<p>` (Hydration-Fehler).
 - Links auf grauen Flächen in `--color-blue-dark` (UniBE-Blau erreicht dort nur 4,48:1).
 - Clientseitige Filter: E2E muss auf `networkidle` warten; Dev-Server erlaubt den E2E-Host `app` (`allowedDevOrigins`).
+
+## Themen der Lehre (Phase 3b)
+- Quelle: `docs/konzept-landingpages/` (Eigentum des Users, im Repo); Import `npm run topics:import`, Parser in `src/topics/parse.ts`.
+- Status `pageStatus` (folgt/live): Pflichtangaben nur für live (`validateRequiredWhenLive`, `validateCountWhenLive`); Feldname nie `status`.
+- Matrix aus `journeyPages` über `src/topics/matrix.ts` (rein, testbar) – Phase aus dem Pfad.

@@ -5,6 +5,8 @@ import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import type { Method, Taxonomy } from '@/payload-types'
 
+import { MethodOccurrences } from '@/components/topics/TopicView'
+
 import { ContentSection } from '../parts'
 import { ArticleView } from './ArticleView'
 
@@ -41,7 +43,9 @@ export async function MethodView({ doc, locale }: { doc: Method; locale: Locale 
         </dl>
       }
       afterResources={
-        alternatives.length > 0 ? (
+        <>
+          <MethodOccurrences methodId={doc.id} locale={locale} />
+          {alternatives.length > 0 ? (
           <ContentSection id="alternative-methoden" title={t('alternatives')}>
             <ul className="card-list">
               {alternatives.map((alt) => {
@@ -57,7 +61,8 @@ export async function MethodView({ doc, locale }: { doc: Method; locale: Locale 
               })}
             </ul>
           </ContentSection>
-        ) : null
+          ) : null}
+        </>
       }
     />
   )
