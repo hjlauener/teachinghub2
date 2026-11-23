@@ -7,6 +7,7 @@ import { genericOAuth, magicLink } from 'better-auth/plugins'
 import { getPayload } from 'payload'
 
 import { deleteMemberData } from '../hub/payload-data'
+import { savePreferences } from '../hub/repo-collections'
 
 import { authDatabase, AUTH_TABLES } from './database'
 import { magicLinkEmail } from './email'
@@ -137,6 +138,14 @@ export const authOptions = {
         before: async (user) => {
           await assertMayRegister(user.email, 'de')
           return { data: { ...user, email: normalizeEmail(user.email), name: checkedName(user.name) } }
+        },
+        // Sprache für Mails (z. B. „… hat etwas mit Ihnen geteilt“) = Sprache der Seite bei der Registrierung;
+        // änderbar in „Mein Hub“ (statt bei jedem Seitenaufruf zu speichern)
+        after: async (user, ctx) => {
+          // Magic Link: Konto entsteht beim Einlösen (GET, callbackURL in der Query); sonst im Body
+          const source = ctx as { query?: { callbackURL?: string }; body?: { callbackURL?: string } } | null | undefined
+          const locale = localeFromPath(source?.query?.callbackURL ?? source?.body?.callbackURL)
+          await savePreferences(authDatabase(), user.id, { locale }).catch(() => null)
         },
       },
       update: {

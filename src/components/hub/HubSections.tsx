@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormatter, useLocale, useTranslations } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import React, { useId, useState } from 'react'
 
 import type { CollectionKind } from '@/hub/rules'
@@ -217,13 +217,21 @@ export function FeedbackItem({ entry }: { entry: FeedbackEntry }) {
 }
 
 /** Mail-Benachrichtigung bei geteilten Inhalten ein-/ausschalten (Entscheidung 8.3). */
-export function PreferencesForm({ notifyShares: initial }: { notifyShares: boolean }) {
+export function PreferencesForm({ notifyShares: initialNotify, mailLocale: initialLocale }: { notifyShares: boolean; mailLocale: 'de' | 'en' | 'fr' }) {
   const t = useTranslations('Hub')
-  const locale = useLocale()
-  const [notify, setNotify] = useState(initial)
+  const id = useId()
+  const [notify, setNotify] = useState(initialNotify)
+  const [mailLocale, setMailLocale] = useState(initialLocale)
   const [message, setMessage] = useState<string | null>(null)
+
+  async function save(next: { notifyShares: boolean; locale: 'de' | 'en' | 'fr' }) {
+    const saved = await hubRequest('/api/hub/preferences', 'PUT', next)
+    setMessage(saved ? t('preferencesSaved') : t('error'))
+    return Boolean(saved)
+  }
+
   return (
-    <p>
+    <div className="stack-form">
       <label className="checkbox">
         <input
           type="checkbox"
@@ -231,22 +239,31 @@ export function PreferencesForm({ notifyShares: initial }: { notifyShares: boole
           onChange={async (e) => {
             const next = e.target.checked
             setNotify(next)
-            const saved = await hubRequest('/api/hub/preferences', 'PUT', {
-              notifyShares: next,
-              locale,
-            })
-            if (!saved) setNotify(!next)
-            setMessage(saved ? t('preferencesSaved') : t('error'))
+            if (!(await save({ notifyShares: next, locale: mailLocale }))) setNotify(!next)
           }}
         />{' '}
         {t('notifyShares')}
       </label>
+      <label htmlFor={`${id}-locale`}>{t('mailLocale')}</label>
+      <select
+        id={`${id}-locale`}
+        value={mailLocale}
+        onChange={async (e) => {
+          const next = e.target.value as 'de' | 'en' | 'fr'
+          const previous = mailLocale
+          setMailLocale(next)
+          if (!(await save({ notifyShares: notify, locale: next }))) setMailLocale(previous)
+        }}
+      >
+        <option value="de">Deutsch</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+      </select>
       {message && (
         <span role="status" className="meta">
-          {' '}
           {message}
         </span>
       )}
-    </p>
+    </div>
   )
 }

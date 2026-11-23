@@ -231,3 +231,11 @@ describe('KI: Ersatz-Embeddings für Tests', () => {
     expect(toVector([0.5, 1])).toBe('[0.500000,1.000000]')
   })
 })
+
+describe('KI: Verbindung nur zu öffentlichen Adressen (DNS-Rebinding)', () => {
+  it('sperrt Namen, die auf interne Adressen zeigen, schon beim Verbinden', async () => {
+    const { publicOnlyLookup } = await import('@/ai/providers')
+    const error = await new Promise<NodeJS.ErrnoException | null>((resolve) => publicOnlyLookup('localhost', { all: true }, (e) => resolve(e)))
+    expect(error?.code).toBe('EBLOCKED')
+  })
+})

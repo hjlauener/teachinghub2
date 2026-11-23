@@ -139,6 +139,7 @@ export interface Config {
   jobs: {
     tasks: {
       legacyDelta: TaskLegacyDelta;
+      aiIndex: TaskAiIndex;
       inline: {
         input: unknown;
         output: unknown;
@@ -2054,7 +2055,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'legacyDelta';
+        taskSlug: 'inline' | 'legacyDelta' | 'aiIndex';
         taskID: string;
         input?:
           | {
@@ -2087,7 +2088,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'legacyDelta') | null;
+  taskSlug?: ('inline' | 'legacyDelta' | 'aiIndex') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -3270,6 +3271,17 @@ export interface CollectionsWidget {
  */
 export interface TaskLegacyDelta {
   input?: unknown;
+  output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskAiIndex".
+ */
+export interface TaskAiIndex {
+  input: {
+    collection: string;
+    id: number;
+  };
   output?: unknown;
 }
 /**

@@ -17,6 +17,7 @@ import { MemberInvites, MemberSettings } from './collections/MemberInvites'
 import { Feedback, FeedbackImages } from './collections/Feedback'
 import { Suggestions } from './collections/Suggestions'
 import { withAiIndex } from './ai/indexer'
+import { allowedOrigins } from './hub/rules'
 import { AiSettings } from './globals/AiSettings'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
@@ -112,10 +113,31 @@ export default buildConfig({
           return { output: {} }
         },
       },
+      {
+        // KI-Index nach Änderungen im CMS nachführen (Phase 6; Aufträge aus src/ai/indexer.ts)
+        slug: 'aiIndex',
+        label: 'KI-Index aktualisieren',
+        retries: 2,
+        inputSchema: [
+          { name: 'collection', type: 'text', required: true },
+          { name: 'id', type: 'number', required: true },
+        ],
+        handler: async ({ input, req }) => {
+          const { indexDocument } = await import('./ai/indexer')
+          const embedded = await indexDocument(req.payload, input.collection as never, input.id)
+          return { output: { embedded } }
+        },
+      },
     ],
-    autoRun: weeklyDelta ? [{ cron: '*/15 * * * *', queue: 'weekly' }] : [],
+    autoRun: [
+      ...(weeklyDelta ? [{ cron: '*/15 * * * *', queue: 'weekly' }] : []),
+      // Index-Aufträge jede Minute abarbeiten (nicht in Testläufen, damit Tests den Index selbst steuern)
+      ...(process.env.AI_INDEX_ON_SAVE !== 'off' && !process.env.VITEST ? [{ cron: '* * * * *', queue: 'ai', limit: 20 }] : []),
+    ],
   },
   editor,
+  // Admin-Anmeldung per Cookie nur von der eigenen Website (CSRF-Schutz zusätzlich zu SameSite)
+  csrf: allowedOrigins(),
   // Beim Start geprüft (src/instrumentation.ts): im Produktionsbetrieb kein Platzhalter, mindestens 32 Zeichen
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -124,6 +124,27 @@ export const HUB_DDL: string[] = [
 
 export type Queryable = Pick<Pool, 'query'>
 
+/**
+ * Mehrere Schreibvorgänge atomar ausführen (Review Architektur). Mit einem Pool: eigene Verbindung mit
+ * BEGIN/COMMIT, bei Fehler ROLLBACK. Mit einer bereits geliehenen Verbindung (z. B. in Tests oder verschachtelt)
+ * läuft die Funktion direkt darauf.
+ */
+export async function inTransaction<T>(db: Queryable, fn: (tx: Queryable) => Promise<T>): Promise<T> {
+  if (!(db instanceof Pool)) return fn(db)
+  const client = await db.connect()
+  try {
+    await client.query('begin')
+    const result = await fn(client)
+    await client.query('commit')
+    return result
+  } catch (error) {
+    await client.query('rollback').catch(() => null)
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
 let pool: Pool | null = null
 
 export function hubDatabase(): Pool {

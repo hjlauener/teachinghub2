@@ -218,3 +218,8 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - Verlauf in „Mein Hub → Fragen an den Hub“ ohne automatisches Löschen; Antworten an Mitglieder teilbar (erscheinen unter „Mit mir geteilt“); im Daten-Export enthalten.
 - Missbrauchsschutz: höchstens 60 Fragen pro Stunde und Mitglied.
 - Offen: Qualität der Antworten mit echten Inhalten und bge-m3 messen und den Schwellwert (`AI_MIN_SCORE`, Standard 0.45) einstellen.
+
+**Hinweise aus dem Sicherheits- und Architektur-Review (nach Phase 6, direkt auf `main`):**
+- Sicherheit: keine SVG-Uploads (ältere SVGs isoliert ausgeliefert); Content-Security-Policy mit Nonce; Videos nur von Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo, SWITCHtube; Anmeldelinks höchstens 5 pro Adresse in 15 Minuten; App startet im Produktionsbetrieb nicht mit Platzhalter-Geheimnissen; KI-Schlüssel rotierbar; eigene Anbieter-Adressen gegen DNS-Rebinding geschützt; CSRF-Liste für den Admin.
+- Architektur: versionierte SQL-Migrationen für `hub`/`ai`; Index-Aufträge als Payload-Jobs statt Timer; Rate-Limits in der Datenbank; Transaktionen für mehrstufige Schreibvorgänge; Uploads über `UPLOADS_DIR` (Volume im Docker-Image); robuster Antwortstrom bei Abbruch; Mail-Sprache als Einstellung (bei Registrierung gesetzt).
+- Für die Online-Demo (Phase 8): Proxy des Hosters muss die Client-IP setzen (`AUTH_IP_HEADERS`), Volume für `/app/uploads`, echte Geheimnisse (`openssl rand -hex 32`).

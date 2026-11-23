@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone, editorsOnly, editorsOrTranslatorsInTargetLocale } from '@/access/roles'
 import { legacyField } from '@/fields/common'
 import { groups, l } from '@/lib/admin'
+import { uploadDir } from '@/lib/uploads'
 import { C } from '@/lib/slugs'
 
 /** Bilder und Dokumente (PDF/Office) – Kopien aus der Altsite tragen `legacy` (Entscheidung 3.1). */
@@ -33,6 +34,7 @@ export const Media: CollectionConfig = {
     legacyField,
   ],
   upload: {
+    staticDir: uploadDir('media'),
     // Keine SVG: sie können Skripte enthalten und liefen auf der eigenen Domain (Review Sicherheit)
     mimeTypes: [
       'image/jpeg',

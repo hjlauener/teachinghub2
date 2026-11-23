@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { editorsOnly } from '@/access/roles'
 import { asMailLocale, feedbackReplyEmail, hubUrl } from '@/hub/mail'
 import { l } from '@/lib/admin'
+import { uploadDir } from '@/lib/uploads'
 
 export { FEEDBACK_KINDS } from '@/hub/rules'
 
@@ -168,5 +169,5 @@ export const FeedbackImages: CollectionConfig = {
   admin: { group: feedbackGroup, hidden: true },
   access: { read: editorsOnly, create: deny, update: deny, delete: editorsOnly },
   fields: [{ name: 'memberId', type: 'text', index: true, admin: { hidden: true } }],
-  upload: { mimeTypes: ['image/png', 'image/jpeg', 'image/webp'], staticDir: 'feedback-images' },
+  upload: { mimeTypes: ['image/png', 'image/jpeg', 'image/webp'], staticDir: uploadDir('feedback-images') },
 }

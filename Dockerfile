@@ -22,6 +22,10 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 RUN mkdir .next && chown nextjs:nodejs .next
+# Hochgeladene Dateien (Mediathek, Feedback-Bilder) auf einem Volume, damit sie Deployments überstehen
+ENV UPLOADS_DIR=/app/uploads
+RUN mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
+VOLUME ["/app/uploads"]
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs

@@ -29,3 +29,6 @@ docs/seiteninventar.csv
 
 # Feedback-Bilder (Personendaten, nie committen)
 feedback-images/
+
+# Uploads ausserhalb von media/ (UPLOADS_DIR)
+uploads/

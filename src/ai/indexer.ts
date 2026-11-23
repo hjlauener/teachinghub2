@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto'
 
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, Payload } from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, Payload, PayloadRequest } from 'payload'
 
 import de from '../../messages/de.json'
 import en from '../../messages/en.json'
 import fr from '../../messages/fr.json'
-import { hubDatabase, type Queryable } from '../hub/database'
+import { hubDatabase, inTransaction, type Queryable } from '../hub/database'
 
 import { configuredEmbedder, type Embedder } from './embed'
 import { deleteDocument, existingHashes, pruneChunks, type StoredChunk, touchChunk, upsertChunk } from './index-repo'
@@ -74,12 +74,13 @@ export async function indexDocument(payload: Payload, collection: AiCollection, 
   const existing = await existingHashes(db, collection, id)
   const changed = wanted.filter((c) => existing.get(`${c.locale}:${c.part}`) !== `${c.contentHash}|${embedder.name}`)
   const unchanged = wanted.filter((c) => !changed.includes(c))
-  if (changed.length) {
-    const vectors = await embedder.embed(changed.map((c) => [c.title, c.label, c.text].filter(Boolean).join('\n')))
-    for (let i = 0; i < changed.length; i++) await upsertChunk(db, changed[i], embedder.name, vectors[i])
-  }
-  for (const c of unchanged) await touchChunk(db, c)
-  await pruneChunks(db, collection, id, keep)
+  // Einbetten ausserhalb der Transaktion (dauert), Schreiben atomar: der Index zeigt nie einen halben Stand
+  const vectors = changed.length ? await embedder.embed(changed.map((c) => [c.title, c.label, c.text].filter(Boolean).join('\n'))) : []
+  await inTransaction(db, async (tx) => {
+    for (let i = 0; i < changed.length; i++) await upsertChunk(tx, changed[i], embedder.name, vectors[i])
+    for (const c of unchanged) await touchChunk(tx, c)
+    await pruneChunks(tx, collection, id, keep)
+  })
   return changed.length
 }
 
@@ -109,32 +110,30 @@ export async function reindexAll(payload: Payload, log: (msg: string) => void = 
 
 /* ---------- Hooks: nach dem Speichern im CMS den Abschnitt-Index nachführen ---------- */
 
-const pending = new Map<string, ReturnType<typeof setTimeout>>()
+/** Warteschlange der Payload-Jobs für Index-Aufträge (Task `aiIndex`, siehe payload.config.ts). */
+export const AI_INDEX_QUEUE = 'ai'
 
 /**
- * Indexierung kurz verzögert und ausserhalb der Speicher-Transaktion (sonst wäre der neue Stand noch nicht sichtbar).
- * Fehler (z. B. Embedding-Dienst nicht erreichbar) blockieren das Speichern nie; `npm run ai:reindex` holt nach.
+ * Index-Auftrag in die Payload-Warteschlange (in derselben Transaktion wie das Speichern; überlebt Neustarts und
+ * Deployments). Ausgeführt wird er vom Job-Runner, also nach dem Commit. Fehler blockieren das Speichern nie;
+ * `npm run ai:reindex` gleicht ohnehin alles ab.
  */
-function schedule(payload: Payload, collection: AiCollection, id: number) {
+async function enqueue(req: PayloadRequest, collection: AiCollection, id: number) {
   if (process.env.AI_INDEX_ON_SAVE === 'off') return
-  const key = `${collection}:${id}`
-  clearTimeout(pending.get(key))
-  pending.set(
-    key,
-    setTimeout(() => {
-      pending.delete(key)
-      indexDocument(payload, collection, id).catch((error) => payload.logger.warn({ err: error, msg: `KI-Index: ${key} nicht aktualisiert` }))
-    }, 1500),
-  )
+  try {
+    await req.payload.jobs.queue({ task: 'aiIndex', input: { collection, id }, queue: AI_INDEX_QUEUE, req })
+  } catch (error) {
+    req.payload.logger.warn({ err: error, msg: `KI-Index: Auftrag ${collection}:${id} nicht eingereiht` })
+  }
 }
 
-const afterChange: CollectionAfterChangeHook = ({ doc, req, collection }) => {
-  schedule(req.payload, collection.slug as AiCollection, doc.id as number)
+const afterChange: CollectionAfterChangeHook = async ({ doc, req, collection }) => {
+  await enqueue(req, collection.slug as AiCollection, doc.id as number)
   return doc
 }
 
-const afterDelete: CollectionAfterDeleteHook = ({ id, req, collection }) => {
-  schedule(req.payload, collection.slug as AiCollection, Number(id))
+const afterDelete: CollectionAfterDeleteHook = async ({ id, req, collection }) => {
+  await enqueue(req, collection.slug as AiCollection, Number(id))
 }
 
 /** Hängt die Index-Hooks an die Inhalts-Collections (Artikel, Methoden, Tools, News, Seiten, Themen). */

@@ -1,6 +1,8 @@
+import { lookup as lookupCallback, type LookupAddress } from 'node:dns'
 import { lookup } from 'node:dns/promises'
 
 import Anthropic from '@anthropic-ai/sdk'
+import { Agent, fetch as pinnedFetch } from 'undici'
 
 import { isPrivateAddress, NO_SOURCE, type Provider } from './rules'
 
@@ -71,12 +73,43 @@ async function anthropicGenerate(input: GenerateInput): Promise<Generation> {
   }
 }
 
-/** Basis-URL nur zu öffentlichen Adressen auflösen (Schutz vor Anfragen ins interne Netz). */
+/** Vorprüfung mit verständlicher Meldung; die eigentliche Sperre macht `publicOnlyAgent` beim Verbinden. */
 async function assertPublicHost(baseUrl: string) {
   const { hostname } = new URL(baseUrl)
   const addresses = await lookup(hostname, { all: true }).catch(() => [])
   if (!addresses.length) throw new ProviderError('network', 'Adresse nicht auflösbar')
   if (addresses.some((a) => isPrivateAddress(a.address))) throw new ProviderError('blocked', 'Interne Adressen sind nicht erlaubt')
+}
+
+/**
+ * Verbindungen zu „OpenAI-kompatiblen“ Adressen: die Namensauflösung der Verbindung selbst prüft, dass alle
+ * Adressen öffentlich sind. So kann ein Name nicht zwischen Prüfung und Verbindung auf ein internes Ziel
+ * umschwenken (DNS-Rebinding).
+ */
+export function publicOnlyLookup(
+  hostname: string,
+  options: { all?: boolean },
+  callback: (error: NodeJS.ErrnoException | null, address: string | LookupAddress[], family?: number) => void,
+): void {
+  lookupCallback(hostname, { all: true }, (error, addresses) => {
+    if (error) return callback(error, [])
+    const list = addresses as LookupAddress[]
+    if (!list.length || list.some((a) => isPrivateAddress(a.address))) return callback(Object.assign(new Error('Interne Adressen sind nicht erlaubt'), { code: 'EBLOCKED' }), [])
+    return options.all ? callback(null, list) : callback(null, list[0].address, list[0].family)
+  })
+}
+
+const publicOnlyAgent = new Agent({ connect: { lookup: publicOnlyLookup as never } })
+
+/** fetch für Anbieter: bei eigener Adresse nur über die geprüfte Verbindung. */
+async function providerFetch(provider: Provider, url: string, init: RequestInit): Promise<Response> {
+  try {
+    if (provider !== 'compatible') return await fetch(url, init)
+    return (await pinnedFetch(url, { ...(init as object), dispatcher: publicOnlyAgent } as never)) as unknown as Response
+  } catch (error) {
+    const code = (error as { cause?: { code?: string } }).cause?.code
+    throw new ProviderError(code === 'EBLOCKED' ? 'blocked' : 'network', code === 'EBLOCKED' ? 'Interne Adressen sind nicht erlaubt' : 'Anbieter nicht erreichbar')
+  }
 }
 
 function httpError(status: number): ProviderError {
@@ -89,7 +122,7 @@ function httpError(status: number): ProviderError {
 async function openaiGenerate(input: GenerateInput): Promise<Generation> {
   const base = input.provider === 'openai' ? OPENAI_BASE : (input.baseUrl ?? '')
   if (input.provider === 'compatible') await assertPublicHost(base)
-  const response = await fetch(`${base}/chat/completions`, {
+  const response = await providerFetch(input.provider, `${base}/chat/completions`, {
     method: 'POST',
     redirect: 'error',
     signal: input.signal ?? AbortSignal.timeout(180_000),
@@ -103,8 +136,6 @@ async function openaiGenerate(input: GenerateInput): Promise<Generation> {
         { role: 'user', content: input.user },
       ],
     }),
-  }).catch(() => {
-    throw new ProviderError('network', 'Anbieter nicht erreichbar')
   })
   if (!response.ok || !response.body) throw httpError(response.status)
 
@@ -182,12 +213,10 @@ export async function verifyKey(input: { provider: Provider; model: string; apiK
   }
   const base = input.provider === 'openai' ? OPENAI_BASE : (input.baseUrl ?? '')
   if (input.provider === 'compatible') await assertPublicHost(base)
-  const response = await fetch(`${base}/models`, {
+  const response = await providerFetch(input.provider, `${base}/models`, {
     redirect: 'error',
     signal: AbortSignal.timeout(20_000),
     headers: { Authorization: `Bearer ${input.apiKey}` },
-  }).catch(() => {
-    throw new ProviderError('network', 'Anbieter nicht erreichbar')
   })
   if (!response.ok) throw httpError(response.status)
 }

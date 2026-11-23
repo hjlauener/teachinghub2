@@ -89,6 +89,9 @@ describe('KI-Index aus Payload-Inhalten (Entscheidungen 8.6, 8.9)', () => {
       overrideAccess: true,
     })
     articleId = article.id
+    // Speichern reiht einen Index-Auftrag in die Payload-Warteschlange ein (überlebt Neustarts; Review Architektur)
+    const jobs = await payload.find({ collection: 'payload-jobs', where: { and: [{ taskSlug: { equals: 'aiIndex' } }, { 'input.id': { equals: articleId } }] }, overrideAccess: true })
+    expect(jobs.totalDocs).toBeGreaterThan(0)
     expect(await indexDocument(payload, 'articles', articleId, { db, embedder })).toBe(2)
     // unverändert: nichts neu einbetten
     expect(await indexDocument(payload, 'articles', articleId, { db, embedder })).toBe(0)

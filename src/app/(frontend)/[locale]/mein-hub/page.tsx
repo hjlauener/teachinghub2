@@ -22,7 +22,6 @@ import {
   listInbox,
   listOwnCollections,
   listSharedCollections,
-  savePreferences,
 } from '@/hub/repo-collections'
 import { COLLECTION_KINDS } from '@/hub/rules'
 import { currentMember, refKey, resolveDocs } from '@/hub/server'
@@ -78,8 +77,6 @@ export default async function MyHubPage({ params }: Props) {
       )
     ).flatMap((q) => (q ? [[q.question.id, q.question.question] as const] : [])),
   )
-  // Sprache für Mails an diese Person (z. B. „… hat etwas mit Ihnen geteilt“) merken
-  if (prefs.locale !== locale) await savePreferences(db, member.id, { locale })
   const inboxRefs = inbox.flatMap((e) => (e.ref ? [e.ref] : []))
   const docs = await resolveDocs([...bookmarks, ...likes, ...inboxRefs], locale)
   const t = await getTranslations('Hub')
@@ -314,7 +311,7 @@ export default async function MyHubPage({ params }: Props) {
 
       <section className="content-section" aria-labelledby="preferences-heading" id="einstellungen">
         <h2 id="preferences-heading">{t('preferencesHeading')}</h2>
-        <PreferencesForm notifyShares={prefs.notifyShares} />
+        <PreferencesForm notifyShares={prefs.notifyShares} mailLocale={prefs.locale} />
       </section>
 
       <section className="content-section" aria-labelledby="ai-heading" id="ki">

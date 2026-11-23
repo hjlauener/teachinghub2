@@ -222,7 +222,8 @@
     "tocLabel": "Sections of “My Hub”",
     "preferencesHeading": "Notifications",
     "notifyShares": "Email me when someone shares something with me",
-    "preferencesSaved": "Setting saved."
+    "preferencesSaved": "Setting saved.",
+    "mailLocale": "Language of emails"
   },
   "Feedback": {
     "button": "Feedback",

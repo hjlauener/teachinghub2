@@ -1,7 +1,7 @@
 import { AUTH_SCHEMA, AUTH_TABLES } from '../auth/database'
 
 import type { Queryable } from './database'
-import { HUB_SCHEMA } from './database'
+import { HUB_SCHEMA, inTransaction } from './database'
 import {
   type CollectionAccess,
   collectionAccess,
@@ -188,17 +188,20 @@ export async function copyCollection(
   newOwnerId: string,
   title: string,
 ): Promise<string> {
-  const { rows } = await db.query<{ id: string }>(
-    `insert into ${collections} (owner_id, kind, title, description) select $2, kind, $3, description from ${collections} where id = $1 returning id`,
-    [id, newOwnerId, title],
-  )
-  const copyId = rows[0].id
-  await db.query(
-    `insert into ${items} (collection_id, ref_collection, ref_doc_id, title, note, created_at)
-     select $2, ref_collection, ref_doc_id, title, note, created_at from ${items} where collection_id = $1`,
-    [id, copyId],
-  )
-  return copyId
+  // Sammlung und Einträge gemeinsam – sonst bliebe bei einem Fehler eine leere Kopie zurück
+  return inTransaction(db, async (tx) => {
+    const { rows } = await tx.query<{ id: string }>(
+      `insert into ${collections} (owner_id, kind, title, description) select $2, kind, $3, description from ${collections} where id = $1 returning id`,
+      [id, newOwnerId, title],
+    )
+    const copyId = rows[0].id
+    await tx.query(
+      `insert into ${items} (collection_id, ref_collection, ref_doc_id, title, note, created_at)
+       select $2, ref_collection, ref_doc_id, title, note, created_at from ${items} where collection_id = $1`,
+      [id, copyId],
+    )
+    return copyId
+  })
 }
 
 /* ---------- Einträge ---------- */
@@ -338,14 +341,10 @@ export async function revokeShare(
   collectionId: string,
   memberId: string,
 ): Promise<void> {
-  await db.query(`delete from ${shares} where collection_id = $1 and member_id = $2`, [
-    collectionId,
-    memberId,
-  ])
-  await db.query(`delete from ${inbox} where shared_collection_id = $1 and recipient_id = $2`, [
-    collectionId,
-    memberId,
-  ])
+  await inTransaction(db, async (tx) => {
+    await tx.query(`delete from ${shares} where collection_id = $1 and member_id = $2`, [collectionId, memberId])
+    await tx.query(`delete from ${inbox} where shared_collection_id = $1 and recipient_id = $2`, [collectionId, memberId])
+  })
 }
 
 /** Geteilte Sammlung selbst verlassen (Empfänger:in). */

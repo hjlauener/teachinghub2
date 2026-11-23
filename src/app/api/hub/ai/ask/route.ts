@@ -38,9 +38,20 @@ export async function POST(request: Request) {
   const base = { question, sources: publicSources, locale, provider: key.provider, model: key.model }
 
   const encoder = new TextEncoder()
+  // Bricht der Browser ab, endet der Strom: danach nichts mehr senden (sonst Fehler „Controller is already closed“)
+  let closed = false
+  const abort = new AbortController()
+  request.signal.addEventListener('abort', () => abort.abort(), { once: true })
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      const send = (event: Record<string, unknown>) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`))
+      const send = (event: Record<string, unknown>) => {
+        if (closed) return
+        try {
+          controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`))
+        } catch {
+          closed = true
+        }
+      }
       const noSource = async (inputTokens = 0, outputTokens = 0) => {
         const id = await saveQuestion(db(), member.id, { ...base, sources: [], answer: '', outcome: 'no_source', inputTokens, outputTokens })
         send({ type: 'nosource', id, suggestions: suggestionsFrom(nearest), inputTokens, outputTokens })
@@ -51,11 +62,12 @@ export async function POST(request: Request) {
           return
         }
         send({ type: 'sources', sources: publicSources })
-        const result = await answer(question, sources, key, member.id, (text) => send({ type: 'delta', text }), request.signal)
+        const result = await answer(question, sources, key, member.id, (text) => send({ type: 'delta', text }), abort.signal)
         if (result.outcome === 'no_source') {
           await noSource(result.inputTokens, result.outputTokens)
           return
         }
+        // Auch abgebrochene Antworten landen im Verlauf (Tokens sind beim Anbieter angefallen)
         const id = await saveQuestion(db(), member.id, { ...base, answer: result.text, outcome: result.outcome, inputTokens: result.inputTokens, outputTokens: result.outputTokens })
         if (result.outcome === 'error') send({ type: 'error', id, code: result.error })
         else send({ type: 'done', id, inputTokens: result.inputTokens, outputTokens: result.outputTokens })
@@ -63,8 +75,19 @@ export async function POST(request: Request) {
         console.error('[Ask] Fehler', error)
         send({ type: 'error', code: 'other' })
       } finally {
-        controller.close()
+        if (!closed) {
+          closed = true
+          try {
+            controller.close()
+          } catch {
+            // bereits geschlossen
+          }
+        }
       }
+    },
+    cancel() {
+      closed = true
+      abort.abort()
     },
   })
   return new Response(stream, { headers: { 'Content-Type': 'application/x-ndjson; charset=utf-8', 'Cache-Control': 'private, no-store', 'X-Accel-Buffering': 'no' } })

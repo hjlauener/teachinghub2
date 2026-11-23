@@ -128,28 +128,6 @@ export function memberSearchPattern(value: unknown): MemberSearchPatterns | null
   return { name: `%${escaped}%`, email: `${escaped}%` }
 }
 
-/**
- * Einfaches Rate-Limit im Speicher (gleitendes Fenster pro Schlüssel). Reicht für eine Instanz des Prototyps.
- * `hit` liefert false, wenn das Limit erreicht ist.
- */
-export function createRateLimiter(max: number, windowMs: number, now: () => number = Date.now) {
-  const hits = new Map<string, number[]>()
-  return {
-    hit(key: string): boolean {
-      const t = now()
-      const recent = (hits.get(key) ?? []).filter((at) => t - at < windowMs)
-      if (recent.length >= max) {
-        hits.set(key, recent)
-        return false
-      }
-      recent.push(t)
-      hits.set(key, recent)
-      if (hits.size > 10_000) for (const [k, v] of hits) if (!v.some((at) => t - at < windowMs)) hits.delete(k)
-      return true
-    },
-  }
-}
-
 /* Feedback (Entscheidungen 8.2, 8.2a, 8.2b) */
 export const FEEDBACK_KINDS = ['fehler', 'verbesserung', 'idee', 'frage'] as const
 export type FeedbackKind = (typeof FEEDBACK_KINDS)[number]

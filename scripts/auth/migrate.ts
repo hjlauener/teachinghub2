@@ -1,14 +1,14 @@
 /**
  * Tabellen der Mitgliederkonten (Schema `auth`) und ihrer persönlichen Daten (Schema `hub`)
  * anlegen/aktualisieren: `npm run auth:migrate`
- * Idempotent; läuft lokal, in der CI und vor dem Start der Demo-Instanz.
+ * Better Auth gleicht sein Schema selbst ab; hub/ai über versionierte SQL-Migrationen (src/db/sql-migrations.ts).
+ * Läuft lokal, in der CI und vor dem Start der Demo-Instanz.
  */
 import { getMigrations } from 'better-auth/db/migration'
-import { Client } from 'pg'
+import { Client, Pool } from 'pg'
 
 import { AUTH_SCHEMA } from '../../src/auth/database'
-import { AI_DDL } from '../../src/ai/database'
-import { HUB_DDL } from '../../src/hub/database'
+import { runSqlMigrations } from '../../src/db/sql-migrations'
 
 const client = new Client({ connectionString: process.env.DATABASE_URL })
 await client.connect()
@@ -21,13 +21,9 @@ console.log(`Auth-Migration: ${toBeCreated.length} Tabellen neu, ${toBeAdded.len
 await runMigrations()
 console.log('Auth-Tabellen bereit.')
 
-// Persönliche Daten (Likes, Bookmarks …) – verweisen auf auth.member, deshalb danach
-const hub = new Client({ connectionString: process.env.DATABASE_URL })
-await hub.connect()
-for (const statement of HUB_DDL) await hub.query(statement)
-console.log('Hub-Tabellen bereit.')
-// KI-Index (Phase 6) – braucht pgvector (Docker-Image pgvector/pgvector)
-for (const statement of AI_DDL) await hub.query(statement)
-await hub.end()
-console.log('KI-Index-Tabellen bereit.')
+// Persönliche Daten (Schema hub) und KI-Index (Schema ai): versionierte Migrationen, verweisen auf auth.member
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 })
+const ran = await runSqlMigrations(pool)
+await pool.end()
+console.log(ran.length ? `SQL-Migrationen ausgeführt: ${ran.length}` : 'Hub- und KI-Tabellen aktuell.')
 process.exit(0)

@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import { feedbackReplyEmail, shareEmail } from '@/hub/mail'
 import {
   collectionAccess,
-  createRateLimiter,
   detectImageType,
   feedbackPlace,
   isCollectionKind,
@@ -63,16 +62,6 @@ describe('Sammlungen, Teilen, Feedback – Regeln (Phase 5, Teil 2)', () => {
     expect(memberSearchPattern('a%_\\')).toEqual({ name: '%a\\%\\_\\\\%', email: 'a\\%\\_\\\\%' })
   })
 
-  it('begrenzt Anfragen pro Schlüssel im gleitenden Fenster', () => {
-    let now = 0
-    const limiter = createRateLimiter(2, 1000, () => now)
-    expect(limiter.hit('a')).toBe(true)
-    expect(limiter.hit('a')).toBe(true)
-    expect(limiter.hit('a')).toBe(false)
-    expect(limiter.hit('b')).toBe(true)
-    now = 1000
-    expect(limiter.hit('a')).toBe(true)
-  })
 
   it('kennt die Feedback-Arten der Vorlage (Entscheidung 8.2)', () => {
     for (const kind of ['fehler', 'verbesserung', 'idee', 'frage'])

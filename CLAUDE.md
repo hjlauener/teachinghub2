@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–5 gemergt; **Phase 6 (Ask-a-question)** auf `phase-6-ask`. Nächste Phase: 7 (edu-ID-Test).
+- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–6 gemergt (M3 erreicht), Sicherheits-/Architektur-Review direkt auf `main`. Nächste Phase: 7 (edu-ID-Test).
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -64,14 +64,24 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Feedback-Bilder nur PNG/JPEG/WebP ≤ 5 MB, Typ per `detectImageType` (Bytes), Ordner `feedback-images/` ist gitignored. Konto löschen → `deleteMemberData` (Better Auth `afterDelete`).
 - Mails an Mitglieder nur über `src/hub/mail.ts` (maskiert); Teilen-Mail nur bei `notify_shares`, Sprache aus `hub.preferences.locale` (wird beim Besuch von „Mein Hub“ gesetzt).
 - Feedback-Dialog: `src/components/hub/FeedbackDialog.tsx`, im Layout eingebunden; Elemente mit `data-feedback-ignore` erscheinen nicht im Screenshot.
-- Review Phase 4/5: Mitgliedersuche findet E-Mails nur ab Adressanfang (nie über die Domain) und ist pro Mitglied begrenzt (`createRateLimiter`); Namen über `normalizeName` (einzeilig, ≤ 100) in Better-Auth-Hooks; Sprache der Anmeldemail über `localeFromMagicLink`.
+- Review Phase 4/5: Mitgliedersuche findet E-Mails nur ab Adressanfang (nie über die Domain) und ist pro Mitglied begrenzt (`hitRateLimit`, Tabelle `hub.rate_events`); Namen über `normalizeName` (einzeilig, ≤ 100) in Better-Auth-Hooks; Sprache der Anmeldemail über `localeFromMagicLink`.
 - Mails in Payload-Hooks immer in try/catch (Mailfehler dürfen Speichern nicht verhindern); Felder `memberEmail/memberName/memberId/mailLocale` sind nach dem Anlegen nicht änderbar.
 - Feedback-Upload verlangt Content-Length (411 ohne, 413 zu gross).
 
 ## Ask-a-question (Phase 6)
 - Code in `src/ai/`: Regeln rein in `rules.ts`/`sections.ts`/`select.ts` (getestet), Verschlüsselung `crypto.ts`, Embeddings `embed.ts`, Index `index-repo.ts` + `indexer.ts`, Anbieter `providers.ts`, Ablauf `ask.ts`, Mitgliederdaten `repo.ts`.
-- Index im Schema `ai` (pgvector, DDL mit `npm run auth:migrate`); Aufbau/Abgleich `npm run ai:reindex` (nach Importen). CMS-Änderungen werden per Hook nachgeführt (verzögert, ausserhalb der Transaktion; `AI_INDEX_ON_SAVE=off` schaltet ab).
+- Index im Schema `ai` (pgvector); Aufbau/Abgleich `npm run ai:reindex` (nach Importen). CMS-Änderungen reihen per Hook einen Payload-Job `aiIndex` ein (Warteschlange `ai`, Runner jede Minute; `AI_INDEX_ON_SAVE=off` schaltet ab, in Vitest läuft kein Runner).
 - Embeddings lokal über Ollama (`bge-m3`, Dienst `ollama`); Tests/CI mit `AI_EMBEDDER=fake`. Antworten nur mit eigenem Schlüssel (AES-GCM, `AI_KEY_SECRET` nie ändern); `AI_TEST_PROVIDER=1` aktiviert den Testanbieter (nur CI/lokal).
 - Ohne passende Quelle wird der Anbieter nicht angefragt. Basis-URL „OpenAI-kompatibel“ nur öffentlich (https, keine IP/localhost, DNS-Prüfung gegen private Netze).
 - Anthropic-Adapter über `@anthropic-ai/sdk` (Streaming, `effort: medium`, Refusal-Fallback `fallbacks: 'default'` für Modelle der 5er-Generation); Modellliste im Global `ai-settings` (Admin).
 - Antworten von fetch immer vollständig lesen (`r.json()`), sonst bleibt die Anfrage offen und `networkidle` in E2E hängt.
+
+## Sicherheit und Architektur (Review nach Phase 6)
+- Schemas `hub` und `ai` nur über versionierte Migrationen in `src/db/sql-migrations.ts` ändern (neue Einträge anhängen, bestehende nie ändern; läuft mit `npm run auth:migrate`, Tabelle `app.sql_migrations`).
+- Mehrstufige Schreibvorgänge in `inTransaction` (`src/hub/database.ts`); Limits in der DB (`hitRateLimit`), kein Zustand nur im Speicher.
+- Content-Security-Policy mit Nonce pro Anfrage in `src/proxy.ts` (`src/lib/csp.ts`); Frontend-Seiten rendern deshalb immer dynamisch (Layout liest `headers()`). Keine Inline-Skripte ohne Nonce.
+- Mediathek ohne SVG; ältere SVGs werden mit Sandbox-CSP ausgeliefert (`next.config.ts`). Videos nur von freigegebenen Plattformen (`src/lib/video.ts`, gleiche Liste in `frame-src`).
+- Geheimnisse werden beim Start geprüft (`src/instrumentation.ts`, `src/lib/secrets.ts`): im Produktionsbetrieb Abbruch bei Platzhaltern oder < 32 Zeichen. KI-Schlüssel im Format `v2:<schlüssel-id>:…`; Rotation mit `AI_KEY_SECRET_PREVIOUS` + `npm run ai:rotate-keys`.
+- Anmeldelinks: höchstens 5 pro Adresse in 15 Minuten (unabhängig von der IP); IP-Header für Better Auth über `AUTH_IP_HEADERS` (vom Proxy des Hosters gesetzt).
+- „OpenAI-kompatible“ Anbieter nur über `providerFetch` (undici-Agent mit Namensauflösung, die interne Adressen sperrt).
+- Uploads über `UPLOADS_DIR` (Docker: Volume `/app/uploads`); Mail-Sprache wird bei der Registrierung gesetzt, nicht beim Seitenaufruf.
