@@ -7,6 +7,7 @@ import {
 import React from 'react'
 
 import type { Locale } from '@/i18n/routing'
+import { isEmbeddableVideo, safeExternalUrl } from '@/lib/video'
 import type { Media } from '@/payload-types'
 
 type Props = {
@@ -67,9 +68,28 @@ function converters(locale: Locale): JSXConvertersFunction {
       videoEmbed: ({ node }: { node: { fields: VideoFields } }) => {
         const { url, title } = node.fields
         if (!url) return null
+        // Nur bekannte Video-Plattformen einbetten (src/lib/video.ts), sonst als Link
+        if (!isEmbeddableVideo(url)) {
+          const href = safeExternalUrl(url)
+          return href ? (
+            <p>
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {title || 'Video'}
+              </a>
+            </p>
+          ) : null
+        }
         return (
           <div className="rt-video">
-            <iframe src={url} title={title || 'Video'} loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen />
+            <iframe
+              src={url}
+              title={title || 'Video'}
+              loading="lazy"
+              allow="fullscreen; picture-in-picture"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+            />
           </div>
         )
       },

@@ -213,7 +213,7 @@ test('Meine Methoden: hinzufügen, eigener Eintrag, vorschlagen, teilen, Kopie, 
   await expect(page.getByText('Vorgeschlagen: eingereicht')).toBeVisible()
 
   // Sammlung lesend mit Rita teilen
-  await page.getByRole('combobox', { name: /Mitglieder/ }).fill(rita.email.slice(0, 12))
+  await page.getByRole('combobox', { name: /Mitglieder/ }).fill(rita.email.split('@')[0])
   await page.getByRole('option', { name: new RegExp(rita.name) }).click()
   await page.getByRole('button', { name: 'Teilen', exact: true }).click()
   await expect(page.getByText(`${rita.name} (${rita.email}) · darf lesen`)).toBeVisible()

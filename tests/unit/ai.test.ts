@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { decryptApiKey, encryptApiKey, keyFromSecret } from '@/ai/crypto'
+import { decryptApiKey, encryptApiKey, keyFromSecret, keyringFromEnv, needsRotation } from '@/ai/crypto'
 import { EMBEDDING_DIMENSIONS, fakeEmbedder, toVector } from '@/ai/embed'
 import type { ScoredChunk } from '@/ai/index-repo'
 import {
@@ -20,6 +20,7 @@ import {
 } from '@/ai/rules'
 import { buildChunks, CHUNK_MAX, isIndexable, splitText } from '@/ai/sections'
 import { preferLocale, suggestionsFrom } from '@/ai/select'
+import { checkSecrets, secretProblems } from '@/lib/secrets'
 
 const lexical = (...paragraphs: string[]) => ({
   root: { type: 'root', children: paragraphs.map((text) => ({ type: 'paragraph', children: [{ type: 'text', text }] })) },
@@ -159,21 +160,64 @@ describe('KI: Schutz bei eigener Anbieter-Adresse (SSRF)', () => {
 })
 
 describe('KI: Verschlüsselung der Schlüssel (Entscheidung 8.4)', () => {
-  const key = keyFromSecret('test-secret-test-secret-test-secret-123')
+  const OLD = 'altes-secret-altes-secret-altes-secret-1'
+  const NEW = 'neues-secret-neues-secret-neues-secret-2'
+  const ring = keyringFromEnv({ AI_KEY_SECRET: OLD })
 
   it('ver- und entschlüsselt; jede Verschlüsselung sieht anders aus', () => {
-    const a = encryptApiKey('sk-ant-geheim', 'member-1', key)
-    const b = encryptApiKey('sk-ant-geheim', 'member-1', key)
+    const a = encryptApiKey('sk-ant-geheim', 'member-1', ring)
+    const b = encryptApiKey('sk-ant-geheim', 'member-1', ring)
     expect(a).not.toBe(b)
     expect(a).not.toContain('geheim')
-    expect(decryptApiKey(a, 'member-1', key)).toBe('sk-ant-geheim')
+    expect(a.startsWith(`v2:${ring.current.id}:`)).toBe(true)
+    expect(decryptApiKey(a, 'member-1', ring)).toBe('sk-ant-geheim')
   })
 
   it('lässt sich nicht bei einem anderen Mitglied oder mit anderem Schlüssel entschlüsseln', () => {
-    const a = encryptApiKey('sk-ant-geheim', 'member-1', key)
-    expect(() => decryptApiKey(a, 'member-2', key)).toThrow()
-    expect(() => decryptApiKey(a, 'member-1', keyFromSecret('anderes-secret-anderes-secret-1234567'))).toThrow()
+    const a = encryptApiKey('sk-ant-geheim', 'member-1', ring)
+    expect(() => decryptApiKey(a, 'member-2', ring)).toThrow()
+    expect(() => decryptApiKey(a, 'member-1', keyringFromEnv({ AI_KEY_SECRET: NEW }))).toThrow()
     expect(() => keyFromSecret('zu-kurz')).toThrow()
+  })
+
+  it('erlaubt eine Rotation: alter Schlüssel lesbar über AI_KEY_SECRET_PREVIOUS, danach neu verschlüsselt', () => {
+    const stored = encryptApiKey('sk-ant-geheim', 'member-1', ring)
+    const rotated = keyringFromEnv({ AI_KEY_SECRET: NEW, AI_KEY_SECRET_PREVIOUS: OLD })
+    expect(needsRotation(stored, rotated)).toBe(true)
+    expect(decryptApiKey(stored, 'member-1', rotated)).toBe('sk-ant-geheim')
+    const fresh = encryptApiKey(decryptApiKey(stored, 'member-1', rotated), 'member-1', rotated)
+    expect(needsRotation(fresh, rotated)).toBe(false)
+    expect(decryptApiKey(fresh, 'member-1', keyringFromEnv({ AI_KEY_SECRET: NEW }))).toBe('sk-ant-geheim')
+  })
+
+  it('liest ältere Einträge im Format v1 mit dem aktuellen Schlüssel', async () => {
+    const { createCipheriv, randomBytes } = await import('node:crypto')
+    const iv = randomBytes(12)
+    const cipher = createCipheriv('aes-256-gcm', ring.current.key, iv)
+    cipher.setAAD(Buffer.from('member-1'))
+    const data = Buffer.concat([cipher.update('sk-alt', 'utf8'), cipher.final()])
+    const v1 = ['v1', iv.toString('base64'), cipher.getAuthTag().toString('base64'), data.toString('base64')].join(':')
+    expect(decryptApiKey(v1, 'member-1', ring)).toBe('sk-alt')
+    expect(needsRotation(v1, ring)).toBe(true)
+  })
+})
+
+describe('Startprüfung der Geheimnisse (Review Sicherheit)', () => {
+  const strong = { PAYLOAD_SECRET: 'a'.repeat(40), BETTER_AUTH_SECRET: 'b'.repeat(40), AI_KEY_SECRET: 'c'.repeat(40) }
+
+  it('erkennt fehlende, zu kurze und Platzhalter-Werte', () => {
+    expect(secretProblems(strong)).toEqual([])
+    expect(secretProblems({ ...strong, PAYLOAD_SECRET: 'bitte-ersetzen' })).toEqual(['PAYLOAD_SECRET ist noch der Platzhalter'])
+    expect(secretProblems({ ...strong, BETTER_AUTH_SECRET: 'kurz' })).toEqual(['BETTER_AUTH_SECRET ist kürzer als 32 Zeichen'])
+    expect(secretProblems({ ...strong, AI_KEY_SECRET: undefined })).toEqual(['AI_KEY_SECRET fehlt'])
+  })
+
+  it('bricht nur im Produktionsbetrieb ab, sonst Warnung', () => {
+    const warnings: string[] = []
+    expect(() => checkSecrets({ ...strong, AI_KEY_SECRET: '', NODE_ENV: 'production' })).toThrow(/AI_KEY_SECRET fehlt/)
+    expect(() => checkSecrets({ ...strong, AI_KEY_SECRET: '', NODE_ENV: 'development' }, (m) => warnings.push(m))).not.toThrow()
+    expect(warnings).toHaveLength(1)
+    expect(() => checkSecrets({ ...strong, NODE_ENV: 'production' })).not.toThrow()
   })
 })
 

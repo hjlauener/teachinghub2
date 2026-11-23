@@ -2,6 +2,7 @@ import type { Block } from 'payload'
 
 import { linkFields } from '@/fields/common'
 import { l } from '@/lib/admin'
+import { isEmbeddableVideo } from '@/lib/video'
 
 /** Freie Bausteine aus den Altsite-Vorlagen (Analyse 4: Infobox, Zweispalter, Video, Alertbox, Linkliste). */
 
@@ -39,7 +40,22 @@ export const VideoBlock: Block = {
       ],
     },
     // Videos werden eingebettet, nicht kopiert (Entscheidung 3.1)
-    { name: 'url', type: 'text', label: l('Einbettungs-URL', 'Embed URL', "URL d'intégration"), required: true },
+    {
+      name: 'url',
+      type: 'text',
+      label: l('Einbettungs-URL', 'Embed URL', "URL d'intégration"),
+      required: true,
+      admin: {
+        description: l(
+          'Nur https von Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo oder SWITCHtube; andere Adressen erscheinen als Link.',
+          'https only from Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo or SWITCHtube; other addresses are shown as a link.',
+          'https uniquement depuis Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo ou SWITCHtube ; les autres adresses sont affichées comme lien.',
+        ),
+      },
+      // Bei Eingaben im CMS prüfen; der Import der Altsite (ohne Benutzer:in) übernimmt alles und zeigt Fremdes als Link
+      validate: (value: unknown, { req }: { req: { user?: unknown } }) =>
+        !req.user || isEmbeddableVideo(value) || 'Diese Video-Plattform ist nicht freigegeben (siehe Hinweis).',
+    },
     { name: 'title', type: 'text', label: l('Titel (für Screenreader)', 'Title (for screen readers)', "Titre (lecteurs d'écran)"), localized: true, required: true },
     { name: 'caption', type: 'textarea', label: l('Legende', 'Caption', 'Légende'), localized: true },
   ],

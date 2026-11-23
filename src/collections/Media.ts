@@ -33,8 +33,13 @@ export const Media: CollectionConfig = {
     legacyField,
   ],
   upload: {
+    // Keine SVG: sie können Skripte enthalten und liefen auf der eigenen Domain (Review Sicherheit)
     mimeTypes: [
-      'image/*',
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'image/webp',
+      'image/avif',
       'application/pdf',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.*',

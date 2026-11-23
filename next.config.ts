@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
+      {
+        // Ältere SVG-Dateien in der Mediathek: direkt aufgerufen ohne Skripte und isoliert (Sandbox)
+        source: '/api/media/file/:file([^/]+\\.svg)',
+        headers: [{ key: 'Content-Security-Policy', value: "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox" }],
+      },
     ]
   },
   images: {

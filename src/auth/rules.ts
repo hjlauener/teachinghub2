@@ -79,3 +79,19 @@ export function normalizeName(value: unknown): string | null {
   const clean = value.replace(/[\u0000-\u001F\u007F\u2028\u2029]/g, ' ').replace(/\s+/g, ' ').trim()
   return clean.length > NAME_MAX ? null : clean
 }
+
+/**
+ * Missbrauchsschutz für Anmeldelinks (Review Sicherheit): höchstens so viele offene Links pro E-Mail-Adresse
+ * im Zeitfenster – unabhängig von der IP-Adresse, die ohne vertrauenswürdigen Proxy fälschbar ist.
+ */
+export const MAGIC_LINKS_PER_EMAIL = 5
+export const MAGIC_LINK_WINDOW_MINUTES = 15
+
+/** Header mit der Client-IP (vom Proxy des Hosters gesetzt); Standard wie Better Auth. */
+export function ipAddressHeaders(value: string | undefined): string[] {
+  const list = (value ?? 'x-forwarded-for')
+    .split(',')
+    .map((h) => h.trim().toLowerCase())
+    .filter((h) => /^[a-z0-9-]+$/.test(h))
+  return list.length ? list : ['x-forwarded-for']
+}

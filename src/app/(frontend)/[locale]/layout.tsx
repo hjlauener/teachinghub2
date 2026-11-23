@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -37,6 +38,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
+  // Seiten immer pro Anfrage rendern: nur so erhalten die Skripte die Nonce der Content-Security-Policy
+  await headers()
 
   const t = await getTranslations({ locale, namespace: 'Site' })
 

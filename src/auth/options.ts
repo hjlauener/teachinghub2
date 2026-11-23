@@ -12,8 +12,11 @@ import { authDatabase, AUTH_TABLES } from './database'
 import { magicLinkEmail } from './email'
 import {
   DEFAULT_SETTINGS,
+  ipAddressHeaders,
   localeFromMagicLink,
   localeFromPath,
+  MAGIC_LINK_WINDOW_MINUTES,
+  MAGIC_LINKS_PER_EMAIL,
   mayRegister,
   NAME_MAX,
   normalizeEmail,
@@ -52,6 +55,28 @@ async function assertMayRegister(email: string, locale: Locale) {
   if (!decision.allowed) throw new APIError('FORBIDDEN', { message: REASON_MESSAGES[decision.reason][locale], code: `REGISTRATION_${decision.reason.toUpperCase()}` })
 }
 
+const TOO_MANY_LINKS = {
+  de: 'Für diese Adresse wurden gerade mehrere Anmeldelinks verschickt. Bitte prüfen Sie Ihr Postfach oder versuchen Sie es später erneut.',
+  en: 'Several sign-in links were just sent to this address. Please check your inbox or try again later.',
+  fr: 'Plusieurs liens de connexion viennent d’être envoyés à cette adresse. Consultez votre boîte ou réessayez plus tard.',
+}
+
+/**
+ * Höchstens MAGIC_LINKS_PER_EMAIL offene Anmeldelinks pro Adresse im Zeitfenster (Schutz vor Mail-Bombing,
+ * unabhängig von der fälschbaren IP-Adresse). AUTH_RATE_LIMIT=off schaltet es für Testläufe ab.
+ */
+// Ohne JSON-Cast: andere Einträge der Tabelle (z. B. Passkey-Challenges) müssen kein JSON sein
+async function assertMagicLinkQuota(email: string, locale: Locale) {
+  if (process.env.AUTH_RATE_LIMIT === 'off') return
+  const { rows } = await authDatabase().query<{ n: string }>(
+    `select count(*) as n from ${AUTH_TABLES.verification}
+     where position('"type":"magic-link"' in value) > 0 and position(('"email":"' || $1 || '"') in lower(value)) > 0
+       and "createdAt" > now() - make_interval(mins => $2)`,
+    [email, MAGIC_LINK_WINDOW_MINUTES],
+  )
+  if (Number(rows[0]?.n ?? 0) >= MAGIC_LINKS_PER_EMAIL) throw new APIError('TOO_MANY_REQUESTS', { message: TOO_MANY_LINKS[locale], code: 'TOO_MANY_LINKS' })
+}
+
 function checkedName(value: unknown): string {
   const name = normalizeName(value)
   if (name === null) throw new APIError('BAD_REQUEST', { message: `Name: höchstens ${NAME_MAX} Zeichen, eine Zeile.`, code: 'INVALID_NAME' })
@@ -86,6 +111,9 @@ export const authOptions = {
   account: { modelName: AUTH_TABLES.account, accountLinking: { enabled: true, trustedProviders: ['eduid'] } },
   verification: { modelName: AUTH_TABLES.verification },
   // Schutz vor Missbrauch (Entscheidung 9.1)
+  // Client-IP nur aus dem Header, den der Proxy des Hosters setzt (z. B. AUTH_IP_HEADERS=x-real-ip);
+  // ohne solchen Proxy ist die IP fälschbar – deshalb zusätzlich das Limit pro Adresse (assertMagicLinkQuota)
+  advanced: { ipAddress: { ipAddressHeaders: ipAddressHeaders(process.env.AUTH_IP_HEADERS) } },
   rateLimit: {
     // Nur im Produktionsbetrieb (Standard von Better Auth); AUTH_RATE_LIMIT=off z. B. für E2E-Läufe
     enabled: process.env.NODE_ENV === 'production' && process.env.AUTH_RATE_LIMIT !== 'off',
@@ -97,6 +125,7 @@ export const authOptions = {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path !== '/sign-in/magic-link') return
       const email = normalizeEmail(String(ctx.body?.email ?? ''))
+      await assertMagicLinkQuota(email, localeFromPath(ctx.body?.callbackURL))
       const existing = await ctx.context.internalAdapter.findUserByEmail(email)
       if (!existing) await assertMayRegister(email, localeFromPath(ctx.body?.callbackURL))
     }),

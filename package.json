@@ -27,6 +27,7 @@
     "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts",
     "search:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/reindex.ts",
     "ai:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/ai/reindex.ts",
+    "ai:rotate-keys": "tsx scripts/ai/rotate-keys.ts",
     "legacy:parity": "tsx scripts/migration/parity.ts",
     "e2e:fixtures": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import-fixtures.ts",
     "topics:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/topics/import.ts",

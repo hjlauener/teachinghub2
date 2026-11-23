@@ -5,6 +5,7 @@ import type { Payload } from 'payload'
 import { REQUEST_DELAY_MS, USER_AGENT } from './config'
 import type { MediaRef } from './lexical'
 
+/** Übernommene Dateitypen; SVG bewusst nicht (können Skripte enthalten). */
 const MIME: Record<string, string> = {
   pdf: 'application/pdf',
   doc: 'application/msword',
@@ -17,7 +18,6 @@ const MIME: Record<string, string> = {
   jpeg: 'image/jpeg',
   png: 'image/png',
   gif: 'image/gif',
-  svg: 'image/svg+xml',
   webp: 'image/webp',
 }
 

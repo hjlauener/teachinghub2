@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { magicLinkEmail } from '@/auth/email'
-import { DEFAULT_SETTINGS, emailDomain, localeFromMagicLink, localeFromPath, mayRegister, NAME_MAX, normalizeName } from '@/auth/rules'
+import { DEFAULT_SETTINGS, emailDomain, ipAddressHeaders, localeFromMagicLink, localeFromPath, mayRegister, NAME_MAX, normalizeName } from '@/auth/rules'
 
 describe('Zulassung neuer Konten (Entscheidungen 2.1/2.2)', () => {
   it('Standard: nur @unibe.ch, keine Subdomains', () => {
@@ -57,5 +57,13 @@ describe('Anmeldemail und Name (Review Phase 4/5)', () => {
     expect(normalizeName(42)).toBeNull()
     expect(normalizeName('x'.repeat(NAME_MAX))).toHaveLength(NAME_MAX)
     expect(normalizeName('x'.repeat(NAME_MAX + 1))).toBeNull()
+  })
+})
+
+describe('IP-Header für das Rate-Limit', () => {
+  it('nimmt nur gültige Header-Namen, Standard x-forwarded-for', () => {
+    expect(ipAddressHeaders(undefined)).toEqual(['x-forwarded-for'])
+    expect(ipAddressHeaders(' X-Real-IP , cf-connecting-ip ')).toEqual(['x-real-ip', 'cf-connecting-ip'])
+    expect(ipAddressHeaders('bad header!,')).toEqual(['x-forwarded-for'])
   })
 })

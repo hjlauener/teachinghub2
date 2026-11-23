@@ -1,4 +1,4 @@
-import { encryptApiKey, keyFromSecret } from '@/ai/crypto'
+import { encryptApiKey, keyringFromEnv } from '@/ai/crypto'
 import { ProviderError, verifyKey } from '@/ai/providers'
 import { deleteKey, getKey, keyInfo, saveKey, updateKeyModel } from '@/ai/repo'
 import { isProvider, keyHint, normalizeApiKey, normalizeBaseUrl, normalizeModel } from '@/ai/rules'
@@ -53,7 +53,7 @@ export async function PUT(request: Request) {
   }
   let encrypted: string
   try {
-    encrypted = encryptApiKey(apiKey, member.id, keyFromSecret(process.env.AI_KEY_SECRET))
+    encrypted = encryptApiKey(apiKey, member.id, keyringFromEnv())
   } catch (error) {
     console.error('[KI-Schlüssel]', error)
     return json({ error: 'not-configured' }, 503)

@@ -2,7 +2,7 @@ import 'server-only'
 
 import { hubDatabase } from '@/hub/database'
 
-import { decryptApiKey, keyFromSecret } from './crypto'
+import { decryptApiKey, keyringFromEnv } from './crypto'
 import { configuredEmbedder, type Embedder } from './embed'
 import { nearestChunks, type ScoredChunk } from './index-repo'
 import { preferLocale } from './select'
@@ -39,7 +39,6 @@ export async function retrieve(question: string, locale: string, embedder: Embed
 export type AnswerResult = { outcome: 'answered' | 'no_source' | 'error'; text: string; inputTokens: number; outputTokens: number; error?: ProviderError['code'] | 'refused' }
 
 export async function answer(question: string, sources: RetrievedSource[], key: StoredKey, memberId: string, onText: (delta: string) => void, signal?: AbortSignal): Promise<AnswerResult> {
-  const apiKey = decryptApiKey(key.keyEncrypted, memberId, keyFromSecret(process.env.AI_KEY_SECRET))
   // Den Marker NO_SOURCE nicht als Teilantwort anzeigen: erst weitergeben, wenn klar ist, dass es kein Marker ist
   let buffer = ''
   let passing = false
@@ -53,6 +52,7 @@ export async function answer(question: string, sources: RetrievedSource[], key: 
     }
   }
   try {
+    const apiKey = decryptApiKey(key.keyEncrypted, memberId, keyringFromEnv())
     const result = await generate({
       provider: key.provider,
       model: key.model,

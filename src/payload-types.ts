@@ -335,6 +335,9 @@ export interface Page {
           }
         | {
             platform?: ('tobira' | 'opencast' | 'other') | null;
+            /**
+             * https only from Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo or SWITCHtube; other addresses are shown as a link.
+             */
             url: string;
             title: string;
             caption?: string | null;
@@ -626,6 +629,9 @@ export interface Article {
           }
         | {
             platform?: ('tobira' | 'opencast' | 'other') | null;
+            /**
+             * https only from Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo or SWITCHtube; other addresses are shown as a link.
+             */
             url: string;
             title: string;
             caption?: string | null;
@@ -935,6 +941,9 @@ export interface Method {
           }
         | {
             platform?: ('tobira' | 'opencast' | 'other') | null;
+            /**
+             * https only from Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo or SWITCHtube; other addresses are shown as a link.
+             */
             url: string;
             title: string;
             caption?: string | null;
@@ -1221,6 +1230,9 @@ export interface Tool {
           }
         | {
             platform?: ('tobira' | 'opencast' | 'other') | null;
+            /**
+             * https only from Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo or SWITCHtube; other addresses are shown as a link.
+             */
             url: string;
             title: string;
             caption?: string | null;

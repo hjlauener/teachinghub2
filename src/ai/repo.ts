@@ -148,3 +148,15 @@ export async function saveSearchMode(db: Queryable, memberId: string, mode: Sear
     [memberId, mode],
   )
 }
+
+/** Für die Schlüsselrotation (`npm run ai:rotate-keys`): alle gespeicherten Schlüssel. */
+export async function listEncryptedKeys(db: Queryable): Promise<{ memberId: string; keyEncrypted: string }[]> {
+  const { rows } = await db.query<{ member_id: string; key_encrypted: string }>(`select member_id, key_encrypted from ${keys}`)
+  return rows.map((r) => ({ memberId: r.member_id, keyEncrypted: r.key_encrypted }))
+}
+
+export async function updateEncryptedKey(db: Queryable, memberId: string, previous: string, next: string): Promise<boolean> {
+  // nur ersetzen, wenn der Eintrag inzwischen nicht geändert wurde
+  const result = await db.query(`update ${keys} set key_encrypted = $3 where member_id = $1 and key_encrypted = $2`, [memberId, previous, next])
+  return (result.rowCount ?? 0) > 0
+}

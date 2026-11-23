@@ -116,6 +116,7 @@ export default buildConfig({
     autoRun: weeklyDelta ? [{ cron: '*/15 * * * *', queue: 'weekly' }] : [],
   },
   editor,
+  // Beim Start geprüft (src/instrumentation.ts): im Produktionsbetrieb kein Platzhalter, mindestens 32 Zeichen
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
