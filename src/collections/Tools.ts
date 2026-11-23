@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { articleSectionTabs, titleAndLead } from '@/fields/articleSections'
 import { legacyField, pathField, seoField, taxonomyField } from '@/fields/common'
+import { buildSearchText, SEARCH_FIELDS, searchTextField } from '@/fields/searchText'
 import { groups, l } from '@/lib/admin'
 import { C } from '@/lib/slugs'
 import { validateUrl } from '@/lib/validation'
@@ -12,6 +13,7 @@ import { editorialDefaults } from './shared'
 export const Tools: CollectionConfig = {
   slug: C.tools,
   ...editorialDefaults,
+  hooks: { beforeChange: [buildSearchText([...SEARCH_FIELDS, 'faq'])] },
   labels: {
     singular: l('Tool', 'Tool', 'Outil'),
     plural: l('Tools', 'Tools', 'Outils'),
@@ -73,6 +75,7 @@ export const Tools: CollectionConfig = {
     },
     pathField(l('z. B. /journey_der_lehre/tools/zoom', 'e.g. /journey_der_lehre/tools/zoom', 'p. ex. /journey_der_lehre/tools/zoom')),
     seoField,
+    searchTextField,
     legacyField,
   ],
 }

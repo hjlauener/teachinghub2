@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–1 gemergt; **Phase 2 (Migration)** auf Branch `phase-2-migration`; nächste Phase: 3 Öffentliche Site.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; **Phase 3 (Öffentliche Site)** auf Branch `phase-3-site`; nächste Phase: 3b Landingpages.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -34,3 +34,10 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Importer verantwortet nur die Felder in `src/migration/fields.ts` (`importedFields`); alles andere pflegt die Redaktion.
 - Konverter muss dieselben Editor-Features nutzen wie die Website (`src/lib/editor.ts`), sonst gehen Tabellen verloren.
 - Hashes immer über `hashValue` (normalisiert null/fehlend, IDs, Schlüsselreihenfolge).
+
+## Website (Phase 3)
+- Inhalte per Pfad über `src/lib/content.ts` (`findByPath`, nur Publiziertes, DE-Fallback). Vorlagen in `src/components/content/views/`.
+- Rich Text immer über `src/components/content/RichText.tsx` (Tabellen, Bilder, Video-Blöcke, interne Links mit Sprachpräfix).
+- Keine Block-Elemente (`figure`, `div`) innerhalb von Absätzen rendern – Altsite-Bilder stehen oft in `<p>` (Hydration-Fehler).
+- Links auf grauen Flächen in `--color-blue-dark` (UniBE-Blau erreicht dort nur 4,48:1).
+- Clientseitige Filter: E2E muss auf `networkidle` warten; Dev-Server erlaubt den E2E-Host `app` (`allowedDevOrigins`).

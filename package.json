@@ -24,7 +24,10 @@
     "legacy:crawl": "tsx scripts/migration/crawl.ts",
     "legacy:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import.ts",
     "legacy:delta": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/delta.ts",
-    "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts"
+    "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts",
+    "search:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/reindex.ts",
+    "legacy:parity": "tsx scripts/migration/parity.ts",
+    "e2e:fixtures": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import-fixtures.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.94.1",

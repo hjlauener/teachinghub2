@@ -126,7 +126,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | **M1 Inhalte & Parität** | 0 Setup ✅ (22.11.2026) | Git/GitHub, Docker (App, Postgres, Mailpit), CI, UniBE-CD-Tokens, i18n-Gerüst, Prototyp-Hinweis | `docker compose up` → leere Site DE/EN/FR, CI grün |
 | | 1 Inhaltsmodell ✅ (22.11.2026) | Collections, Taxonomien, Rollen, Admin-Views | Redaktion legt Artikel/Methode/Thema an |
 | | 2 Migration ✅ (23.11.2026) | Importer, Medien, Migrations-Inbox, 3-Wege-Konflikt, Redirect-Regel | alle 257 Seiten + 67 Methoden importiert, Delta-Lauf erkennt Teständerung |
-| | 3 Öffentliche Site | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
+| | 3 Öffentliche Site ✅ (23.11.2026, Lighthouse offen) | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
 | | 3b Landingpages | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |
 | → | | **Folgetermin mit der Redaktion: Demo M1** | |
 | **M2 Mitglieder** | 4 Accounts | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
@@ -173,8 +173,10 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Phasen 0–2 sind umgesetzt (Phase 2 auf Branch `phase-2-migration`). Nächster Schritt: Phase 3 Öffentliche Site (Parität) – Briefing für die Redaktion (3.3a) bleibt offen.
+Phasen 0–3 sind umgesetzt (Phase 3 auf Branch `phase-3-site`). Nächster Schritt: Phase 3b Landingpages, danach Demo M1 für die Redaktion. Briefing für die Redaktion (3.3a) bleibt offen.
 
-**Hinweise aus Phase 2:** Erstimport 257/257 Seiten, 382 Dateien, 17 News; Tabellen (Lexical-Tabellen) und Videos (Video-Baustein im Text) bleiben erhalten. 5 Seiten sind reine Formulare der Altsite (SurveyJS) und enthalten nur Titel/Lead – Formulare folgen separat. Übersetzungen als „veraltet“ markieren folgt mit dem Übersetzungsmodell in Phase 3. Wöchentlicher Abgleich über Payload-Jobs mit `LEGACY_DELTA_WEEKLY=true`.
-
-**Hinweise aus Phase 0:** `/` leitet immer auf `/de` (keine Browsersprachen-Erkennung, wie Altsite). Hausschrift Frutiger Neue nicht eingebunden (Lizenz, 1.3a) → Arial/Helvetica. Payload-Migrationen werden ab Phase 1 nötig (bisher Schema-Push im Dev-Modus).
+**Hinweise aus Phase 3:**
+- Parität: 257/257 Altseiten erreichbar, alte URLs leiten per Regel (301) um (`npm run legacy:parity`).
+- Suche: Titel, Lead und Volltext (verstecktes Feld `searchText`, beim Speichern erzeugt; `npm run search:reindex`). Methoden zählen wie auf der Altsite zur Rubrik „Lehre durchführen“ / Thema „Lehrmethoden“.
+- Maschinelle Übersetzung ist gebaut (Google-Adapter, Cache je Feld und DE-Stand), aber ohne `GOOGLE_TRANSLATE_API_KEY` aus – EN/FR zeigen dann DE mit Hinweis.
+- Offen: Lighthouse-Messung (Ziel ≥ 90), Mobile-Menü (Navigation bricht derzeit nur um), Menüpunkt „Themen“ bis Phase 3b als Platzhalter, 5 Formularseiten der Altsite nur mit Titel/Lead.

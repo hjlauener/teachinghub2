@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { articleSectionTabs, titleAndLead } from '@/fields/articleSections'
 import { legacyField, pathField, seoField, taxonomyField } from '@/fields/common'
+import { buildSearchText, SEARCH_FIELDS, searchTextField } from '@/fields/searchText'
 import { groups, l } from '@/lib/admin'
 import { C } from '@/lib/slugs'
 
@@ -14,6 +15,7 @@ import { editorialDefaults } from './shared'
 export const Articles: CollectionConfig = {
   slug: C.articles,
   ...editorialDefaults,
+  hooks: { beforeChange: [buildSearchText(SEARCH_FIELDS)] },
   labels: {
     singular: l('Artikel', 'Article', 'Article'),
     plural: l('Artikel', 'Articles', 'Articles'),
@@ -61,6 +63,7 @@ export const Articles: CollectionConfig = {
     },
     pathField(),
     seoField,
+    searchTextField,
     legacyField,
   ],
 }

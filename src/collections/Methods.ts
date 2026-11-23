@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { articleSectionTabs, titleAndLead } from '@/fields/articleSections'
 import { legacyField, pathField, seoField, taxonomyField } from '@/fields/common'
+import { buildSearchText, SEARCH_FIELDS, searchTextField } from '@/fields/searchText'
 import { groups, l } from '@/lib/admin'
 import { C } from '@/lib/slugs'
 
@@ -11,6 +12,7 @@ import { editorialDefaults } from './shared'
 export const Methods: CollectionConfig = {
   slug: C.methods,
   ...editorialDefaults,
+  hooks: { beforeChange: [buildSearchText(SEARCH_FIELDS)] },
   labels: {
     singular: l('Methode', 'Method', 'Méthode'),
     plural: l('Methoden', 'Methods', 'Méthodes'),
@@ -58,6 +60,7 @@ export const Methods: CollectionConfig = {
     },
     pathField(l('z. B. /methodenkompass/think_pair_share', 'e.g. /methodenkompass/think_pair_share', 'p. ex. /methodenkompass/think_pair_share')),
     seoField,
+    searchTextField,
     legacyField,
   ],
 }

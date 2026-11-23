@@ -56,6 +56,8 @@ services:
     command: sh -c "npm ci --no-audit --no-fund --ignore-scripts && npx playwright test"
     environment:
       E2E_BASE_URL: http://app:3000
+      # Lokal gegen die importierten Altsite-Inhalte testen (CI nutzt künstliche Testseiten)
+      E2E_REAL_DATA: '1'
       CI: '1'
     volumes:
       - .:/app
