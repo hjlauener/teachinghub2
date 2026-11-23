@@ -23,7 +23,7 @@ async function magicLinkFor(email: string): Promise<string> {
 
 test('Konto ist ohne Anmeldung nicht erreichbar', async ({ page }) => {
   await page.goto('/de/konto')
-  await expect(page).toHaveURL(/\/de\/anmelden$/)
+  await expect(page).toHaveURL(/\/de\/anmelden\?zurueck=%2Fde%2Fkonto$/)
   expect((await axe(page)).violations).toEqual([])
 })
 
@@ -45,9 +45,10 @@ test('Magic Link: anmelden, abmelden, Konto löschen', async ({ page }) => {
 
   const link = new URL(await magicLinkFor(email))
   await page.goto(`${link.pathname}${link.search}`) // gleicher Host wie die Tests
-  await expect(page).toHaveURL(/\/de\/konto$/)
+  await expect(page).toHaveURL(/\/de\/mein-hub$/)
+  await expect(page.getByRole('link', { name: 'Mein Hub' })).toBeVisible()
+  await page.goto('/de/konto')
   await expect(page.getByText(`Angemeldet als ${email}`)).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Mein Konto' })).toBeVisible()
   expect((await axe(page)).violations).toEqual([])
 
   // Link funktioniert nur einmal
@@ -69,7 +70,8 @@ test('Magic Link: anmelden, abmelden, Konto löschen', async ({ page }) => {
   const latest = (await (await fetch(`${mailpit}/api/v1/message/${list.messages[0].ID}`)).json()) as { Text: string }
   const second = new URL(latest.Text.match(/https?:\/\/\S+\/api\/auth\/magic-link\/verify\S+/)![0])
   await page.goto(`${second.pathname}${second.search}`)
-  await expect(page).toHaveURL(/\/de\/konto$/)
+  await expect(page).toHaveURL(/\/de\/mein-hub$/)
+  await page.goto('/de/konto')
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Konto endgültig löschen' }).click()
   await expect(page.getByRole('link', { name: 'Anmelden' })).toBeVisible()

@@ -25,6 +25,8 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InboxReview as InboxReview_8a7fe4bed4ef793a9230920a77eb06a3 } from '@/components/admin/InboxReview'
 import { DeltaRunButton as DeltaRunButton_7787dbfae083e4670177937ca01f51ae } from '@/components/admin/DeltaRunButton'
+import { LikeStatsLink as LikeStatsLink_9222561846eec304ce1b48a6c5f7055f } from '@/components/admin/LikeStatsLink'
+import { LikeStats as LikeStats_bf41db9c34cac43cdad6988ac5829bef } from '@/components/admin/LikeStats'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -56,5 +58,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/InboxReview#InboxReview": InboxReview_8a7fe4bed4ef793a9230920a77eb06a3,
   "@/components/admin/DeltaRunButton#DeltaRunButton": DeltaRunButton_7787dbfae083e4670177937ca01f51ae,
+  "@/components/admin/LikeStatsLink#LikeStatsLink": LikeStatsLink_9222561846eec304ce1b48a6c5f7055f,
+  "@/components/admin/LikeStats#LikeStats": LikeStats_bf41db9c34cac43cdad6988ac5829bef,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

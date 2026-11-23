@@ -30,7 +30,7 @@ docker compose exec app npm run typecheck
 docker compose exec app npm test                 # Unit- und Integrationstests
 docker compose --profile e2e run --rm e2e        # Playwright + axe gegen die laufende App
 docker compose exec app npm run seed             # Schlagwörter + Navigation einspielen (idempotent)
-docker compose exec app npm run auth:migrate     # Tabellen der Mitgliederkonten (Schema auth); läuft beim Start automatisch
+docker compose exec app npm run auth:migrate     # Tabellen der Mitgliederkonten (Schema auth) und ihrer Daten (Schema hub); läuft beim Start automatisch
 docker compose exec app npm run generate:types   # nach Änderungen an Collections
 docker compose exec app npm run migrate:create -- <name>  # Migration für Produktion erzeugen
 docker compose exec app npm run generate:importmap

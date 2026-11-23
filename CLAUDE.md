@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; Phase 3 auf `phase-3-site` (PR #13), Phase 3b auf `phase-3b-landingpages` (PR #14), **Phase 4 (Accounts)** auf `phase-4-accounts`; nächste Phase: 5 Personalisierung.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–4 gemergt; **Phase 5 (Personalisierung)** auf `phase-5-personalisierung`: Teil 1 (Like, Bookmark, Mein Hub, Export), Teil 2 (Feedback-Dialog, Sammlungen, Teilen) folgt.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -53,3 +53,9 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Zulassung in `src/auth/rules.ts` (rein, getestet); Einstellungen im Payload-Global `member-settings`, Einladungen `member-invites`.
 - E2E-Container teilt das Netzwerk mit der App (`network_mode: service:app`), weil die Anmeldung auf BETTER_AUTH_URL (localhost) zurückleitet. Mailpit-API für Anmeldelinks.
 - Produktions-DB darf nie per Dev-Push verändert werden (sonst hängt der Start an einer Rückfrage) – Integrationstests in der CI auf eigener DB.
+
+## Persönliche Funktionen (Phase 5)
+- Daten der Mitglieder im Schema `hub` (`src/hub/database.ts`, DDL läuft mit `npm run auth:migrate`), Fremdschlüssel auf `auth.member` mit `on delete cascade` – Konto löschen löscht alles.
+- Regeln rein in `src/hub/rules.ts` (getestet), SQL in `src/hub/repo.ts`, serverseitige Helfer in `src/hub/server.ts`; API unter `/api/hub/*` (schreibend nur same-origin + Session).
+- Like-Zähler erst ab 3 öffentlich; Rohzahlen unter 3 nie an den Browser geben (Kompass bekommt nur einen Rang). Wer geliked hat, zeigt keine Ansicht, auch nicht die Redaktion (`/admin/like-statistik` zeigt nur Zähler).
+- Persönlicher Zustand wird clientseitig geladen (`/api/hub/state`), Seiten bleiben für alle gleich gerendert.

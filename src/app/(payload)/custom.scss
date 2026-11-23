@@ -1,0 +1,22 @@
+
+/* Like-Statistik (Phase 5) */
+.like-stats__nav {
+  display: block;
+  margin-top: 1rem;
+}
+
+.like-stats__table {
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.4rem 1rem 0.4rem 0;
+    border-bottom: 1px solid var(--theme-elevation-150);
+  }
+}
+
+.like-stats details {
+  margin-bottom: 0.75rem;
+}

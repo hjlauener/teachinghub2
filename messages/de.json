@@ -89,7 +89,9 @@
     "sortBy": "Sortieren nach",
     "sortName": "Name",
     "sortEffort": "Aufwand",
-    "noResults": "Keine Methode passt zu diesen Filtern."
+    "noResults": "Keine Methode passt zu diesen Filtern.",
+    "sortPopular": "Beliebt",
+    "popular": "Beliebt"
   },
   "Search": {
     "heading": "Suche",
@@ -106,7 +108,10 @@
     "typeMethod": "Methode",
     "typeTool": "Tool",
     "typeNews": "News",
-    "reset": "Filter zurücksetzen"
+    "reset": "Filter zurücksetzen",
+    "sort": "Sortierung",
+    "sortRelevance": "Relevanz",
+    "sortPopular": "Beliebt"
   },
   "Topics": {
     "heading": "Themen der Lehre",
@@ -176,5 +181,40 @@
     "memberSince": "Mitglied seit {date}",
     "linkInvalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
     "eduid": "Mit SWITCH edu-ID anmelden"
+  },
+  "Hub": {
+    "nav": "Mein Hub",
+    "actions": "Persönliche Funktionen",
+    "like": "Hilfreich",
+    "likeCount": "{count} Kolleg:innen finden das hilfreich",
+    "likeShort": "{count} finden das hilfreich",
+    "bookmark": "Merken",
+    "bookmarked": "Gemerkt",
+    "signInToUse": "Anmelden, um Inhalte zu merken oder als hilfreich zu markieren",
+    "heading": "Mein Hub",
+    "lead": "Ihre gemerkten Inhalte, Ihre Likes und Ihre Daten an einem Ort.",
+    "bookmarksHeading": "Gemerkt",
+    "noBookmarks": "Noch nichts gemerkt. Mit „Merken“ auf einer Inhaltsseite legen Sie sie hier ab.",
+    "note": "Notiz zu «{title}»",
+    "saveNote": "Notiz speichern",
+    "noteSaved": "Notiz gespeichert.",
+    "removeBookmark": "Nicht mehr merken",
+    "likesHeading": "Hilfreich gefunden",
+    "likesPrivate": "Nur Sie sehen, was Sie als hilfreich markiert haben. Andere sehen nur die Anzahl, und erst ab 3.",
+    "noLikes": "Noch keine Inhalte als hilfreich markiert.",
+    "removeLike": "Markierung entfernen",
+    "exportHeading": "Meine Daten",
+    "exportLead": "Laden Sie alle Angaben, die der Teaching Hub über Sie speichert, als JSON-Datei herunter.",
+    "exportButton": "Daten herunterladen",
+    "accountSettings": "Konto und Passkeys verwalten",
+    "backToHub": "Zurück zu „Mein Hub“",
+    "error": "Das hat nicht geklappt. Bitte versuchen Sie es erneut.",
+    "type_articles": "Artikel",
+    "type_methods": "Methode",
+    "type_tools": "Tool",
+    "type_news": "News",
+    "type_pages": "Seite",
+    "type_topics": "Thema",
+    "type_subtopics": "Unterthema"
   }
 }

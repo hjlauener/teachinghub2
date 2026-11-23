@@ -9,10 +9,14 @@ import { MethodView } from '@/components/content/views/MethodView'
 import { NewsView } from '@/components/content/views/NewsView'
 import { PageView } from '@/components/content/views/PageView'
 import { ToolView } from '@/components/content/views/ToolView'
+import { ContentActions } from '@/components/hub/ContentActions'
 import { SearchPage } from '@/components/search/SearchPage'
 import { TopicsOverview } from '@/components/topics/TopicsOverview'
 import { SubtopicView, TopicView } from '@/components/topics/TopicView'
 import { mainNavigation } from '@/config/navigation'
+import { hubDatabase } from '@/hub/database'
+import { likeCount } from '@/hub/repo'
+import { publicLikeCount } from '@/hub/rules'
 import { Link } from '@/i18n/navigation'
 import { isLocale, type Locale } from '@/i18n/routing'
 import { type ContentDoc, findByPath, getPayloadClient, isTranslated, titleForPath } from '@/lib/content'
@@ -100,11 +104,16 @@ export default async function ContentRoute({ params, searchParams }: Props) {
     }
   }
   const breadcrumb = await crumbs(path, locale)
+  // Like-Zähler ist öffentlich, aber erst ab 3 (Entscheidung 8.1)
+  const likes = publicLikeCount(
+    await likeCount(hubDatabase(), { collection: found.collection, id: found.doc.id }).catch(() => 0),
+  )
 
   return (
     <>
       <Breadcrumb items={breadcrumb} />
       <TranslationNotice state={state} />
+      <ContentActions collection={found.collection} id={found.doc.id} count={likes} />
       {found.collection === 'articles' && <ArticleView doc={found.doc} locale={locale} kind="articles" />}
       {found.collection === 'methods' && <MethodView doc={found.doc} locale={locale} />}
       {found.collection === 'tools' && <ToolView doc={found.doc} locale={locale} />}
