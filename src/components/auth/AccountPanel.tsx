@@ -16,6 +16,7 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
   const [name, setName] = useState(initialName)
   const [message, setMessage] = useState<string | null>(null)
   const [passkeys, setPasskeys] = useState<Passkey[]>([])
+  const [reauth, setReauth] = useState(false)
 
   const loadPasskeys = () =>
     authClient.passkey
@@ -30,7 +31,7 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
   async function saveName(event: React.FormEvent) {
     event.preventDefault()
     const { error } = await authClient.updateUser({ name })
-    setMessage(error ? error.message || t('error') : t('saved'))
+    setMessage(error ? (error.code === 'INVALID_NAME' ? t('nameInvalid') : t('error')) : t('saved'))
   }
 
   async function addPasskey() {
@@ -44,6 +45,11 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
     await loadPasskeys()
   }
 
+  async function signInAgain() {
+    await authClient.signOut()
+    router.push({ pathname: '/anmelden', query: { zurueck: `/${locale}/konto` } })
+  }
+
   async function signOut() {
     await authClient.signOut()
     router.push('/')
@@ -53,7 +59,9 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
   async function deleteAccount() {
     if (!window.confirm(t('deleteConfirm'))) return
     const { error } = await authClient.deleteUser({ callbackURL: `/${locale}` })
-    if (error) return setMessage(error.message || t('error'))
+    // Löschen verlangt eine frische Anmeldung (Better Auth: höchstens 24 h alt)
+    if (error?.code === 'SESSION_EXPIRED') return setReauth(true)
+    if (error) return setMessage(t('error'))
     router.push('/')
     router.refresh()
   }
@@ -65,7 +73,7 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
       <form onSubmit={saveName} className="filters">
         <div className="filters__field filters__field--wide">
           <label htmlFor="account-name">{t('name')}</label>
-          <input id="account-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <input id="account-name" type="text" autoComplete="name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <button type="submit" className="button button--primary">
           {t('save')}
@@ -111,6 +119,14 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
         <button type="button" className="button button--secondary" onClick={deleteAccount}>
           {t('deleteButton')}
         </button>
+        {reauth && (
+          <div role="alert" className="alertbox alertbox--warning">
+            <p>{t('reauthToDelete')}</p>
+            <button type="button" className="button button--primary" onClick={signInAgain}>
+              {t('reauthButton')}
+            </button>
+          </div>
+        )}
       </section>
     </div>
   )

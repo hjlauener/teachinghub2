@@ -180,7 +180,10 @@
     "deleted": "Votre compte a été supprimé.",
     "memberSince": "Membre depuis le {date}",
     "linkInvalid": "Ce lien de connexion est invalide ou a expiré. Veuillez en demander un nouveau.",
-    "eduid": "Se connecter avec SWITCH edu-ID"
+    "eduid": "Se connecter avec SWITCH edu-ID",
+    "reauthToDelete": "La suppression du compte nécessite une connexion récente (24 heures au plus). Veuillez vous reconnecter, puis supprimer le compte.",
+    "reauthButton": "Se reconnecter",
+    "nameInvalid": "Le nom ne doit pas dépasser 100 caractères."
   },
   "Hub": {
     "nav": "Mon Hub",

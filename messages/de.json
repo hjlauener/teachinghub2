@@ -180,7 +180,10 @@
     "deleted": "Ihr Konto wurde gelöscht.",
     "memberSince": "Mitglied seit {date}",
     "linkInvalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
-    "eduid": "Mit SWITCH edu-ID anmelden"
+    "eduid": "Mit SWITCH edu-ID anmelden",
+    "reauthToDelete": "Zum Löschen des Kontos ist eine frische Anmeldung nötig (höchstens 24 Stunden alt). Bitte melden Sie sich neu an und löschen Sie das Konto danach.",
+    "reauthButton": "Neu anmelden",
+    "nameInvalid": "Der Name darf höchstens 100 Zeichen lang sein."
   },
   "Hub": {
     "nav": "Mein Hub",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { magicLinkEmail } from '@/auth/email'
-import { DEFAULT_SETTINGS, emailDomain, mayRegister } from '@/auth/rules'
+import { DEFAULT_SETTINGS, emailDomain, localeFromMagicLink, localeFromPath, mayRegister, NAME_MAX, normalizeName } from '@/auth/rules'
 
 describe('Zulassung neuer Konten (Entscheidungen 2.1/2.2)', () => {
   it('Standard: nur @unibe.ch, keine Subdomains', () => {
@@ -37,5 +37,25 @@ describe('Mail mit Anmeldelink', () => {
     expect(mail.text).toContain('15 minutes')
     expect(mail.html).toContain('&quot;c&quot;')
     expect(mail.html).not.toContain('"c"')
+  })
+})
+
+describe('Anmeldemail und Name (Review Phase 4/5)', () => {
+  it('liest die Sprache aus dem kodierten Rücksprungpfad des Magic Links', () => {
+    expect(localeFromMagicLink('http://localhost:3000/api/auth/magic-link/verify?token=abc&callbackURL=%2Ffr%2Fmein-hub')).toBe('fr')
+    expect(localeFromMagicLink('http://localhost:3000/api/auth/magic-link/verify?token=abc&callbackURL=%2Fen')).toBe('en')
+    expect(localeFromMagicLink('http://localhost:3000/api/auth/magic-link/verify?token=abc&callbackURL=%2F')).toBe('de')
+    expect(localeFromMagicLink('kein url')).toBe('de')
+    expect(localeFromPath('/en/methodenkompass?x=1')).toBe('en')
+    expect(localeFromPath('/english')).toBe('de')
+  })
+
+  it('lässt als Namen nur einzeiligen Text bis 100 Zeichen zu', () => {
+    expect(normalizeName('  Eva\r\nBcc: x@example.com ')).toBe('Eva Bcc: x@example.com')
+    expect(normalizeName(undefined)).toBe('')
+    expect(normalizeName({ evil: true })).toBeNull()
+    expect(normalizeName(42)).toBeNull()
+    expect(normalizeName('x'.repeat(NAME_MAX))).toHaveLength(NAME_MAX)
+    expect(normalizeName('x'.repeat(NAME_MAX + 1))).toBeNull()
   })
 })

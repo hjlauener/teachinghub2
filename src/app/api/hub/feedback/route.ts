@@ -24,8 +24,10 @@ import { getPayloadClient } from '@/lib/content'
 export async function POST(request: Request) {
   const checked = await requireMember(request, { write: true })
   if ('error' in checked) return checked.error
-  const length = Number(request.headers.get('content-length') ?? 0)
-  if (length > IMAGE_MAX_BYTES + 100_000) return json({ error: 'too-large' }, 413)
+  // Grösse vor dem Einlesen prüfen: ohne Content-Length (chunked) würde formData() alles puffern
+  const header = request.headers.get('content-length')
+  if (header === null || !/^\d+$/.test(header)) return json({ error: 'length-required' }, 411)
+  if (Number(header) > IMAGE_MAX_BYTES + 100_000) return json({ error: 'too-large' }, 413)
   const form = await request.formData().catch(() => null)
   if (!form) return json({ error: 'invalid' }, 400)
 

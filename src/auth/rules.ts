@@ -46,3 +46,36 @@ export const REASON_MESSAGES: Record<'invalid' | 'domain' | 'invite', { de: stri
   },
   invite: { de: 'Ein Konto ist derzeit nur mit Einladung möglich.', en: 'Accounts are currently by invitation only.', fr: 'Un compte n’est actuellement possible que sur invitation.' },
 }
+
+export type AuthLocale = 'de' | 'en' | 'fr'
+
+/** Sprache aus einem lokalen Pfad mit Sprachpräfix (z. B. `/fr/mein-hub`); sonst Deutsch. */
+export function localeFromPath(path: string | undefined | null): AuthLocale {
+  const match = (path ?? '').match(/^\/(de|en|fr)(\/|$|\?|#)/)
+  return (match?.[1] as AuthLocale | undefined) ?? 'de'
+}
+
+/**
+ * Sprache für die Anmeldemail: aus dem Rücksprungpfad (`callbackURL`) des Magic Links.
+ * Better Auth kodiert ihn in der Verify-URL (`?callbackURL=%2Ffr%2F…`), deshalb erst dekodieren.
+ */
+export function localeFromMagicLink(url: string): AuthLocale {
+  try {
+    return localeFromPath(new URL(url).searchParams.get('callbackURL'))
+  } catch {
+    return 'de'
+  }
+}
+
+export const NAME_MAX = 100
+
+/**
+ * Anzeigename prüfen (Better Auth nimmt beliebige Werte an): Text, eine Zeile ohne Steuerzeichen,
+ * höchstens NAME_MAX Zeichen. null = ungültig. Der Name erscheint in Mails, Suche und Sammlungen.
+ */
+export function normalizeName(value: unknown): string | null {
+  if (value === undefined || value === null) return ''
+  if (typeof value !== 'string') return null
+  const clean = value.replace(/[\u0000-\u001F\u007F\u2028\u2029]/g, ' ').replace(/\s+/g, ' ').trim()
+  return clean.length > NAME_MAX ? null : clean
+}

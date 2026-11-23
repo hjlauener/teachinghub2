@@ -2,6 +2,7 @@ import { notifyShare } from '@/hub/notify'
 import { addInbox, findMember, recentSharesCount } from '@/hub/repo-collections'
 import { MESSAGE_MAX, normalizeText, SHARES_PER_HOUR, parseRef } from '@/hub/rules'
 import { db, json, readBody, requireMember, resolveDocs } from '@/hub/server'
+import type { Locale } from '@/i18n/routing'
 
 /**
  * Inhalt an Kolleg:innen senden (Entscheidung 8.3): POST { collection, id, memberIds: string[], message? }.
@@ -25,13 +26,20 @@ export async function POST(request: Request) {
 
   if ((await recentSharesCount(db(), checked.member.id)) >= SHARES_PER_HOUR)
     return json({ error: 'rate-limit' }, 429)
+  // Titel in der Sprache der jeweiligen Empfänger:in (Mail), pro Sprache nur einmal laden
+  const titles = new Map<Locale, Promise<string>>()
+  const titleIn = (locale: Locale) => {
+    if (!titles.has(locale))
+      titles.set(locale, resolveDocs([{ collection: ref.collection, docId: ref.id }], locale).then((docs) => docs.get(`${ref.collection}:${ref.id}`)?.title ?? doc.title))
+    return titles.get(locale) as Promise<string>
+  }
   let sent = 0
   for (const id of ids) {
     if (id === checked.member.id) continue
     const recipient = await findMember(db(), id)
     if (!recipient) continue
     await addInbox(db(), { recipientId: recipient.id, senderId: checked.member.id, ref, message })
-    await notifyShare(checked.member, recipient, { title: doc.title, message })
+    await notifyShare(checked.member, recipient, { title: titleIn, message })
     sent++
   }
   return sent ? json({ sent }) : json({ error: 'not-found' }, 404)

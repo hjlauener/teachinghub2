@@ -10,7 +10,17 @@ import { deleteMemberData } from '../hub/payload-data'
 
 import { authDatabase, AUTH_TABLES } from './database'
 import { magicLinkEmail } from './email'
-import { DEFAULT_SETTINGS, mayRegister, normalizeEmail, REASON_MESSAGES, type RegistrationSettings } from './rules'
+import {
+  DEFAULT_SETTINGS,
+  localeFromMagicLink,
+  localeFromPath,
+  mayRegister,
+  NAME_MAX,
+  normalizeEmail,
+  normalizeName,
+  REASON_MESSAGES,
+  type RegistrationSettings,
+} from './rules'
 
 /**
  * Konfiguration der Mitgliederkonten (ohne `server-only`, damit auch CLI-Skripte sie laden können).
@@ -35,16 +45,17 @@ async function registrationSettings(): Promise<{ settings: RegistrationSettings;
   }
 }
 
-export function localeFromUrl(url: string | undefined | null): Locale {
-  const match = (url ?? '').match(/\/(de|en|fr)(\/|$|\?)/)
-  return (match?.[1] as Locale) ?? 'de'
-}
-
 /** Prüft eine Registrierung; wirft einen verständlichen Fehler, wenn sie nicht zugelassen ist. */
 async function assertMayRegister(email: string, locale: Locale) {
   const { settings, isInvited } = await registrationSettings()
   const decision = mayRegister(email, settings, await isInvited(email))
   if (!decision.allowed) throw new APIError('FORBIDDEN', { message: REASON_MESSAGES[decision.reason][locale], code: `REGISTRATION_${decision.reason.toUpperCase()}` })
+}
+
+function checkedName(value: unknown): string {
+  const name = normalizeName(value)
+  if (name === null) throw new APIError('BAD_REQUEST', { message: `Name: höchstens ${NAME_MAX} Zeichen, eine Zeile.`, code: 'INVALID_NAME' })
+  return name
 }
 
 const eduidConfigured = Boolean(process.env.EDUID_DISCOVERY_URL && process.env.EDUID_CLIENT_ID && process.env.EDUID_CLIENT_SECRET)
@@ -61,8 +72,13 @@ export const authOptions = {
       enabled: true,
       // Hub-Tabellen löschen sich per Cascade; Feedback (inkl. Bilder) löschen, Vorschläge anonymisieren (Phase 5)
       afterDelete: async (user) => {
-        const payload = await getPayload({ config })
-        await deleteMemberData(payload, user.id)
+        // Das Konto ist bereits gelöscht: Fehler nur protokollieren, sonst meldet die UI fälschlich einen Fehlschlag
+        try {
+          const payload = await getPayload({ config })
+          await deleteMemberData(payload, user.id)
+        } catch (error) {
+          console.error('[Konto löschen] Feedback/Vorschläge nicht bereinigt für', user.id, error)
+        }
       },
     },
   },
@@ -82,7 +98,7 @@ export const authOptions = {
       if (ctx.path !== '/sign-in/magic-link') return
       const email = normalizeEmail(String(ctx.body?.email ?? ''))
       const existing = await ctx.context.internalAdapter.findUserByEmail(email)
-      if (!existing) await assertMayRegister(email, localeFromUrl(ctx.body?.callbackURL))
+      if (!existing) await assertMayRegister(email, localeFromPath(ctx.body?.callbackURL))
     }),
   },
   databaseHooks: {
@@ -91,8 +107,12 @@ export const authOptions = {
         // Zweite Absicherung, unabhängig vom Anmeldeweg
         before: async (user) => {
           await assertMayRegister(user.email, 'de')
-          return { data: { ...user, email: normalizeEmail(user.email) } }
+          return { data: { ...user, email: normalizeEmail(user.email), name: checkedName(user.name) } }
         },
+      },
+      update: {
+        // Name erscheint in Mails, Suche und Sammlungen: nur einzeiliger Text bis NAME_MAX Zeichen
+        before: async (data) => (data.name === undefined ? { data } : { data: { ...data, name: checkedName(data.name) } }),
       },
     },
   },
@@ -101,7 +121,7 @@ export const authOptions = {
       expiresIn: 15 * 60,
       sendMagicLink: async ({ email, url }) => {
         const payload = await getPayload({ config })
-        await payload.sendEmail({ to: email, ...magicLinkEmail(url, localeFromUrl(url)) })
+        await payload.sendEmail({ to: email, ...magicLinkEmail(url, localeFromMagicLink(url)) })
       },
     }),
     passkey({

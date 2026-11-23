@@ -38,7 +38,7 @@ import {
   unreadInboxCount,
   updateItem,
 } from '@/hub/repo-collections'
-import { memberSearchPattern } from '@/hub/rules'
+import { type MemberSearchPatterns, memberSearchPattern } from '@/hub/rules'
 import config from '@/payload.config'
 
 /**
@@ -203,10 +203,15 @@ describe('Sammlungen und Teilen im Schema hub (Phase 5, Teil 2)', () => {
   })
 
   it('sucht Mitglieder nach Name oder E-Mail, ohne sich selbst, höchstens 8', async () => {
-    const pattern = memberSearchPattern(tag) as string
+    const pattern = memberSearchPattern(tag) as MemberSearchPatterns
     const found = await searchMembers(db, pattern, owner)
     expect(found.map((m) => m.id).sort()).toEqual([reader, editor].sort())
-    expect(await searchMembers(db, memberSearchPattern('%%%') as string, owner)).toEqual([])
+    expect(await searchMembers(db, memberSearchPattern('%%%') as MemberSearchPatterns, owner)).toEqual([])
+    // E-Mail nur ab Anfang: die Domain allein findet niemanden, der Anfang der Adresse schon
+    const byDomain = await searchMembers(db, memberSearchPattern(`-${tag}@unibe.ch`) as MemberSearchPatterns, owner)
+    expect(byDomain).toEqual([])
+    const byPrefix = await searchMembers(db, memberSearchPattern(`rita${tag.toLowerCase()}-`) as MemberSearchPatterns, owner)
+    expect(byPrefix.map((m) => m.id)).toEqual([reader])
   })
 
   it('speichert Benachrichtigungen (Standard: an)', async () => {

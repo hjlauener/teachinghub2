@@ -37,15 +37,21 @@ export const Feedback: CollectionConfig = {
         const reply = (doc.reply ?? '').trim()
         if (!reply || reply === (previousDoc?.reply ?? '').trim() || !doc.memberEmail) return doc
         const locale = asMailLocale(doc.mailLocale)
-        await req.payload.sendEmail({
-          to: doc.memberEmail,
-          ...feedbackReplyEmail(locale, {
-            place: doc.place,
-            reply,
-            message: doc.message,
-            url: hubUrl(locale, '#feedback'),
-          }),
-        })
+        // Mailfehler (z. B. SMTP nicht erreichbar) dürfen das Speichern der Redaktion nicht verhindern
+        try {
+          await req.payload.sendEmail({
+            to: doc.memberEmail,
+            ...feedbackReplyEmail(locale, {
+              place: doc.place,
+              reply,
+              message: doc.message,
+              url: hubUrl(locale, '#feedback'),
+            }),
+          })
+        } catch (error) {
+          req.payload.logger.error({ err: error, msg: `Antwort-Mail zu Feedback ${doc.id} nicht versendet` })
+          return doc
+        }
         const repliedAt = new Date().toISOString()
         await req.payload.update({
           collection: 'feedback',
@@ -128,21 +134,27 @@ export const Feedback: CollectionConfig = {
       type: 'date',
       label: l('Antwort verschickt', 'Reply sent', 'Réponse envoyée'),
       admin: { readOnly: true, position: 'sidebar' },
+      // Nur beim Anlegen gesetzt: sonst liessen sich Antwort-Mails an fremde Adressen umleiten
+      access: { update: deny },
     },
     {
       name: 'memberEmail',
       type: 'email',
       label: l('Mitglied', 'Member', 'Membre'),
       admin: { readOnly: true, position: 'sidebar' },
+      // Nur beim Anlegen gesetzt: sonst liessen sich Antwort-Mails an fremde Adressen umleiten
+      access: { update: deny },
     },
     {
       name: 'memberName',
       type: 'text',
       label: l('Name', 'Name', 'Nom'),
       admin: { readOnly: true, position: 'sidebar' },
+      // Nur beim Anlegen gesetzt: sonst liessen sich Antwort-Mails an fremde Adressen umleiten
+      access: { update: deny },
     },
-    { name: 'memberId', type: 'text', index: true, admin: { hidden: true } },
-    { name: 'mailLocale', type: 'text', admin: { hidden: true } },
+    { name: 'memberId', type: 'text', index: true, admin: { hidden: true }, access: { update: deny } },
+    { name: 'mailLocale', type: 'text', admin: { hidden: true }, access: { update: deny } },
   ],
 }
 
