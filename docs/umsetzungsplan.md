@@ -130,7 +130,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | | 3b Landingpages ✅ (23.11.2026) | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |
 | → | | **Folgetermin mit der Redaktion: Demo M1** | |
 | **M2 Mitglieder** | 4 Accounts ✅ (23.11.2026) | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
-| | 5 Personalisierung (Teil 1 ✅ 23.11.2026) | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
+| | 5 Personalisierung (Teil 1 ✅, Teil 2 ✅ 23.11.2026) | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
 | **M3 KI** | 6 Ask-a-question | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
 | **M4 Login & Demo** | 7 edu-ID-Test | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
 | | 8 Online-Demo | Schweizer Hoster (1.2a), Zugangsschutz, `noindex`, Backup, Testpersonen | 3–5 Dozierende testen |
@@ -161,7 +161,6 @@ TeachingHub2/
 | 4.3a | „Maschinelle Fassung übernehmen“ für Übersetzer:in | Phase 3 |
 | 5.2a | Umzug ins UniBE-GitLab | bei Übergabe |
 | 6.2a | Registrierung bei SWITCH über UniBE | vor echter edu-ID |
-| 8.2b | Bestimmung der „Stelle“ im Feedback | Phase 5 |
 
 ## 14. Risiken
 
@@ -173,7 +172,7 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht**, Phase 4 (Accounts) ist gemergt. Phase 5 Teil 1 (Like, Bookmark, Mein Hub) umgesetzt auf `phase-5-personalisierung`; nächster Schritt: Phase 5 Teil 2 (Feedback-Dialog, Sammlungen, Vorschläge, Teilen). Demo/Briefing für die Redaktion (3.3a) bleibt offen.
+Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht**, Phase 4 (Accounts) ist gemergt. Phase 5 Teil 1 (Like, Bookmark, Mein Hub) ist gemergt, Teil 2 (Feedback-Dialog, Sammlungen, Vorschläge, Teilen) umgesetzt auf `phase-5-teil-2`; damit ist **Meilenstein M2** (Mitglieder) erreicht. Nächster Schritt: Phase 6 (Ask-a-question). Demo/Briefing für die Redaktion (3.3a) bleibt offen.
 
 **Hinweise aus Phase 3:**
 - Parität: 257/257 Altseiten erreichbar, alte URLs leiten per Regel (301) um (`npm run legacy:parity`).
@@ -200,3 +199,13 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - „Mein Hub“ (`/mein-hub`, im Kopf statt „Mein Konto“): Gemerktes mit Notiz (max. 2000 Zeichen), eigene Likes, Daten-Export als JSON (DSG-Auskunft); Kontoeinstellungen unter `/konto`.
 - Redaktions-Statistik im Admin unter „Like-Statistik“: meist geliked, nie geliked (Artikel, Methoden, Tools).
 - Daten im Schema `hub`, Konto löschen löscht sie mit (Fremdschlüssel mit Cascade).
+
+**Hinweise aus Phase 5, Teil 2:**
+- Feedback-Dialog nach Vorlage (`docs/referenz/feedback-dialog.png`): globaler Knopf „Feedback“ unten rechts; Screenshot der aktuellen Ansicht (html-to-image, im Browser), Zeichnen mit Rückgängig/Löschen/„Gross zeichnen“/3 Strichstärken, „Bild mitsenden“, eigenes Bild oder Ctrl+V; Stelle nach 8.2b. Gäste → Anmeldung → Dialog öffnet sich mit derselben Stelle (`?feedback=`).
+- Bilder: PNG/JPEG/WebP, höchstens 5 MB, Typ anhand der Bytes geprüft; Ablage `feedback-images/` (nie committen), nur für die Redaktion lesbar. Limit 10 Feedbacks pro Stunde und Mitglied.
+- Redaktion: Admin-Gruppe „Rückmeldungen“ mit Feedback-Inbox (Status neu/in Arbeit/erledigt, Antwort → Mail + „Mein Hub“) und Vorschlags-Inbox (eingereicht/in Prüfung/angenommen/abgelehnt, Entscheid → Mail).
+- „Meine Methoden“ / „Meine Tools“: private Sammlungen (Schema `hub`) mit Hub-Verweisen oder eigenen Einträgen, Notiz/Variante; „Der Redaktion vorschlagen“ je Eintrag. Hinzufügen direkt auf Methoden- und Toolseiten; Detailseite `/mein-hub/sammlung/<id>`.
+- Teilen: öffentlich (Link kopieren, E-Mail, LinkedIn) für alle; an Mitglieder (Suche ab 3 Zeichen, max. 8 Treffer) mit Nachricht und abschaltbarer Mail. Sammlungen nur lesen oder „darf bearbeiten“, widerrufbar, Kopie übernehmen; keine geheimen Links. Limit 50 geteilte Einträge pro Stunde.
+- „Mein Hub“ neu mit Sprungnavigation: Gemerkt, Meine Methoden, Meine Tools, Mit mir geteilt, Hilfreich gefunden, Mein Feedback, Meine Vorschläge, Benachrichtigungen, Meine Daten. Export enthält alle neuen Daten.
+- Konto löschen: Hub-Daten per Cascade, Feedback samt Bildern gelöscht, Vorschläge anonymisiert (Better Auth `afterDelete`).
+- Payload-Migration `20261123_135306_feedback_suggestions`; Hub-Tabellen weiterhin über `npm run auth:migrate`.

@@ -75,3 +75,20 @@ export const refKey = (collection: string, id: number) => `${collection}:${id}`
 export function json(body: unknown, status = 200): Response {
   return Response.json(body, { status, headers: { 'Cache-Control': 'private, no-store' } })
 }
+
+/**
+ * Gemeinsame Prüfung der Hub-API: schreibende Anfragen nur same-origin, immer mit Session.
+ * Liefert entweder das Mitglied oder die fertige Fehlerantwort.
+ */
+export async function requireMember(request: Request, options: { write: boolean }): Promise<{ member: Member } | { error: Response }> {
+  if (options.write && !sameOrigin(request)) return { error: json({ error: 'origin' }, 403) }
+  const member = await currentMember(request.headers)
+  if (!member) return { error: json({ error: 'unauthenticated' }, 401) }
+  return { member }
+}
+
+/** JSON-Körper einer Anfrage als Objekt (oder leeres Objekt). */
+export async function readBody(request: Request): Promise<Record<string, unknown>> {
+  const body = (await request.json().catch(() => null)) as unknown
+  return body && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>) : {}
+}

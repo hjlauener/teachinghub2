@@ -14,6 +14,8 @@ import { LegacySnapshots } from './collections/LegacySnapshots'
 import { MigrationInbox } from './collections/MigrationInbox'
 import { Media } from './collections/Media'
 import { MemberInvites, MemberSettings } from './collections/MemberInvites'
+import { Feedback, FeedbackImages } from './collections/Feedback'
+import { Suggestions } from './collections/Suggestions'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
 import { Pages } from './collections/Pages'
@@ -85,6 +87,10 @@ export default buildConfig({
     // Verwaltung
     Users,
     MemberInvites,
+    // Rückmeldungen der Mitglieder (Phase 5)
+    Feedback,
+    FeedbackImages,
+    Suggestions,
     // Migration Altsite
     MigrationInbox,
     LegacySnapshots,

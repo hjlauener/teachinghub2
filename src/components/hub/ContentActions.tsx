@@ -5,14 +5,17 @@ import React, { useEffect, useState } from 'react'
 
 import type { HubCollection } from '@/hub/rules'
 
+import { AddToCollection } from './AddToCollection'
+import { ShareMenu } from './ShareMenu'
+
 type State = { member: boolean; liked: boolean; bookmarked: boolean; note: string }
 
 /**
- * „Hilfreich“ (Like) und „Merken“ auf Inhaltsseiten (Entscheidung 8.1). Der persönliche Zustand wird
+ * „Hilfreich“ (Like), „Merken“, „Zu Meine Methoden/Tools“ und „Teilen“ auf Inhaltsseiten (Entscheidungen 8.1, 2.3, 8.3). Der persönliche Zustand wird
  * clientseitig geladen, damit Seiten nicht pro Person gerendert werden. Gäste werden zur Anmeldung geführt
  * und kommen danach auf dieselbe Seite zurück.
  */
-export function ContentActions({ collection, id, count: initialCount }: { collection: HubCollection; id: number; count: number | null }) {
+export function ContentActions({ collection, id, title, count: initialCount }: { collection: HubCollection; id: number; title: string; count: number | null }) {
   const t = useTranslations('Hub')
   const locale = useLocale()
   const [state, setState] = useState<State | null>(null)
@@ -81,12 +84,14 @@ export function ContentActions({ collection, id, count: initialCount }: { collec
           <button type="button" className="button button--secondary content-actions__button" aria-pressed={state.bookmarked} disabled={busy} onClick={toggleBookmark}>
             <span aria-hidden="true">{state.bookmarked ? '★' : '☆'}</span> {state.bookmarked ? t('bookmarked') : t('bookmark')}
           </button>
+          {(collection === 'methods' || collection === 'tools') && <AddToCollection kind={collection} id={id} />}
         </>
       ) : state ? (
         <a className="content-actions__signin" href={`/${locale}/anmelden?zurueck=${encodeURIComponent(returnTo)}`}>
           {t('signInToUse')}
         </a>
       ) : null}
+      {state && <ShareMenu collection={collection} id={id} title={title} member={state.member} />}
       {error && (
         <span role="alert" className="content-actions__error">
           {error}

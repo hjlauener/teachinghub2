@@ -4,6 +4,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import React from 'react'
 
+import { FeedbackLauncher } from '@/components/hub/FeedbackDialog'
 import { PrototypeNotice } from '@/components/PrototypeNotice'
 import { SiteFooter } from '@/components/SiteFooter'
 import { SiteHeader } from '@/components/SiteHeader'
@@ -52,6 +53,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <div className="container">{children}</div>
           </main>
           <SiteFooter />
+          <FeedbackLauncher />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -3,7 +3,18 @@ import 'server-only'
 import { AUTH_SCHEMA, AUTH_TABLES } from '@/auth/database'
 
 import { hubDatabase } from './database'
+import { getPayloadClient } from '@/lib/content'
+
+import { listMemberFeedback, listMemberSuggestions } from './payload-data'
 import { listBookmarks, listLikes } from './repo'
+import {
+  getPreferences,
+  listInbox,
+  listOwnCollections,
+  listOwnItems,
+  listShares,
+  listSharedCollections,
+} from './repo-collections'
 import { type Member, refKey, resolveDocs } from './server'
 
 /**
@@ -12,15 +23,39 @@ import { type Member, refKey, resolveDocs } from './server'
  */
 export async function exportMemberData(member: Member) {
   const db = hubDatabase()
-  const [likes, bookmarks, passkeys] = await Promise.all([
+  const payload = await getPayloadClient()
+  const [
+    likes,
+    bookmarks,
+    collections,
+    items,
+    shared,
+    inbox,
+    preferences,
+    feedback,
+    suggestions,
+    passkeys,
+  ] = await Promise.all([
     listLikes(db, member.id),
     listBookmarks(db, member.id),
+    listOwnCollections(db, member.id),
+    listOwnItems(db, member.id),
+    listSharedCollections(db, member.id),
+    listInbox(db, member.id),
+    getPreferences(db, member.id),
+    listMemberFeedback(payload, member.id),
+    listMemberSuggestions(payload, member.id),
     db.query<{ name: string | null; createdAt: Date }>(
       `select name, "createdAt" from ${AUTH_SCHEMA}.${AUTH_TABLES.passkey} where "userId" = $1 order by "createdAt"`,
       [member.id],
     ),
   ])
-  const docs = await resolveDocs([...likes, ...bookmarks], 'de')
+  const shares = new Map(
+    await Promise.all(collections.map(async (c) => [c.id, await listShares(db, c.id)] as const)),
+  )
+  const itemRefs = items.flatMap((i) => (i.ref ? [i.ref] : []))
+  const inboxRefs = inbox.flatMap((i) => (i.ref ? [i.ref] : []))
+  const docs = await resolveDocs([...likes, ...bookmarks, ...itemRefs, ...inboxRefs], 'de')
   const content = (collection: string, docId: number) => {
     const doc = docs.get(refKey(collection, docId))
     return { collection, id: docId, title: doc?.title ?? null, path: doc?.path ?? null }
@@ -28,9 +63,63 @@ export async function exportMemberData(member: Member) {
   return {
     exportedAt: new Date().toISOString(),
     source: 'TeachingHub2 (Prototyp)',
-    account: { email: member.email, name: member.name, memberSince: member.createdAt.toISOString() },
-    passkeys: passkeys.rows.map((p) => ({ name: p.name, createdAt: new Date(p.createdAt).toISOString() })),
-    likes: likes.map((l) => ({ ...content(l.collection, l.docId), likedAt: l.createdAt.toISOString() })),
-    bookmarks: bookmarks.map((b) => ({ ...content(b.collection, b.docId), note: b.note, createdAt: b.createdAt.toISOString(), updatedAt: b.updatedAt.toISOString() })),
+    account: {
+      email: member.email,
+      name: member.name,
+      memberSince: member.createdAt.toISOString(),
+    },
+    passkeys: passkeys.rows.map((p) => ({
+      name: p.name,
+      createdAt: new Date(p.createdAt).toISOString(),
+    })),
+    likes: likes.map((l) => ({
+      ...content(l.collection, l.docId),
+      likedAt: l.createdAt.toISOString(),
+    })),
+    bookmarks: bookmarks.map((b) => ({
+      ...content(b.collection, b.docId),
+      note: b.note,
+      createdAt: b.createdAt.toISOString(),
+      updatedAt: b.updatedAt.toISOString(),
+    })),
+    collections: collections.map((c) => ({
+      kind: c.kind,
+      title: c.title,
+      description: c.description,
+      createdAt: c.createdAt.toISOString(),
+      sharedWith: (shares.get(c.id) ?? []).map((s) => ({
+        name: s.name,
+        email: s.email,
+        canEdit: s.canEdit,
+      })),
+      items: items
+        .filter((i) => i.collectionId === c.id)
+        .map((i) => ({
+          content: i.ref ? content(i.ref.collection, i.ref.docId) : null,
+          title: i.title,
+          note: i.note,
+          suggestionId: i.suggestionId,
+          createdAt: i.createdAt.toISOString(),
+        })),
+    })),
+    sharedWithMe: {
+      collections: shared.map((c) => ({
+        kind: c.kind,
+        title: c.title,
+        owner: c.ownerName,
+        canEdit: c.canEdit,
+      })),
+      inbox: inbox.map((e) => ({
+        from: e.senderName,
+        content: e.ref ? content(e.ref.collection, e.ref.docId) : null,
+        collection: e.collectionId,
+        message: e.message,
+        readAt: e.readAt?.toISOString() ?? null,
+        createdAt: e.createdAt.toISOString(),
+      })),
+    },
+    preferences,
+    feedback: feedback.map(({ id: _id, ...f }) => f),
+    suggestions: suggestions.map(({ id: _id, ...s }) => s),
   }
 }
