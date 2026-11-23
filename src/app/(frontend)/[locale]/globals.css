@@ -1029,3 +1029,90 @@ img {
 .account {
   max-width: 720px;
 }
+
+/* ---- Phase 5: Persönliche Funktionen ------------------------------------------------- */
+
+.content-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-12);
+  min-height: 2.5rem;
+  margin-bottom: var(--space-12);
+  font-size: var(--font-size-15);
+}
+
+.content-actions__count {
+  color: var(--color-text-muted);
+  margin-right: auto;
+}
+
+.content-actions__button[aria-pressed='true'] {
+  background: var(--color-red-background);
+  color: var(--color-red-dark);
+}
+
+.content-actions__error {
+  color: var(--color-red-dark);
+  flex-basis: 100%;
+  text-align: right;
+}
+
+.like-badge {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-15);
+  white-space: nowrap;
+}
+
+.hub {
+  max-width: 880px;
+}
+
+.hub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-18);
+}
+
+.hub-item {
+  border: 1px solid var(--color-border);
+  padding: var(--space-18);
+}
+
+.hub-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-12);
+  align-items: baseline;
+}
+
+.hub-item__head h3 {
+  margin: 0;
+  font-size: var(--font-size-18, 1.125rem);
+}
+
+.hub-item__type {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-15);
+  display: block;
+}
+
+.hub-item textarea {
+  width: 100%;
+  min-height: 4.5rem;
+  font: inherit;
+  padding: var(--space-9);
+  border: 1px solid var(--color-grey-mid-darker);
+}
+
+.hub-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+  margin-top: var(--space-12);
+}

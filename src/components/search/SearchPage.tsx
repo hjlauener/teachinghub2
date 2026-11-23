@@ -5,6 +5,9 @@ import React from 'react'
 import { TermChips } from '@/components/content/parts'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
+import { hubDatabase } from '@/hub/database'
+import { likeCounts } from '@/hub/repo'
+import { publicLikeCount } from '@/hub/rules'
 import { findMany, listTaxonomies } from '@/lib/content'
 import type { Taxonomy } from '@/payload-types'
 
@@ -19,7 +22,7 @@ export type SearchType = (typeof SEARCH_TYPES)[number]
 const METHOD_RUBRIC = 'lehre_durchfuehren'
 const METHOD_THEME = 'lehrmethoden'
 
-type Hit = { key: string; type: SearchType; title: string; lead: string | null; path: string | null; rubrics?: (number | Taxonomy)[] | null; themes?: (number | Taxonomy)[] | null; score: number }
+type Hit = { key: string; type: SearchType; title: string; lead: string | null; path: string | null; rubrics?: (number | Taxonomy)[] | null; themes?: (number | Taxonomy)[] | null; score: number; likes: number }
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? ''
 
@@ -39,7 +42,9 @@ export function score(title: string, lead: string | null, q: string): number {
 
 export async function SearchPage({ locale, searchParams }: { locale: Locale; searchParams: Record<string, string | string[] | undefined> }) {
   const t = await getTranslations('Search')
+  const h = await getTranslations('Hub')
   const q = one(searchParams.q)
+  const popular = one(searchParams.sortierung) === 'beliebt'
   const type = SEARCH_TYPES.find((ty) => ty === one(searchParams.typ)) ?? null
   const [rubrics, themes] = await Promise.all([listTaxonomies('rubrik', locale), listTaxonomies('thema', locale)])
   const rubric = rubrics.find((r) => r.slug === one(searchParams.rubrik)) ?? null
@@ -52,10 +57,12 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
   ]
   const wants = (ty: SearchType) => !type || type === ty
   const methodsMatchTaxonomy = (!rubric || rubric.slug === METHOD_RUBRIC) && (!theme || theme.slug === METHOD_THEME)
-  const active = Boolean(q || type || rubric || theme)
+  const active = Boolean(q || type || rubric || theme || popular)
 
   const hits: Hit[] = []
   if (active) {
+    const counts = (collection: 'articles' | 'tools' | 'methods' | 'news') => likeCounts(hubDatabase(), collection).catch(() => new Map<number, number>())
+    const [likesA, likesT, likesM, likesN] = await Promise.all([counts('articles'), counts('tools'), counts('methods'), counts('news')])
     const [articles, tools, methods, news] = await Promise.all([
       wants('article') || wants('offer') ? findMany('articles', locale, { where: and(taxonomy), depth: 1 }) : null,
       wants('tool') ? findMany('tools', locale, { where: and(taxonomy), depth: 1 }) : null,
@@ -64,12 +71,12 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
     ])
     for (const a of articles?.docs ?? []) {
       const ty: SearchType = a.kind === 'offer' ? 'offer' : 'article'
-      if (wants(ty)) hits.push({ key: `a${a.id}`, type: ty, title: a.title, lead: a.lead ?? null, path: a.path, rubrics: a.rubrics, themes: a.themes, score: score(a.title, a.lead ?? null, q) })
+      if (wants(ty)) hits.push({ key: `a${a.id}`, type: ty, title: a.title, lead: a.lead ?? null, path: a.path, rubrics: a.rubrics, themes: a.themes, score: score(a.title, a.lead ?? null, q), likes: likesA.get(a.id) ?? 0 })
     }
-    for (const x of tools?.docs ?? []) hits.push({ key: `t${x.id}`, type: 'tool', title: x.title, lead: x.lead ?? null, path: x.path, rubrics: x.rubrics, themes: x.themes, score: score(x.title, x.lead ?? null, q) })
-    for (const m of methods?.docs ?? []) hits.push({ key: `m${m.id}`, type: 'method', title: m.title, lead: m.lead ?? null, path: m.path, score: score(m.title, m.lead ?? null, q) })
-    for (const n of news?.docs ?? []) hits.push({ key: `n${n.id}`, type: 'news', title: n.title, lead: n.lead ?? null, path: n.path ?? null, score: score(n.title, n.lead ?? null, q) })
-    hits.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    for (const x of tools?.docs ?? []) hits.push({ key: `t${x.id}`, type: 'tool', title: x.title, lead: x.lead ?? null, path: x.path, rubrics: x.rubrics, themes: x.themes, score: score(x.title, x.lead ?? null, q), likes: likesT.get(x.id) ?? 0 })
+    for (const m of methods?.docs ?? []) hits.push({ key: `m${m.id}`, type: 'method', title: m.title, lead: m.lead ?? null, path: m.path, score: score(m.title, m.lead ?? null, q), likes: likesM.get(m.id) ?? 0 })
+    for (const n of news?.docs ?? []) hits.push({ key: `n${n.id}`, type: 'news', title: n.title, lead: n.lead ?? null, path: n.path ?? null, score: score(n.title, n.lead ?? null, q), likes: likesN.get(n.id) ?? 0 })
+    hits.sort((a, b) => (popular ? b.likes - a.likes : 0) || b.score - a.score || a.title.localeCompare(b.title))
   }
 
   const typeLabel = (ty: SearchType) => t(`type${ty.charAt(0).toUpperCase()}${ty.slice(1)}` as 'typeArticle')
@@ -117,6 +124,13 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
             ))}
           </select>
         </div>
+        <div className="filters__field">
+          <label htmlFor="search-sortierung">{t('sort')}</label>
+          <select id="search-sortierung" name="sortierung" defaultValue={popular ? 'beliebt' : ''}>
+            <option value="">{t('sortRelevance')}</option>
+            <option value="beliebt">{t('sortPopular')}</option>
+          </select>
+        </div>
         <button type="submit" className="button button--primary">
           {t('submit')}
         </button>
@@ -141,6 +155,7 @@ export async function SearchPage({ locale, searchParams }: { locale: Locale; sea
                   <p className="card__topic">{typeLabel(hit.type)}</p>
                   <h3>{hit.path ? <Link href={hit.path}>{hit.title}</Link> : hit.title}</h3>
                   {hit.lead && <p>{hit.lead}</p>}
+                  {publicLikeCount(hit.likes) !== null && <p className="like-badge">♥ {h('likeCount', { count: hit.likes })}</p>}
                   <div className="card__terms">
                     <TermChips terms={hit.rubrics} />
                     <TermChips terms={hit.themes} />

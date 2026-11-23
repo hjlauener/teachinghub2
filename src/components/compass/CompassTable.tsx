@@ -15,10 +15,15 @@ export type CompassMethod = {
   modalities: number[]
   socialForms: number[]
   effort: number | null
+  /** Öffentlicher Like-Zähler (erst ab 3, sonst null). */
+  likes: number | null
+  /** Position in der Sortierung „Beliebt“ (0 = meiste Likes). */
+  rank: number
 }
 
 type Option = { id: number; name: string; order: number }
 type FacetKey = 'purposes' | 'modalities' | 'socialForms' | 'effort'
+type Sort = 'name' | 'effort' | 'popular'
 
 const FACETS: { key: FacetKey; label: 'purposes' | 'modalities' | 'socialForms' | 'effort' }[] = [
   { key: 'purposes', label: 'purposes' },
@@ -56,9 +61,10 @@ export function CompassTable({
 }) {
   const t = useTranslations('Compass')
   const c = useTranslations('Content')
+  const h = useTranslations('Hub')
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<Partial<Record<FacetKey, number | null>>>({})
-  const [sort, setSort] = useState<'name' | 'effort'>('name')
+  const [sort, setSort] = useState<Sort>('name')
 
   const names = useMemo(() => {
     const map = new Map<number, string>()
@@ -69,11 +75,11 @@ export function CompassTable({
 
   const rows = useMemo(() => {
     const filtered = filterMethods(methods, query, selected)
-    return [...filtered].sort((a, b) =>
-      sort === 'effort'
-        ? (effortOrder.get(a.effort ?? 0) ?? 99) - (effortOrder.get(b.effort ?? 0) ?? 99) || a.title.localeCompare(b.title)
-        : a.title.localeCompare(b.title),
-    )
+    return [...filtered].sort((a, b) => {
+      if (sort === 'popular') return a.rank - b.rank
+      if (sort === 'effort') return (effortOrder.get(a.effort ?? 0) ?? 99) - (effortOrder.get(b.effort ?? 0) ?? 99) || a.title.localeCompare(b.title)
+      return a.title.localeCompare(b.title)
+    })
   }, [methods, query, selected, sort, effortOrder])
 
   const list = (values: number[]) => values.map((v) => names.get(v)).filter(Boolean).join(', ')
@@ -104,9 +110,10 @@ export function CompassTable({
         ))}
         <div className="filters__field">
           <label htmlFor="compass-sort">{t('sortBy')}</label>
-          <select id="compass-sort" value={sort} onChange={(e) => setSort(e.target.value as 'name' | 'effort')}>
+          <select id="compass-sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
             <option value="name">{t('sortName')}</option>
             <option value="effort">{t('sortEffort')}</option>
+            <option value="popular">{t('sortPopular')}</option>
           </select>
         </div>
         <button
@@ -144,6 +151,13 @@ export function CompassTable({
                 <tr key={m.id}>
                   <th scope="row">
                     <Link href={m.path}>{m.title}</Link>
+                    {m.likes !== null && (
+                      <span className="like-badge">
+                        {' '}
+                        <span aria-hidden="true">♥ {m.likes}</span>
+                        <span className="visually-hidden">{h('likeShort', { count: m.likes })}</span>
+                      </span>
+                    )}
                     {m.lead && <span className="compass-table__lead">{m.lead}</span>}
                   </th>
                   <td>{list(m.purposes)}</td>

@@ -89,7 +89,9 @@
     "sortBy": "Trier par",
     "sortName": "Nom",
     "sortEffort": "Effort",
-    "noResults": "Aucune méthode ne correspond à ces filtres."
+    "noResults": "Aucune méthode ne correspond à ces filtres.",
+    "sortPopular": "Populaire",
+    "popular": "Populaire"
   },
   "Search": {
     "heading": "Recherche",
@@ -106,7 +108,10 @@
     "typeMethod": "Méthode",
     "typeTool": "Outil",
     "typeNews": "Actualité",
-    "reset": "Réinitialiser les filtres"
+    "reset": "Réinitialiser les filtres",
+    "sort": "Trier par",
+    "sortRelevance": "Pertinence",
+    "sortPopular": "Populaire"
   },
   "Topics": {
     "heading": "Thèmes de l'enseignement",
@@ -176,5 +181,40 @@
     "memberSince": "Membre depuis le {date}",
     "linkInvalid": "Ce lien de connexion est invalide ou a expiré. Veuillez en demander un nouveau.",
     "eduid": "Se connecter avec SWITCH edu-ID"
+  },
+  "Hub": {
+    "nav": "Mon Hub",
+    "actions": "Fonctions personnelles",
+    "like": "Utile",
+    "likeCount": "{count} collègues trouvent cela utile",
+    "likeShort": "{count} trouvent cela utile",
+    "bookmark": "Enregistrer",
+    "bookmarked": "Enregistré",
+    "signInToUse": "Se connecter pour enregistrer des contenus ou les marquer comme utiles",
+    "heading": "Mon Hub",
+    "lead": "Vos contenus enregistrés, vos « utile » et vos données au même endroit.",
+    "bookmarksHeading": "Enregistrés",
+    "noBookmarks": "Rien d’enregistré pour l’instant. Utilisez « Enregistrer » sur une page de contenu pour la retrouver ici.",
+    "note": "Note sur « {title} »",
+    "saveNote": "Enregistrer la note",
+    "noteSaved": "Note enregistrée.",
+    "removeBookmark": "Retirer des enregistrés",
+    "likesHeading": "Trouvé utile",
+    "likesPrivate": "Vous seul·e voyez ce que vous avez marqué comme utile. Les autres ne voient que le nombre, et seulement à partir de 3.",
+    "noLikes": "Aucun contenu marqué comme utile pour l’instant.",
+    "removeLike": "Retirer la marque",
+    "exportHeading": "Mes données",
+    "exportLead": "Téléchargez toutes les informations que le Teaching Hub enregistre à votre sujet sous forme de fichier JSON.",
+    "exportButton": "Télécharger les données",
+    "accountSettings": "Gérer le compte et les passkeys",
+    "backToHub": "Retour à « Mon Hub »",
+    "error": "Cela n’a pas fonctionné. Veuillez réessayer.",
+    "type_articles": "Article",
+    "type_methods": "Méthode",
+    "type_tools": "Outil",
+    "type_news": "Actualité",
+    "type_pages": "Page",
+    "type_topics": "Thème",
+    "type_subtopics": "Sous-thème"
   }
 }

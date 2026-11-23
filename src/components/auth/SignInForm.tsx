@@ -4,16 +4,24 @@ import { useLocale, useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 
 import { authClient, signInWithEduid } from '@/auth/client'
-import { useRouter } from '@/i18n/navigation'
 
 /** Anmeldung per Magic Link oder Passkey (Entscheidung 6.1). */
-export function SignInForm({ linkInvalid = false, eduid = false }: { linkInvalid?: boolean; eduid?: boolean }) {
+export function SignInForm({
+  linkInvalid = false,
+  eduid = false,
+  returnTo,
+}: {
+  linkInvalid?: boolean
+  eduid?: boolean
+  /** Geprüfter lokaler Pfad, auf den die Anmeldung zurückführt (z. B. die Seite, auf der „Merken“ geklickt wurde). */
+  returnTo: string
+}) {
   const t = useTranslations('Auth')
   const locale = useLocale()
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle')
   const [error, setError] = useState<string | null>(linkInvalid ? t('linkInvalid') : null)
+  const errorURL = `/${locale}/anmelden?fehler=link&zurueck=${encodeURIComponent(returnTo)}`
 
   async function sendLink(event: React.FormEvent) {
     event.preventDefault()
@@ -21,8 +29,8 @@ export function SignInForm({ linkInvalid = false, eduid = false }: { linkInvalid
     setError(null)
     const { error: err } = await authClient.signIn.magicLink({
       email,
-      callbackURL: `/${locale}/konto`,
-      errorCallbackURL: `/${locale}/anmelden?fehler=link`,
+      callbackURL: returnTo,
+      errorCallbackURL: errorURL,
     })
     if (err) {
       setState('idle')
@@ -37,8 +45,7 @@ export function SignInForm({ linkInvalid = false, eduid = false }: { linkInvalid
     const result = await authClient.signIn.passkey()
     if (result?.error) setError(result.error.message || t('error'))
     else {
-      router.push('/konto')
-      router.refresh()
+      window.location.assign(returnTo)
     }
   }
 
@@ -79,7 +86,7 @@ export function SignInForm({ linkInvalid = false, eduid = false }: { linkInvalid
             type="button"
             className="button button--primary"
             onClick={async () => {
-              const err = await signInWithEduid(`/${locale}/konto`, `/${locale}/anmelden?fehler=link`)
+              const err = await signInWithEduid(returnTo, errorURL)
               if (err) setError(t('error'))
             }}
           >

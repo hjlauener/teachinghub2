@@ -89,7 +89,9 @@
     "sortBy": "Sort by",
     "sortName": "Name",
     "sortEffort": "Effort",
-    "noResults": "No method matches these filters."
+    "noResults": "No method matches these filters.",
+    "sortPopular": "Popular",
+    "popular": "Popular"
   },
   "Search": {
     "heading": "Search",
@@ -106,7 +108,10 @@
     "typeMethod": "Method",
     "typeTool": "Tool",
     "typeNews": "News",
-    "reset": "Reset filters"
+    "reset": "Reset filters",
+    "sort": "Sort by",
+    "sortRelevance": "Relevance",
+    "sortPopular": "Popular"
   },
   "Topics": {
     "heading": "Teaching topics",
@@ -176,5 +181,40 @@
     "memberSince": "Member since {date}",
     "linkInvalid": "This sign-in link is invalid or has expired. Please request a new one.",
     "eduid": "Sign in with SWITCH edu-ID"
+  },
+  "Hub": {
+    "nav": "My Hub",
+    "actions": "Personal features",
+    "like": "Helpful",
+    "likeCount": "{count} colleagues find this helpful",
+    "likeShort": "{count} find this helpful",
+    "bookmark": "Save",
+    "bookmarked": "Saved",
+    "signInToUse": "Sign in to save content or mark it as helpful",
+    "heading": "My Hub",
+    "lead": "Your saved content, your likes and your data in one place.",
+    "bookmarksHeading": "Saved",
+    "noBookmarks": "Nothing saved yet. Use “Save” on a content page to keep it here.",
+    "note": "Note on “{title}”",
+    "saveNote": "Save note",
+    "noteSaved": "Note saved.",
+    "removeBookmark": "Remove from saved",
+    "likesHeading": "Found helpful",
+    "likesPrivate": "Only you can see what you marked as helpful. Others only see the number, and only from 3.",
+    "noLikes": "Nothing marked as helpful yet.",
+    "removeLike": "Remove mark",
+    "exportHeading": "My data",
+    "exportLead": "Download everything the Teaching Hub stores about you as a JSON file.",
+    "exportButton": "Download data",
+    "accountSettings": "Manage account and passkeys",
+    "backToHub": "Back to “My Hub”",
+    "error": "Something went wrong. Please try again.",
+    "type_articles": "Article",
+    "type_methods": "Method",
+    "type_tools": "Tool",
+    "type_news": "News",
+    "type_pages": "Page",
+    "type_topics": "Topic",
+    "type_subtopics": "Subtopic"
   }
 }

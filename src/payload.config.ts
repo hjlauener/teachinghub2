@@ -48,6 +48,13 @@ export default buildConfig({
     meta: {
       titleSuffix: ' – TeachingHub2 (Prototyp)',
     },
+    components: {
+      // Redaktions-Statistik der Likes (Phase 5, Entscheidung 8.1)
+      afterNavLinks: ['@/components/admin/LikeStatsLink#LikeStatsLink'],
+      views: {
+        likeStats: { Component: '@/components/admin/LikeStats#LikeStats', path: '/like-statistik' },
+      },
+    },
   },
   // Sprache der Admin-Oberfläche
   i18n: {
