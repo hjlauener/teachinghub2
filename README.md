@@ -18,7 +18,8 @@ docker compose up             # App, Datenbank, Mailpit
 |---|---|
 | Website | http://localhost:3000 (→ `/de`, `/en`, `/fr`) |
 | CMS (Payload Admin) | http://localhost:3000/admin – beim ersten Aufruf Admin-Konto anlegen |
-| Mailpit (abgefangene Mails) | http://localhost:8025 |
+| Mailpit (abgefangene Mails, z. B. Anmeldelinks) | http://localhost:8025 |
+| Anmelden (Mitgliederkonto) | http://localhost:3000/de/anmelden |
 | PostgreSQL | `localhost:5433`, Benutzer/Passwort `teachinghub` |
 
 ## Befehle (im Container)
@@ -29,6 +30,7 @@ docker compose exec app npm run typecheck
 docker compose exec app npm test                 # Unit- und Integrationstests
 docker compose --profile e2e run --rm e2e        # Playwright + axe gegen die laufende App
 docker compose exec app npm run seed             # Schlagwörter + Navigation einspielen (idempotent)
+docker compose exec app npm run auth:migrate     # Tabellen der Mitgliederkonten (Schema auth); läuft beim Start automatisch
 docker compose exec app npm run generate:types   # nach Änderungen an Collections
 docker compose exec app npm run migrate:create -- <name>  # Migration für Produktion erzeugen
 docker compose exec app npm run generate:importmap

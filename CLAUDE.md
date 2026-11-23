@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; Phase 3 auf `phase-3-site` (PR #13), **Phase 3b (Landingpages)** auf `phase-3b-landingpages`; M1 erreicht, nächste Phase: 4 Accounts.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–2 gemergt; Phase 3 auf `phase-3-site` (PR #13), Phase 3b auf `phase-3b-landingpages` (PR #14), **Phase 4 (Accounts)** auf `phase-4-accounts`; nächste Phase: 5 Personalisierung.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -46,3 +46,10 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Quelle: `docs/konzept-landingpages/` (Eigentum des Users, im Repo); Import `npm run topics:import`, Parser in `src/topics/parse.ts`.
 - Status `pageStatus` (folgt/live): Pflichtangaben nur für live (`validateRequiredWhenLive`, `validateCountWhenLive`); Feldname nie `status`.
 - Matrix aus `journeyPages` über `src/topics/matrix.ts` (rein, testbar) – Phase aus dem Pfad.
+
+## Mitgliederkonten (Phase 4)
+- Better Auth: Konfiguration `src/auth/options.ts` (ohne `server-only`, auch für CLI), Instanz `src/auth/server.ts`, Client `src/auth/client.ts`.
+- Tabellen nur im Schema `auth` (nie `public`, sonst Konflikt mit Payloads Schema-Push); nach Änderungen `npm run auth:migrate`.
+- Zulassung in `src/auth/rules.ts` (rein, getestet); Einstellungen im Payload-Global `member-settings`, Einladungen `member-invites`.
+- E2E-Container teilt das Netzwerk mit der App (`network_mode: service:app`), weil die Anmeldung auf BETTER_AUTH_URL (localhost) zurückleitet. Mailpit-API für Anmeldelinks.
+- Produktions-DB darf nie per Dev-Push verändert werden (sonst hängt der Start an einer Rückfrage) – Integrationstests in der CI auf eigener DB.

@@ -12,6 +12,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Nur für den Build (Module werden ausgewertet); gilt nicht im Laufzeit-Image (eigene Stage)
+ENV BETTER_AUTH_SECRET=build-time-placeholder-not-used-at-runtime
 RUN npm run build
 
 FROM base AS runner

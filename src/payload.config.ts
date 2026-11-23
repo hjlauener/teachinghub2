@@ -13,6 +13,7 @@ import { Contacts } from './collections/Contacts'
 import { LegacySnapshots } from './collections/LegacySnapshots'
 import { MigrationInbox } from './collections/MigrationInbox'
 import { Media } from './collections/Media'
+import { MemberInvites, MemberSettings } from './collections/MemberInvites'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
 import { Pages } from './collections/Pages'
@@ -76,11 +77,12 @@ export default buildConfig({
     TranslationCache,
     // Verwaltung
     Users,
+    MemberInvites,
     // Migration Altsite
     MigrationInbox,
     LegacySnapshots,
   ],
-  globals: [Navigation],
+  globals: [Navigation, MemberSettings],
   // Wöchentlicher Delta-Abgleich (Entscheidung 3.2), nur wenn LEGACY_DELTA_WEEKLY=true
   jobs: {
     tasks: [
