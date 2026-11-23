@@ -5,7 +5,7 @@ import { getPayload, type Payload, type Where } from 'payload'
 import { cache } from 'react'
 
 import type { Locale } from '@/i18n/routing'
-import type { Article, Method, News, Page, Taxonomy, Tool } from '@/payload-types'
+import type { Article, Method, News, Page, Subtopic, Taxonomy, Tool, Topic } from '@/payload-types'
 
 /**
  * Lesezugriff der Website auf das CMS. Öffentlich: nur Publiziertes (Access-Regeln greifen, kein Benutzer).
@@ -19,8 +19,10 @@ export type ContentDoc =
   | { collection: 'methods'; doc: Method }
   | { collection: 'tools'; doc: Tool }
   | { collection: 'news'; doc: News }
+  | { collection: 'topics'; doc: Topic }
+  | { collection: 'subtopics'; doc: Subtopic }
 
-const PATH_COLLECTIONS = ['pages', 'articles', 'methods', 'tools', 'news'] as const
+const PATH_COLLECTIONS = ['pages', 'articles', 'methods', 'tools', 'news', 'topics', 'subtopics'] as const
 
 /** Dokument zu einem Pfad (ohne Sprachpräfix) in allen Inhalts-Collections suchen. */
 export const findByPath = cache(async (path: string, locale: Locale): Promise<ContentDoc | null> => {
@@ -77,7 +79,7 @@ export const listTaxonomies = cache(async (type: Taxonomy['type'], locale: Local
   return docs
 })
 
-export async function findMany<T extends 'articles' | 'methods' | 'tools' | 'news'>(
+export async function findMany<T extends 'articles' | 'methods' | 'tools' | 'news' | 'topics' | 'subtopics'>(
   collection: T,
   locale: Locale,
   options: { where?: Where; sort?: string; limit?: number; depth?: number } = {},

@@ -2,7 +2,7 @@ import type { Field, RelationshipField, Validate } from 'payload'
 
 import { l } from '@/lib/admin'
 import { C, type TaxonomyType, linkableCollections } from '@/lib/slugs'
-import { validateOneSentence, validatePath, validateUrl } from '@/lib/validation'
+import { validateCountWhenLive, validateOneSentence, validatePath, validateUrl } from '@/lib/validation'
 
 const asPayloadValidate = (fn: (value: unknown) => true | string): Validate => (value) => fn(value)
 
@@ -125,8 +125,9 @@ export function annotatedLinksField(
     name,
     type: 'array',
     label,
-    minRows: rows.min,
-    maxRows: rows.max,
+    // Anzahl gilt erst für eine live geschaltete Themenseite (Status „folgt“ darf unvollständig sein)
+    validate: ((value: unknown, { data }: { data: Record<string, unknown> }) =>
+      validateCountWhenLive(value, data, rows.min, rows.max)) as Validate,
     labels: { singular: l('Kommentierter Link', 'Annotated link', 'Lien commenté'), plural: l('Kommentierte Links', 'Annotated links', 'Liens commentés') },
     admin: { initCollapsed: true },
     fields: [

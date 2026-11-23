@@ -1,10 +1,33 @@
-import type { CollectionConfig } from 'payload'
+import { type CollectionBeforeValidateHook, type CollectionConfig, type Validate, ValidationError } from 'payload'
 
 import { annotatedLinksField, pathField, seoField, taxonomyField } from '@/fields/common'
 import { groups, l } from '@/lib/admin'
+import { validateCountWhenLive, validateRequiredWhenLive } from '@/lib/validation'
 import { C } from '@/lib/slugs'
 
 import { editorialDefaults } from './shared'
+
+const liveRequired: Validate = (value, { data }) => validateRequiredWhenLive(value, data as { pageStatus?: unknown })
+const liveCount =
+  (min: number, max: number): Validate =>
+  (value, { data }) =>
+    validateCountWhenLive(value, data as { pageStatus?: unknown }, min, max)
+
+/** Redaktionsregeln (Konzept): ≥ 5 Journey-Seiten, 3–8 Unterthemen – geprüft beim Live-Schalten. */
+const topicRules: CollectionBeforeValidateHook = async ({ data, originalDoc, req }) => {
+  const merged = { ...(originalDoc ?? {}), ...(data ?? {}) } as Record<string, unknown>
+  const pages = Array.isArray(merged.journeyPages) ? merged.journeyPages.length : 0
+  const result = { ...data, journeyPageCount: pages }
+  if (merged.pageStatus !== 'live' || merged._status === 'draft') return result
+  const errors: { path: string; message: string }[] = []
+  if (pages < 5) errors.push({ path: 'journeyPages', message: `Zu dünn für eine eigene Themenseite: ${pages} von mindestens 5 Seiten in der Journey.` })
+  if (originalDoc?.id) {
+    const { totalDocs } = await req.payload.count({ collection: C.subtopics, where: { topic: { equals: originalDoc.id } }, overrideAccess: true, req })
+    if (totalDocs < 3 || totalDocs > 8) errors.push({ path: 'pageStatus', message: `Ein Kernthema braucht 3–8 Unterthemen (aktuell ${totalDocs}).` })
+  }
+  if (errors.length) throw new ValidationError({ collection: C.topics, errors })
+  return result
+}
 
 /**
  * Kernthema = Landingpage Ebene 1 (Konzept: Landingpage_Kapitel.md, Themenstruktur_gesamt.md).
@@ -20,10 +43,11 @@ export const Topics: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'pageStatus', '_status'],
+    defaultColumns: ['title', 'category', 'pageStatus', 'journeyPageCount', '_status'],
     group: groups.topics,
   },
   defaultSort: ['category', 'order'],
+  hooks: { beforeValidate: [topicRules] },
   fields: [
     { name: 'title', type: 'text', label: l('Titel', 'Title', 'Titre'), required: true, localized: true },
     {
@@ -45,7 +69,13 @@ export const Topics: CollectionConfig = {
         {
           label: l('1 Einstieg', '1 Introduction', '1 Introduction'),
           fields: [
-            { name: 'intro', type: 'richText', label: l('Einstieg (2–3 Sätze)', 'Introduction (2–3 sentences)', 'Introduction (2–3 phrases)'), localized: true, required: true },
+            {
+              name: 'intro',
+              type: 'richText',
+              label: l('Einstieg (2–3 Sätze)', 'Introduction (2–3 sentences)', 'Introduction (2–3 phrases)'),
+              localized: true,
+              validate: liveRequired,
+            },
             { name: 'currentNotice', type: 'textarea', label: l('Aktueller Hinweis (optional)', 'Current notice (optional)', 'Actualité (facultatif)'), localized: true },
           ],
         },
@@ -56,8 +86,7 @@ export const Topics: CollectionConfig = {
               name: 'keyPoints',
               type: 'array',
               label: l('Kernaussagen', 'Key points', 'Points clés'),
-              minRows: 3,
-              maxRows: 5,
+              validate: liveCount(3, 5),
               fields: [{ name: 'text', type: 'textarea', label: l('Aussage', 'Statement', 'Énoncé'), required: true, localized: true }],
             },
           ],
@@ -154,6 +183,27 @@ export const Topics: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'order', type: 'number', label: l('Reihenfolge', 'Order', 'Ordre'), defaultValue: 0, admin: { position: 'sidebar' } },
+    {
+      name: 'journeyPages',
+      type: 'relationship',
+      label: l('Seiten entlang der Journey (Matrix)', 'Pages along the journey (matrix)', 'Pages le long du parcours (matrice)'),
+      relationTo: [C.articles, C.tools],
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+        description: l(
+          'Bestimmt die Matrix Themen × Journey. Unter 5 Seiten: zu dünn für eine eigene Themenseite.',
+          'Drives the topics × journey matrix. Fewer than 5 pages: too thin for a topic page.',
+          'Alimente la matrice. Moins de 5 pages : trop mince pour une page.',
+        ),
+      },
+    },
+    {
+      name: 'journeyPageCount',
+      type: 'number',
+      label: l('Seiten in der Journey', 'Pages in the journey', 'Pages dans le parcours'),
+      admin: { position: 'sidebar', readOnly: true },
+    },
     taxonomyField('journeyPhases', 'rubrik', l('Bezug zur Journey', 'Journey phases', 'Étapes du parcours'), {
       admin: { position: 'sidebar' },
     }),

@@ -127,7 +127,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | | 1 Inhaltsmodell ✅ (22.11.2026) | Collections, Taxonomien, Rollen, Admin-Views | Redaktion legt Artikel/Methode/Thema an |
 | | 2 Migration ✅ (23.11.2026) | Importer, Medien, Migrations-Inbox, 3-Wege-Konflikt, Redirect-Regel | alle 257 Seiten + 67 Methoden importiert, Delta-Lauf erkennt Teständerung |
 | | 3 Öffentliche Site ✅ (23.11.2026, Lighthouse offen) | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
-| | 3b Landingpages | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |
+| | 3b Landingpages ✅ (23.11.2026) | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |
 | → | | **Folgetermin mit der Redaktion: Demo M1** | |
 | **M2 Mitglieder** | 4 Accounts | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
 | | 5 Personalisierung | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
@@ -173,10 +173,16 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Phasen 0–3 sind umgesetzt (Phase 3 auf Branch `phase-3-site`). Nächster Schritt: Phase 3b Landingpages, danach Demo M1 für die Redaktion. Briefing für die Redaktion (3.3a) bleibt offen.
+Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht** – nächster Schritt: Demo für die Redaktion, danach M2 (Phase 4 Accounts). Briefing für die Redaktion (3.3a) bleibt offen.
 
 **Hinweise aus Phase 3:**
 - Parität: 257/257 Altseiten erreichbar, alte URLs leiten per Regel (301) um (`npm run legacy:parity`).
 - Suche: Titel, Lead und Volltext (verstecktes Feld `searchText`, beim Speichern erzeugt; `npm run search:reindex`). Methoden zählen wie auf der Altsite zur Rubrik „Lehre durchführen“ / Thema „Lehrmethoden“.
 - Maschinelle Übersetzung ist gebaut (Google-Adapter, Cache je Feld und DE-Stand), aber ohne `GOOGLE_TRANSLATE_API_KEY` aus – EN/FR zeigen dann DE mit Hinweis.
-- Offen: Lighthouse-Messung (Ziel ≥ 90), Mobile-Menü (Navigation bricht derzeit nur um), Menüpunkt „Themen“ bis Phase 3b als Platzhalter, 5 Formularseiten der Altsite nur mit Titel/Lead.
+- Offen: Lighthouse-Messung (Ziel ≥ 90), Mobile-Menü (Navigation bricht derzeit nur um), 5 Formularseiten der Altsite nur mit Titel/Lead.
+
+**Hinweise aus Phase 3b:**
+- Import `npm run topics:import` aus `docs/konzept-landingpages/`: 14 Kernthemen (8 A, 4 B, 2 C), 59 Unterthemen, 118 Methoden-Zuordnungen, Matrix-Seiten je Kernthema; „KI in Lehre und Studium“ und „Digitale und hybride Lehre“ live mit allen 9 Kapiteln.
+- Neu im Modell: Status „folgt/live“ auch für Unterthemen; Pflichtkapitel und Anzahlen gelten erst beim Live-Schalten; Feld „Seiten entlang der Journey“ speist die Matrix (automatisch berechnet); Redaktionsregeln beim Live-Schalten: ≥ 5 Journey-Seiten, 3–8 Unterthemen.
+- Labels der kommentierten Links: neue Hochschul-Labels (z. B. „Universität Zürich“) werden beim Import angelegt.
+- Unterthemen-Seiten zeigen bisher Steckbrief und passende Methoden; ihre 9 Kapitel sind noch zu schreiben (Redaktion). Methodenseiten zeigen „Kommt vor in“.

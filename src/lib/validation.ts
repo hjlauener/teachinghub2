@@ -68,3 +68,25 @@ export function validateUrl(value: unknown): true | string {
     return 'Ungültige URL.'
   }
 }
+
+/**
+ * Landingpages: Pflichtangaben und Anzahlen gelten erst, wenn die Seite „live“ ist (Konzept: Kapitel-Vorlagen).
+ * Themen mit Status „folgt“ erscheinen in der Übersicht, ohne vollständig zu sein.
+ */
+export function validateCountWhenLive(value: unknown, data: { pageStatus?: unknown } | undefined, min?: number, max?: number): true | string {
+  if (data?.pageStatus !== 'live') return true
+  const count = Array.isArray(value) ? value.length : 0
+  if (min !== undefined && count < min) return `Für eine live geschaltete Seite mindestens ${min} Einträge.`
+  if (max !== undefined && count > max) return `Höchstens ${max} Einträge.`
+  return true
+}
+
+export function validateRequiredWhenLive(value: unknown, data: { pageStatus?: unknown } | undefined): true | string {
+  if (data?.pageStatus !== 'live') return true
+  const empty =
+    value === null ||
+    value === undefined ||
+    (typeof value === 'string' && value.trim() === '') ||
+    (typeof value === 'object' && 'root' in (value as object) && !((value as { root: { children?: unknown[] } }).root.children?.length))
+  return empty ? 'Pflichtfeld für eine live geschaltete Seite.' : true
+}
