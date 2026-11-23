@@ -37,15 +37,20 @@ export const Suggestions: CollectionConfig = {
           doc.suggestionStatus === 'angenommen' || doc.suggestionStatus === 'abgelehnt'
         if (!decided || doc.suggestionStatus === previousDoc?.suggestionStatus) return doc
         const locale = asMailLocale(doc.mailLocale)
-        await req.payload.sendEmail({
-          to: doc.memberEmail,
-          ...suggestionDecisionEmail(locale, {
-            title: doc.title,
-            accepted: doc.suggestionStatus === 'angenommen',
-            note: doc.editorNote ?? '',
-            url: hubUrl(locale, '#vorschlaege'),
-          }),
-        })
+        // Mailfehler dürfen das Speichern des Entscheids nicht verhindern
+        try {
+          await req.payload.sendEmail({
+            to: doc.memberEmail,
+            ...suggestionDecisionEmail(locale, {
+              title: doc.title,
+              accepted: doc.suggestionStatus === 'angenommen',
+              note: doc.editorNote ?? '',
+              url: hubUrl(locale, '#vorschlaege'),
+            }),
+          })
+        } catch (error) {
+          req.payload.logger.error({ err: error, msg: `Entscheid-Mail zu Vorschlag ${doc.id} nicht versendet` })
+        }
         return doc
       },
     ],
@@ -117,14 +122,18 @@ export const Suggestions: CollectionConfig = {
       type: 'email',
       label: l('Mitglied', 'Member', 'Membre'),
       admin: { readOnly: true, position: 'sidebar' },
+      // Nur beim Anlegen gesetzt: sonst liessen sich Antwort-Mails an fremde Adressen umleiten
+      access: { update: deny },
     },
     {
       name: 'memberName',
       type: 'text',
       label: l('Name', 'Name', 'Nom'),
       admin: { readOnly: true, position: 'sidebar' },
+      // Nur beim Anlegen gesetzt: sonst liessen sich Antwort-Mails an fremde Adressen umleiten
+      access: { update: deny },
     },
-    { name: 'memberId', type: 'text', index: true, admin: { hidden: true } },
-    { name: 'mailLocale', type: 'text', admin: { hidden: true } },
+    { name: 'memberId', type: 'text', index: true, admin: { hidden: true }, access: { update: deny } },
+    { name: 'mailLocale', type: 'text', admin: { hidden: true }, access: { update: deny } },
   ],
 }

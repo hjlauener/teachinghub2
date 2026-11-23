@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–4 und Phase 5 Teil 1 gemergt; **Phase 5 Teil 2** (Feedback-Dialog, Sammlungen, Vorschläge, Teilen) auf `phase-5-teil-2`. Nächste Phase: 6 (Ask-a-question).
+- Plan: `docs/umsetzungsplan.md` (v1.1 auf `phase-6-ask`). Phasen 0–5 gemergt; Detailentscheide zu Phase 6 (Ask-a-question) in `docs/entscheidungen.md` 8.8–8.12.
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -64,3 +64,6 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Feedback-Bilder nur PNG/JPEG/WebP ≤ 5 MB, Typ per `detectImageType` (Bytes), Ordner `feedback-images/` ist gitignored. Konto löschen → `deleteMemberData` (Better Auth `afterDelete`).
 - Mails an Mitglieder nur über `src/hub/mail.ts` (maskiert); Teilen-Mail nur bei `notify_shares`, Sprache aus `hub.preferences.locale` (wird beim Besuch von „Mein Hub“ gesetzt).
 - Feedback-Dialog: `src/components/hub/FeedbackDialog.tsx`, im Layout eingebunden; Elemente mit `data-feedback-ignore` erscheinen nicht im Screenshot.
+- Review Phase 4/5: Mitgliedersuche findet E-Mails nur ab Adressanfang (nie über die Domain) und ist pro Mitglied begrenzt (`createRateLimiter`); Namen über `normalizeName` (einzeilig, ≤ 100) in Better-Auth-Hooks; Sprache der Anmeldemail über `localeFromMagicLink`.
+- Mails in Payload-Hooks immer in try/catch (Mailfehler dürfen Speichern nicht verhindern); Felder `memberEmail/memberName/memberId/mailLocale` sind nach dem Anlegen nicht änderbar.
+- Feedback-Upload verlangt Content-Length (411 ohne, 413 zu gross).

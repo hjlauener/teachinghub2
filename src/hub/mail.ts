@@ -36,11 +36,16 @@ const SHARE = {
   },
 }
 
+const oneLine = (value: string, max: number) =>
+  value.replace(/[\u0000-\u001F\u007F\u2028\u2029]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max)
+
 export function shareEmail(
   locale: MailLocale,
   input: { from: string; title: string; message: string; url: string },
 ) {
   const t = SHARE[locale]
+  // Name und Titel stehen im Betreff: einzeilig und begrenzt (Schutz vor Header-Manipulation)
+  input = { ...input, from: oneLine(input.from, 100), title: oneLine(input.title, 200) }
   const message = input.message ? `\n\n${t.message}:\n${input.message}` : ''
   return {
     subject: t.subject(input.from),

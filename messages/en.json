@@ -180,7 +180,10 @@
     "deleted": "Your account has been deleted.",
     "memberSince": "Member since {date}",
     "linkInvalid": "This sign-in link is invalid or has expired. Please request a new one.",
-    "eduid": "Sign in with SWITCH edu-ID"
+    "eduid": "Sign in with SWITCH edu-ID",
+    "reauthToDelete": "Deleting your account requires a recent sign-in (at most 24 hours old). Please sign in again and then delete your account.",
+    "reauthButton": "Sign in again",
+    "nameInvalid": "The name may be at most 100 characters long."
   },
   "Hub": {
     "nav": "My Hub",

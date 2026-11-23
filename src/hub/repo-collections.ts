@@ -9,6 +9,7 @@ import {
   type ContentRef,
   type HubCollection,
   MEMBER_SEARCH_LIMIT,
+  type MemberSearchPatterns,
 } from './rules'
 
 /**
@@ -287,12 +288,12 @@ export async function listOwnItems(db: Queryable, ownerId: string): Promise<Item
 
 export async function searchMembers(
   db: Queryable,
-  pattern: string,
+  pattern: MemberSearchPatterns,
   excludeId: string,
 ): Promise<MemberInfo[]> {
   const { rows } = await db.query<MemberInfo>(
-    `select id, name, email from ${members} where id <> $2 and (name ilike $1 or email ilike $1) order by name, email limit ${MEMBER_SEARCH_LIMIT}`,
-    [pattern, excludeId],
+    `select id, name, email from ${members} where id <> $3 and (name ilike $1 or email ilike $2) order by name, email limit ${MEMBER_SEARCH_LIMIT}`,
+    [pattern.name, pattern.email, excludeId],
   )
   return rows
 }

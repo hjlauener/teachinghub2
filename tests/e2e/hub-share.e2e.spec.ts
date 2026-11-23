@@ -175,6 +175,10 @@ test('Meine Methoden: hinzufügen, eigener Eintrag, vorschlagen, teilen, Kopie, 
   const ritaPage = await newMember(browser, rita.email, rita.name)
   const page = await newMember(browser, olga.email, olga.name)
 
+  // Name wird serverseitig geprüft (Review Phase 4/5): zu lang → 400, Zeilenumbrüche werden entfernt
+  const tooLong = await page.request.post('/api/auth/update-user', { data: { name: 'x'.repeat(101) }, headers: { Origin: 'http://localhost:3000' } })
+  expect(tooLong.status()).toBe(400)
+
   // Methode zu einer neuen Sammlung hinzufügen
   await page.goto(`/de${method.path}`)
   await page.waitForLoadState('networkidle')
@@ -188,7 +192,7 @@ test('Meine Methoden: hinzufügen, eigener Eintrag, vorschlagen, teilen, Kopie, 
   // Inhalt an Rita senden
   await page.getByRole('button', { name: 'Teilen' }).click()
   await page.getByRole('button', { name: 'An Kolleg:innen senden' }).click()
-  await page.getByRole('combobox', { name: /Mitglieder/ }).fill(`rita-${stamp}`)
+  await page.getByRole('combobox', { name: /Mitglieder/ }).fill(rita.name)
   await page.getByRole('option', { name: new RegExp(rita.name) }).click()
   await page.getByLabel('Nachricht (optional)').fill('Für unser Modul')
   await page.getByRole('button', { name: 'Senden', exact: true }).click()

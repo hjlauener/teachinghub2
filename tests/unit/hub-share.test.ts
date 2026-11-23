@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { feedbackReplyEmail, shareEmail } from '@/hub/mail'
 import {
   collectionAccess,
+  createRateLimiter,
   detectImageType,
   feedbackPlace,
   isCollectionKind,
@@ -58,8 +59,19 @@ describe('Sammlungen, Teilen, Feedback – Regeln (Phase 5, Teil 2)', () => {
     expect(memberSearchPattern('ab')).toBeNull()
     expect(memberSearchPattern('  ab  ')).toBeNull()
     expect(memberSearchPattern(null)).toBeNull()
-    expect(memberSearchPattern('mül')).toBe('%mül%')
-    expect(memberSearchPattern('a%_\\')).toBe('%a\\%\\_\\\\%')
+    expect(memberSearchPattern('mül')).toEqual({ name: '%mül%', email: 'mül%' })
+    expect(memberSearchPattern('a%_\\')).toEqual({ name: '%a\\%\\_\\\\%', email: 'a\\%\\_\\\\%' })
+  })
+
+  it('begrenzt Anfragen pro Schlüssel im gleitenden Fenster', () => {
+    let now = 0
+    const limiter = createRateLimiter(2, 1000, () => now)
+    expect(limiter.hit('a')).toBe(true)
+    expect(limiter.hit('a')).toBe(true)
+    expect(limiter.hit('a')).toBe(false)
+    expect(limiter.hit('b')).toBe(true)
+    now = 1000
+    expect(limiter.hit('a')).toBe(true)
   })
 
   it('kennt die Feedback-Arten der Vorlage (Entscheidung 8.2)', () => {
@@ -109,6 +121,9 @@ describe('Sammlungen, Teilen, Feedback – Regeln (Phase 5, Teil 2)', () => {
       url: 'https://hub.example/de/mein-hub#geteilt',
     })
     expect(mail.subject).toBe('Eva <b> hat etwas mit Ihnen geteilt')
+    const header = shareEmail('de', { from: 'Eva\r\nBcc: x@example.com', title: 'Liste\nzwei', message: '', url: 'https://hub.example' })
+    expect(header.subject).toBe('Eva Bcc: x@example.com hat etwas mit Ihnen geteilt')
+    expect(header.text).toContain('«Liste zwei»')
     expect(mail.html).not.toContain('<script>')
     expect(mail.html).toContain('&lt;script&gt;x&lt;/script&gt;<br>Zeile 2')
     expect(mail.text).toContain('https://hub.example/de/mein-hub#geteilt')

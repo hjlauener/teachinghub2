@@ -111,14 +111,43 @@ export function collectionAccess(ownerId: string, memberId: string, share: { can
   return { read: false, edit: false, manage: false }
 }
 
-/** Suche nach Mitgliedern zum Teilen: ab 3 Zeichen; Platzhalter von LIKE werden maskiert. */
+/**
+ * Suche nach Mitgliedern zum Teilen: ab 3 Zeichen; Platzhalter von LIKE werden maskiert.
+ * Name: Teilwort; E-Mail: nur ab Anfang der Adresse (sonst liefert „unibe.ch“ alle Mitglieder).
+ */
 export const MEMBER_SEARCH_MIN = 3
 export const MEMBER_SEARCH_LIMIT = 8
-export function memberSearchPattern(value: unknown): string | null {
+export const MEMBER_SEARCHES_PER_WINDOW = 30
+export const MEMBER_SEARCH_WINDOW_MS = 10 * 60 * 1000
+export type MemberSearchPatterns = { name: string; email: string }
+export function memberSearchPattern(value: unknown): MemberSearchPatterns | null {
   if (typeof value !== 'string') return null
   const term = value.trim()
   if (term.length < MEMBER_SEARCH_MIN || term.length > 100) return null
-  return `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%`
+  const escaped = term.replace(/[\\%_]/g, (c) => `\\${c}`)
+  return { name: `%${escaped}%`, email: `${escaped}%` }
+}
+
+/**
+ * Einfaches Rate-Limit im Speicher (gleitendes Fenster pro Schlüssel). Reicht für eine Instanz des Prototyps.
+ * `hit` liefert false, wenn das Limit erreicht ist.
+ */
+export function createRateLimiter(max: number, windowMs: number, now: () => number = Date.now) {
+  const hits = new Map<string, number[]>()
+  return {
+    hit(key: string): boolean {
+      const t = now()
+      const recent = (hits.get(key) ?? []).filter((at) => t - at < windowMs)
+      if (recent.length >= max) {
+        hits.set(key, recent)
+        return false
+      }
+      recent.push(t)
+      hits.set(key, recent)
+      if (hits.size > 10_000) for (const [k, v] of hits) if (!v.some((at) => t - at < windowMs)) hits.delete(k)
+      return true
+    },
+  }
 }
 
 /* Feedback (Entscheidungen 8.2, 8.2a, 8.2b) */
