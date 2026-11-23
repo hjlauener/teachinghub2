@@ -6,6 +6,8 @@ import { nextCookies } from 'better-auth/next-js'
 import { genericOAuth, magicLink } from 'better-auth/plugins'
 import { getPayload } from 'payload'
 
+import { deleteMemberData } from '../hub/payload-data'
+
 import { authDatabase, AUTH_TABLES } from './database'
 import { magicLinkEmail } from './email'
 import { DEFAULT_SETTINGS, mayRegister, normalizeEmail, REASON_MESSAGES, type RegistrationSettings } from './rules'
@@ -53,7 +55,17 @@ export const authOptions = {
   secret: process.env.BETTER_AUTH_SECRET,
   database: authDatabase(),
   trustedOrigins: [baseURL, ...(process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '').split(',').filter(Boolean)],
-  user: { modelName: AUTH_TABLES.user, deleteUser: { enabled: true } },
+  user: {
+    modelName: AUTH_TABLES.user,
+    deleteUser: {
+      enabled: true,
+      // Hub-Tabellen löschen sich per Cascade; Feedback (inkl. Bilder) löschen, Vorschläge anonymisieren (Phase 5)
+      afterDelete: async (user) => {
+        const payload = await getPayload({ config })
+        await deleteMemberData(payload, user.id)
+      },
+    },
+  },
   session: { modelName: AUTH_TABLES.session },
   account: { modelName: AUTH_TABLES.account, accountLinking: { enabled: true, trustedProviders: ['eduid'] } },
   verification: { modelName: AUTH_TABLES.verification },

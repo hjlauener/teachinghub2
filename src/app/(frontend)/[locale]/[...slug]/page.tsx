@@ -113,7 +113,7 @@ export default async function ContentRoute({ params, searchParams }: Props) {
     <>
       <Breadcrumb items={breadcrumb} />
       <TranslationNotice state={state} />
-      <ContentActions collection={found.collection} id={found.doc.id} count={likes} />
+      <ContentActions collection={found.collection} id={found.doc.id} title={found.doc.title} count={likes} />
       {found.collection === 'articles' && <ArticleView doc={found.doc} locale={locale} kind="articles" />}
       {found.collection === 'methods' && <MethodView doc={found.doc} locale={locale} />}
       {found.collection === 'tools' && <ToolView doc={found.doc} locale={locale} />}

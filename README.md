@@ -69,7 +69,10 @@ src/migrations/                Datenbank-Migrationen
 src/seed/                      Startdaten
 src/migration/                 Crawler, Extraktion, Import, Delta-Abgleich
 scripts/migration/             CLI für Crawl, Import, Delta
-src/components/                Layout-Komponenten (Header, Navigation, Footer, Prototyp-Hinweis)
+src/components/                Layout-Komponenten (Header, Navigation, Footer, Prototyp-Hinweis), hub/ (Like, Merken, Feedback, Teilen, Sammlungen)
+src/auth/                      Mitgliederkonten (Better Auth, Schema auth)
+src/hub/                       Persönliche Funktionen (Schema hub, Regeln, SQL, Feedback/Vorschläge, Mails)
+src/app/api/hub/               API der persönlichen Funktionen (schreibend nur same-origin + Session)
 src/config/navigation.ts       Hauptnavigation (alte Pfade, Entscheidung 7.2)
 src/design/tokens.css          UniBE-CD als Design-Tokens
 src/i18n/                      Sprach-Routing (next-intl)

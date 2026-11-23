@@ -80,6 +80,9 @@ export interface Config {
     'translation-cache': TranslationCache;
     users: User;
     'member-invites': MemberInvite;
+    feedback: Feedback;
+    'feedback-images': FeedbackImage;
+    suggestions: Suggestion;
     'migration-inbox': MigrationInbox;
     'legacy-snapshots': LegacySnapshot;
     'payload-kv': PayloadKv;
@@ -103,6 +106,9 @@ export interface Config {
     'translation-cache': TranslationCacheSelect<false> | TranslationCacheSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'member-invites': MemberInvitesSelect<false> | MemberInvitesSelect<true>;
+    feedback: FeedbackSelect<false> | FeedbackSelect<true>;
+    'feedback-images': FeedbackImagesSelect<false> | FeedbackImagesSelect<true>;
+    suggestions: SuggestionsSelect<false> | SuggestionsSelect<true>;
     'migration-inbox': MigrationInboxSelect<false> | MigrationInboxSelect<true>;
     'legacy-snapshots': LegacySnapshotsSelect<false> | LegacySnapshotsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -1784,6 +1790,79 @@ export interface MemberInvite {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feedback".
+ */
+export interface Feedback {
+  id: number;
+  feedbackStatus: 'neu' | 'in_arbeit' | 'erledigt';
+  kind: 'fehler' | 'verbesserung' | 'idee' | 'frage';
+  place: string;
+  pageUrl?: string | null;
+  message: string;
+  image?: (number | null) | FeedbackImage;
+  /**
+   * Sent by email on save and shown in “My Hub”.
+   */
+  reply?: string | null;
+  repliedAt?: string | null;
+  memberEmail?: string | null;
+  memberName?: string | null;
+  memberId?: string | null;
+  mailLocale?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feedback-images".
+ */
+export interface FeedbackImage {
+  id: number;
+  memberId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suggestions".
+ */
+export interface Suggestion {
+  id: number;
+  suggestionStatus: 'neu' | 'in_pruefung' | 'angenommen' | 'abgelehnt';
+  kind: 'methods' | 'tools';
+  title: string;
+  text?: string | null;
+  basedOn?:
+    | ({
+        relationTo: 'methods';
+        value: number | Method;
+      } | null)
+    | ({
+        relationTo: 'tools';
+        value: number | Tool;
+      } | null);
+  /**
+   * Sent by email with the decision.
+   */
+  editorNote?: string | null;
+  memberEmail?: string | null;
+  memberName?: string | null;
+  memberId?: string | null;
+  mailLocale?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "migration-inbox".
  */
 export interface MigrationInbox {
@@ -2059,6 +2138,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'member-invites';
         value: number | MemberInvite;
+      } | null)
+    | ({
+        relationTo: 'feedback';
+        value: number | Feedback;
+      } | null)
+    | ({
+        relationTo: 'feedback-images';
+        value: number | FeedbackImage;
+      } | null)
+    | ({
+        relationTo: 'suggestions';
+        value: number | Suggestion;
       } | null)
     | ({
         relationTo: 'migration-inbox';
@@ -2858,6 +2949,62 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MemberInvitesSelect<T extends boolean = true> {
   email?: T;
   note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feedback_select".
+ */
+export interface FeedbackSelect<T extends boolean = true> {
+  feedbackStatus?: T;
+  kind?: T;
+  place?: T;
+  pageUrl?: T;
+  message?: T;
+  image?: T;
+  reply?: T;
+  repliedAt?: T;
+  memberEmail?: T;
+  memberName?: T;
+  memberId?: T;
+  mailLocale?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feedback-images_select".
+ */
+export interface FeedbackImagesSelect<T extends boolean = true> {
+  memberId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suggestions_select".
+ */
+export interface SuggestionsSelect<T extends boolean = true> {
+  suggestionStatus?: T;
+  kind?: T;
+  title?: T;
+  text?: T;
+  basedOn?: T;
+  editorNote?: T;
+  memberEmail?: T;
+  memberName?: T;
+  memberId?: T;
+  mailLocale?: T;
   updatedAt?: T;
   createdAt?: T;
 }

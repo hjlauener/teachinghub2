@@ -26,3 +26,6 @@ docs/seiteninventar.csv
 # System
 .DS_Store
 *.log
+
+# Feedback-Bilder (Personendaten, nie committen)
+feedback-images/

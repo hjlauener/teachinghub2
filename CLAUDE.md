@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–4 gemergt; **Phase 5 (Personalisierung)** auf `phase-5-personalisierung`: Teil 1 (Like, Bookmark, Mein Hub, Export), Teil 2 (Feedback-Dialog, Sammlungen, Teilen) folgt.
+- Plan: `docs/umsetzungsplan.md` v1.0. Phasen 0–4 und Phase 5 Teil 1 gemergt; **Phase 5 Teil 2** (Feedback-Dialog, Sammlungen, Vorschläge, Teilen) auf `phase-5-teil-2`. Nächste Phase: 6 (Ask-a-question).
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -59,3 +59,8 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Regeln rein in `src/hub/rules.ts` (getestet), SQL in `src/hub/repo.ts`, serverseitige Helfer in `src/hub/server.ts`; API unter `/api/hub/*` (schreibend nur same-origin + Session).
 - Like-Zähler erst ab 3 öffentlich; Rohzahlen unter 3 nie an den Browser geben (Kompass bekommt nur einen Rang). Wer geliked hat, zeigt keine Ansicht, auch nicht die Redaktion (`/admin/like-statistik` zeigt nur Zähler).
 - Persönlicher Zustand wird clientseitig geladen (`/api/hub/state`), Seiten bleiben für alle gleich gerendert.
+- Teil 2: Sammlungen/Teilen/Inbox/Einstellungen in `hub.collections`, `collection_items`, `collection_shares`, `inbox`, `preferences` (SQL in `src/hub/repo-collections.ts`, Rechte über `collectionAccess` + `src/hub/collection-access.ts`, ohne Lesezugriff 404 statt 403).
+- Feedback und Vorschläge sind Payload-Collections (`feedback`, `feedback-images`, `suggestions`, Admin-Gruppe „Rückmeldungen“), nur Redaktion lesbar; Mitglieder nur über `src/hub/payload-data.ts` (immer nach `memberId` gefiltert). Feldnamen `feedbackStatus`/`suggestionStatus` (nie `status`).
+- Feedback-Bilder nur PNG/JPEG/WebP ≤ 5 MB, Typ per `detectImageType` (Bytes), Ordner `feedback-images/` ist gitignored. Konto löschen → `deleteMemberData` (Better Auth `afterDelete`).
+- Mails an Mitglieder nur über `src/hub/mail.ts` (maskiert); Teilen-Mail nur bei `notify_shares`, Sprache aus `hub.preferences.locale` (wird beim Besuch von „Mein Hub“ gesetzt).
+- Feedback-Dialog: `src/components/hub/FeedbackDialog.tsx`, im Layout eingebunden; Elemente mit `data-feedback-ignore` erscheinen nicht im Screenshot.
