@@ -20,6 +20,7 @@ import { Subtopics } from './collections/Subtopics'
 import { Taxonomies } from './collections/Taxonomies'
 import { Tools } from './collections/Tools'
 import { Topics } from './collections/Topics'
+import { TranslationCache } from './collections/TranslationCache'
 import { Users } from './collections/Users'
 import { Navigation } from './globals/Navigation'
 import { editor } from './lib/editor'
@@ -72,6 +73,7 @@ export default buildConfig({
     Taxonomies,
     Contacts,
     Media,
+    TranslationCache,
     // Verwaltung
     Users,
     // Migration Altsite

@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { legacyField, linkFields } from '@/fields/common'
+import { buildSearchText, searchTextField } from '@/fields/searchText'
 import { groups, l } from '@/lib/admin'
 import { C } from '@/lib/slugs'
 
@@ -10,6 +11,7 @@ import { editorialDefaults } from './shared'
 export const News: CollectionConfig = {
   slug: C.news,
   ...editorialDefaults,
+  hooks: { beforeChange: [buildSearchText(['title', 'lead', 'body'])] },
   labels: { singular: l('News', 'News item', 'Actualité'), plural: l('News', 'News', 'Actualités') },
   admin: {
     useAsTitle: 'title',
@@ -50,6 +52,7 @@ export const News: CollectionConfig = {
       unique: true,
       admin: { position: 'sidebar', description: 'z. B. /ablage/news/sub_motion' },
     },
+    searchTextField,
     legacyField,
   ],
 }

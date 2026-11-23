@@ -77,6 +77,7 @@ export interface Config {
     taxonomies: Taxonomy;
     contacts: Contact;
     media: Media;
+    'translation-cache': TranslationCache;
     users: User;
     'migration-inbox': MigrationInbox;
     'legacy-snapshots': LegacySnapshot;
@@ -98,6 +99,7 @@ export interface Config {
     taxonomies: TaxonomiesSelect<false> | TaxonomiesSelect<true>;
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'translation-cache': TranslationCacheSelect<false> | TranslationCacheSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'migration-inbox': MigrationInboxSelect<false> | MigrationInboxSelect<true>;
     'legacy-snapshots': LegacySnapshotsSelect<false> | LegacySnapshotsSelect<true>;
@@ -689,6 +691,7 @@ export interface Article {
     title?: string | null;
     description?: string | null;
   };
+  searchText?: string | null;
   /**
    * Set by the importer.
    */
@@ -997,6 +1000,7 @@ export interface Method {
     title?: string | null;
     description?: string | null;
   };
+  searchText?: string | null;
   /**
    * Set by the importer.
    */
@@ -1282,6 +1286,7 @@ export interface Tool {
     title?: string | null;
     description?: string | null;
   };
+  searchText?: string | null;
   /**
    * Set by the importer.
    */
@@ -1681,6 +1686,7 @@ export interface News {
    * z. B. /ablage/news/sub_motion
    */
   path?: string | null;
+  searchText?: string | null;
   /**
    * Set by the importer.
    */
@@ -1692,6 +1698,26 @@ export interface News {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "translation-cache".
+ */
+export interface TranslationCache {
+  id: number;
+  key: string;
+  value?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  provider?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1991,6 +2017,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'translation-cache';
+        value: number | TranslationCache;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
@@ -2268,6 +2298,7 @@ export interface ArticlesSelect<T extends boolean = true> {
         title?: T;
         description?: T;
       };
+  searchText?: T;
   legacy?:
     | T
     | {
@@ -2375,6 +2406,7 @@ export interface MethodsSelect<T extends boolean = true> {
         title?: T;
         description?: T;
       };
+  searchText?: T;
   legacy?:
     | T
     | {
@@ -2483,6 +2515,7 @@ export interface ToolsSelect<T extends boolean = true> {
         title?: T;
         description?: T;
       };
+  searchText?: T;
   legacy?:
     | T
     | {
@@ -2515,6 +2548,7 @@ export interface NewsSelect<T extends boolean = true> {
   date?: T;
   visibleUntil?: T;
   path?: T;
+  searchText?: T;
   legacy?:
     | T
     | {
@@ -2741,6 +2775,17 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "translation-cache_select".
+ */
+export interface TranslationCacheSelect<T extends boolean = true> {
+  key?: T;
+  value?: T;
+  provider?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

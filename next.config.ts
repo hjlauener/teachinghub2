@@ -9,6 +9,8 @@ const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // E2E-Container ruft den Dev-Server als „app“ auf (docker compose --profile e2e)
+  allowedDevOrigins: ['app'],
   // Nur vom Importer genutzt – nicht in den Server-Bundle packen
   serverExternalPackages: ['jsdom'],
   poweredByHeader: false,

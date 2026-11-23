@@ -47,6 +47,11 @@ docker compose exec app npm run legacy:delta     # Abgleich → Migrations-Inbox
 
 Im Admin unter **Migration Altsite → Migrations-Inbox**: Abgleich starten, Änderungen ansehen (Basis → neu, bei Konflikt zusätzlich die lokale Fassung) und **übernehmen · später · ignorieren**. Nichts wird automatisch überschrieben. `LEGACY_RECONVERT=1 npm run legacy:import` wandelt Importiertes nach Konverter-Verbesserungen neu um (lokal Geändertes bleibt).
 
+```bash
+docker compose exec app npm run legacy:parity    # Prüft: jede Altsite-Seite erreichbar + alte URL leitet um
+docker compose exec app npm run search:reindex   # Suchtext aller Inhalte neu aufbauen
+```
+
 > Bei knappem Docker-Speicher den Import ohne laufenden Dev-Server ausführen: `docker compose stop app` und `docker compose run --rm --no-deps app npm run legacy:import`.
 
 ## Struktur
