@@ -131,7 +131,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | → | | **Folgetermin mit der Redaktion: Demo M1** | |
 | **M2 Mitglieder** | 4 Accounts ✅ (23.11.2026) | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
 | | 5 Personalisierung (Teil 1 ✅, Teil 2 ✅ 23.11.2026) | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
-| **M3 KI** | 6 Ask-a-question | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
+| **M3 KI** | 6 Ask-a-question (✅ 23.11.2026) | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
 | **M4 Login & Demo** | 7 edu-ID-Test | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
 | | 8 Online-Demo | Schweizer Hoster (1.2a), Zugangsschutz, `noindex`, Backup, Testpersonen | 3–5 Dozierende testen |
 
@@ -172,7 +172,7 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht**, Phase 4 (Accounts) ist gemergt. Phase 5 Teil 1 (Like, Bookmark, Mein Hub) ist gemergt, Teil 2 (Feedback-Dialog, Sammlungen, Vorschläge, Teilen) umgesetzt auf `phase-5-teil-2`; damit ist **Meilenstein M2** (Mitglieder) erreicht. Nächster Schritt: Phase 6 (Ask-a-question). Demo/Briefing für die Redaktion (3.3a) bleibt offen.
+Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht**, Phase 4 (Accounts) ist gemergt. Phase 5 ist gemergt (**Meilenstein M2** erreicht), ebenso das Review der Phasen 4/5. Phase 6 (Ask-a-question) umgesetzt auf `phase-6-ask`; nach dem Merge ist **Meilenstein M3** (KI) erreicht. Nächster Schritt: Phase 7 (edu-ID-Test). Demo/Briefing für die Redaktion (3.3a) bleibt offen.
 
 **Hinweise aus Phase 3:**
 - Parität: 257/257 Altseiten erreichbar, alte URLs leiten per Regel (301) um (`npm run legacy:parity`).
@@ -209,3 +209,12 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - „Mein Hub“ neu mit Sprungnavigation: Gemerkt, Meine Methoden, Meine Tools, Mit mir geteilt, Hilfreich gefunden, Mein Feedback, Meine Vorschläge, Benachrichtigungen, Meine Daten. Export enthält alle neuen Daten.
 - Konto löschen: Hub-Daten per Cascade, Feedback samt Bildern gelöscht, Vorschläge anonymisiert (Better Auth `afterDelete`).
 - Payload-Migration `20261123_135306_feedback_suggestions`; Hub-Tabellen weiterhin über `npm run auth:migrate`.
+
+**Hinweise aus Phase 6:**
+- „Fragen“ als Umschalter auf der Suchseite (`/suche?modus=fragen`); die Wahl bleibt pro Mitglied gespeichert. Gäste sehen einen Anmeldehinweis, Mitglieder ohne Schlüssel eine Anleitung.
+- KI-Index: Abschnitte der publizierten Inhalte (DE + menschliche EN/FR-Übersetzungen, ohne „folgt“-Themen und News > 2 Jahre), Anker der Website-Abschnitte als Quellenlinks. Lokal mit Ollama/bge-m3; Aufbau `npm run ai:reindex`, danach automatisch bei jeder CMS-Änderung.
+- Antwort: nur aus den gefundenen Abschnitten, Verweise [n] mit Quellenliste, Token-Anzeige. Ohne passende Quelle wird der Anbieter nicht angefragt (keine Kosten): Hinweis, ähnliche Seiten, Volltextsuche, „Inhalt fehlt – der Redaktion melden“ (Feedback-Dialog, Art Idee).
+- Schlüssel: „Mein Hub → KI-Einstellungen“, vor dem Speichern mit kurzem Aufruf geprüft, AES-GCM verschlüsselt (an das Mitglied gebunden), nur Kennung „…abcd“ sichtbar, jederzeit löschbar. Anbieter Anthropic, OpenAI, OpenAI-kompatibel (nur öffentliche https-Adressen). Modellliste im Admin unter „KI-Einstellungen“ (Start: Claude Opus 5.5, Claude Sonnet 5.5; OpenAI-Modelle trägt der Admin ein, sonst freie Eingabe).
+- Verlauf in „Mein Hub → Fragen an den Hub“ ohne automatisches Löschen; Antworten an Mitglieder teilbar (erscheinen unter „Mit mir geteilt“); im Daten-Export enthalten.
+- Missbrauchsschutz: höchstens 60 Fragen pro Stunde und Mitglied.
+- Offen: Qualität der Antworten mit echten Inhalten und bge-m3 messen und den Schwellwert (`AI_MIN_SCORE`, Standard 0.45) einstellen.

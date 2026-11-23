@@ -124,10 +124,12 @@ export interface Config {
   globals: {
     navigation: Navigation;
     'member-settings': MemberSetting;
+    'ai-settings': AiSetting;
   };
   globalsSelect: {
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     'member-settings': MemberSettingsSelect<false> | MemberSettingsSelect<true>;
+    'ai-settings': AiSettingsSelect<false> | AiSettingsSelect<true>;
   };
   locale: 'de' | 'en' | 'fr';
   widgets: {
@@ -3166,6 +3168,26 @@ export interface MemberSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-settings".
+ */
+export interface AiSetting {
+  id: number;
+  /**
+   * A few current models per provider. The first entry of a provider is the default.
+   */
+  models?:
+    | {
+        provider: 'anthropic' | 'openai';
+        model: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation_select".
  */
 export interface NavigationSelect<T extends boolean = true> {
@@ -3197,6 +3219,23 @@ export interface MemberSettingsSelect<T extends boolean = true> {
     | T
     | {
         domain?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-settings_select".
+ */
+export interface AiSettingsSelect<T extends boolean = true> {
+  models?:
+    | T
+    | {
+        provider?: T;
+        model?: T;
+        label?: T;
         id?: T;
       };
   updatedAt?: T;

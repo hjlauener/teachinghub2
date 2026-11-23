@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` (v1.1 auf `phase-6-ask`). Phasen 0–5 gemergt; Detailentscheide zu Phase 6 (Ask-a-question) in `docs/entscheidungen.md` 8.8–8.12.
+- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–5 gemergt; **Phase 6 (Ask-a-question)** auf `phase-6-ask`. Nächste Phase: 7 (edu-ID-Test).
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -67,3 +67,11 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Review Phase 4/5: Mitgliedersuche findet E-Mails nur ab Adressanfang (nie über die Domain) und ist pro Mitglied begrenzt (`createRateLimiter`); Namen über `normalizeName` (einzeilig, ≤ 100) in Better-Auth-Hooks; Sprache der Anmeldemail über `localeFromMagicLink`.
 - Mails in Payload-Hooks immer in try/catch (Mailfehler dürfen Speichern nicht verhindern); Felder `memberEmail/memberName/memberId/mailLocale` sind nach dem Anlegen nicht änderbar.
 - Feedback-Upload verlangt Content-Length (411 ohne, 413 zu gross).
+
+## Ask-a-question (Phase 6)
+- Code in `src/ai/`: Regeln rein in `rules.ts`/`sections.ts`/`select.ts` (getestet), Verschlüsselung `crypto.ts`, Embeddings `embed.ts`, Index `index-repo.ts` + `indexer.ts`, Anbieter `providers.ts`, Ablauf `ask.ts`, Mitgliederdaten `repo.ts`.
+- Index im Schema `ai` (pgvector, DDL mit `npm run auth:migrate`); Aufbau/Abgleich `npm run ai:reindex` (nach Importen). CMS-Änderungen werden per Hook nachgeführt (verzögert, ausserhalb der Transaktion; `AI_INDEX_ON_SAVE=off` schaltet ab).
+- Embeddings lokal über Ollama (`bge-m3`, Dienst `ollama`); Tests/CI mit `AI_EMBEDDER=fake`. Antworten nur mit eigenem Schlüssel (AES-GCM, `AI_KEY_SECRET` nie ändern); `AI_TEST_PROVIDER=1` aktiviert den Testanbieter (nur CI/lokal).
+- Ohne passende Quelle wird der Anbieter nicht angefragt. Basis-URL „OpenAI-kompatibel“ nur öffentlich (https, keine IP/localhost, DNS-Prüfung gegen private Netze).
+- Anthropic-Adapter über `@anthropic-ai/sdk` (Streaming, `effort: medium`, Refusal-Fallback `fallbacks: 'default'` für Modelle der 5er-Generation); Modellliste im Global `ai-settings` (Admin).
+- Antworten von fetch immer vollständig lesen (`r.json()`), sonst bleibt die Anfrage offen und `networkidle` in E2E hängt.

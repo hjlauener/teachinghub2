@@ -7,6 +7,7 @@ import { getMigrations } from 'better-auth/db/migration'
 import { Client } from 'pg'
 
 import { AUTH_SCHEMA } from '../../src/auth/database'
+import { AI_DDL } from '../../src/ai/database'
 import { HUB_DDL } from '../../src/hub/database'
 
 const client = new Client({ connectionString: process.env.DATABASE_URL })
@@ -24,6 +25,9 @@ console.log('Auth-Tabellen bereit.')
 const hub = new Client({ connectionString: process.env.DATABASE_URL })
 await hub.connect()
 for (const statement of HUB_DDL) await hub.query(statement)
-await hub.end()
 console.log('Hub-Tabellen bereit.')
+// KI-Index (Phase 6) – braucht pgvector (Docker-Image pgvector/pgvector)
+for (const statement of AI_DDL) await hub.query(statement)
+await hub.end()
+console.log('KI-Index-Tabellen bereit.')
 process.exit(0)

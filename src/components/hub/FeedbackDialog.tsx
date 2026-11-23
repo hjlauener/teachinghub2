@@ -95,15 +95,16 @@ export function FeedbackLauncher() {
   const [done, setDone] = useState(false)
   const drawing = useRef<Stroke | null>(null)
 
-  const start = useCallback(async (initialPlace?: string) => {
+  const start = useCallback(async (initialPlace?: string, preset?: { kind: FeedbackKind; message: string }) => {
     setBusy(true)
     const shot = await captureViewport()
     setPlace(initialPlace || currentPlace())
     setImage(shot)
-    setWithImage(Boolean(shot))
+    // Vorausgefüllte Meldung (z. B. „Inhalt fehlt“ aus Ask-a-question): Bild nicht standardmässig mitsenden
+    setWithImage(Boolean(shot) && !preset)
     setStrokes([])
-    setMessage('')
-    setKind('verbesserung')
+    setMessage(preset?.message ?? '')
+    setKind(preset?.kind ?? 'verbesserung')
     setError(null)
     setDone(false)
     setLarge(false)
@@ -123,6 +124,19 @@ export function FeedbackLauncher() {
     const timer = setTimeout(() => void start(pending.slice(0, 300)), 0)
     return () => clearTimeout(timer)
   }, [session, start])
+
+  // Andere Teile der Seite öffnen den Dialog mit Vorgaben (Ask-a-question: „Inhalt fehlt – der Redaktion melden“, 8.7)
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<{ kind?: unknown; message?: unknown }>).detail ?? {}
+      const kind = FEEDBACK_KINDS.includes(detail.kind as FeedbackKind) ? (detail.kind as FeedbackKind) : 'idee'
+      const message = typeof detail.message === 'string' ? detail.message.slice(0, 5000) : ''
+      if (session) void start(undefined, { kind, message })
+      else router.push({ pathname: '/anmelden', query: { zurueck: `${window.location.pathname}${window.location.search}` } })
+    }
+    window.addEventListener('teachinghub:feedback', listener)
+    return () => window.removeEventListener('teachinghub:feedback', listener)
+  }, [session, start, router])
 
   useEffect(() => {
     const dialog = dialogRef.current
