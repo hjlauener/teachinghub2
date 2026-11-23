@@ -79,6 +79,7 @@ export interface Config {
     media: Media;
     'translation-cache': TranslationCache;
     users: User;
+    'member-invites': MemberInvite;
     'migration-inbox': MigrationInbox;
     'legacy-snapshots': LegacySnapshot;
     'payload-kv': PayloadKv;
@@ -101,6 +102,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     'translation-cache': TranslationCacheSelect<false> | TranslationCacheSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'member-invites': MemberInvitesSelect<false> | MemberInvitesSelect<true>;
     'migration-inbox': MigrationInboxSelect<false> | MigrationInboxSelect<true>;
     'legacy-snapshots': LegacySnapshotsSelect<false> | LegacySnapshotsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -115,9 +117,11 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('de' | 'en' | 'fr') | ('de' | 'en' | 'fr')[];
   globals: {
     navigation: Navigation;
+    'member-settings': MemberSetting;
   };
   globalsSelect: {
     navigation: NavigationSelect<false> | NavigationSelect<true>;
+    'member-settings': MemberSettingsSelect<false> | MemberSettingsSelect<true>;
   };
   locale: 'de' | 'en' | 'fr';
   widgets: {
@@ -1769,6 +1773,17 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-invites".
+ */
+export interface MemberInvite {
+  id: number;
+  email: string;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "migration-inbox".
  */
 export interface MigrationInbox {
@@ -2040,6 +2055,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'member-invites';
+        value: number | MemberInvite;
       } | null)
     | ({
         relationTo: 'migration-inbox';
@@ -2834,6 +2853,16 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-invites_select".
+ */
+export interface MemberInvitesSelect<T extends boolean = true> {
+  email?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "migration-inbox_select".
  */
 export interface MigrationInboxSelect<T extends boolean = true> {
@@ -2971,6 +3000,25 @@ export interface Navigation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-settings".
+ */
+export interface MemberSetting {
+  id: number;
+  registrationMode?: ('invite' | 'domains' | 'open') | null;
+  /**
+   * Exactly this domain, no subdomains.
+   */
+  allowedDomains?:
+    | {
+        domain: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation_select".
  */
 export interface NavigationSelect<T extends boolean = true> {
@@ -2986,6 +3034,22 @@ export interface NavigationSelect<T extends boolean = true> {
     | {
         label?: T;
         url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-settings_select".
+ */
+export interface MemberSettingsSelect<T extends boolean = true> {
+  registrationMode?: T;
+  allowedDomains?:
+    | T
+    | {
+        domain?: T;
         id?: T;
       };
   updatedAt?: T;

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { externalLinks } from '@/config/navigation'
 import { Link } from '@/i18n/navigation'
 
+import { AccountLink } from './auth/AccountLink'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { MainNav } from './MainNav'
 
@@ -28,7 +29,10 @@ export async function SiteHeader() {
             {t('title')}
           </Link>
         </div>
-        <LanguageSwitcher />
+        <div className="site-header__tools">
+          <AccountLink />
+          <LanguageSwitcher />
+        </div>
       </div>
       <div className="container">
         <MainNav />

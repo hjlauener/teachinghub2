@@ -17,6 +17,11 @@ env:
   NEXT_PUBLIC_SERVER_URL: http://localhost:3000
   SMTP_HOST: localhost
   SMTP_PORT: '1025'
+  BETTER_AUTH_SECRET: ci-only-not-secret-auth-0123456789abcdef
+  BETTER_AUTH_URL: http://localhost:3000
+  # Tests senden mehrere Anmeldelinks hintereinander (inkl. Wiederholungen)
+  AUTH_RATE_LIMIT: 'off'
+  MAILPIT_URL: http://localhost:8025
 
 jobs:
   check:
@@ -35,6 +40,10 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U teachinghub -d teachinghub2"
           --health-interval 5s --health-timeout 5s --health-retries 20
+      mailpit:
+        # Fängt die Anmeldelinks ab (E2E der Mitgliederkonten)
+        image: axllent/mailpit:v1.34.0
+        ports: ['1025:1025', '8025:8025']
 
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +66,9 @@ jobs:
         run: npm run test:unit
 
       - name: Migrationen auf leerer Datenbank anwenden
-        run: npm run migrate
+        run: |
+          npm run migrate
+          npm run auth:migrate
 
       # Integrationstests auf eigener DB: sie passen das Schema im Dev-Modus an (Schema-Push).
       # Die E2E-DB bleibt rein migriert – sonst fragt der Produktionsserver beim Start nach und hängt.
@@ -66,6 +77,7 @@ jobs:
           DATABASE_URL: postgres://teachinghub:teachinghub@localhost:5432/teachinghub2_int
         run: |
           node scripts/ci/create-db.mjs "$DATABASE_URL"
+          npm run auth:migrate
           npm run test:int
 
       - name: Testinhalte für E2E einspielen

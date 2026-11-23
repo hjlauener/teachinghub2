@@ -997,3 +997,35 @@ img {
 .content-page:has(.topics-views) {
   max-width: none;
 }
+
+/* ---- Phase 4: Konten ---------------------------------------------------------------- */
+
+.site-header__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.account-link {
+  font-family: var(--font-family-bold);
+  font-size: var(--font-size-15);
+  min-width: 6em;
+  text-align: right;
+}
+
+.auth-form {
+  max-width: 640px;
+}
+
+.auth-form__passkey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+  margin-top: var(--space-24);
+  font-size: var(--font-size-15);
+}
+
+.account {
+  max-width: 720px;
+}

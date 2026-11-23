@@ -28,15 +28,18 @@
     "search:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/reindex.ts",
     "legacy:parity": "tsx scripts/migration/parity.ts",
     "e2e:fixtures": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import-fixtures.ts",
-    "topics:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/topics/import.ts"
+    "topics:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/topics/import.ts",
+    "auth:migrate": "tsx scripts/auth/migrate.ts"
   },
   "dependencies": {
+    "@better-auth/passkey": "1.7.27",
     "@payloadcms/db-postgres": "3.94.1",
     "@payloadcms/email-nodemailer": "3.94.1",
     "@payloadcms/next": "3.94.1",
     "@payloadcms/richtext-lexical": "3.94.1",
     "@payloadcms/translations": "3.94.1",
     "@payloadcms/ui": "3.94.1",
+    "better-auth": "1.7.27",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
@@ -44,6 +47,7 @@
     "next": "16.4.6",
     "next-intl": "4.15.3",
     "payload": "3.94.1",
+    "pg": "8.20.0",
     "react": "19.2.9",
     "react-dom": "19.2.9",
     "sharp": "0.35.4"

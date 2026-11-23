@@ -129,7 +129,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | | 3 Öffentliche Site ✅ (23.11.2026, Lighthouse offen) | Navigation, Start, Journey, Rubrikseiten, Vorlagen, Methodenkompass, Suche, Über uns, Live-Übersetzung | Paritätscheck 100 %, axe grün, Lighthouse ≥ 90 |
 | | 3b Landingpages ✅ (23.11.2026) | Topics/Subtopics, Kategorien A/B/C, Labels, Übersicht + Matrix, Prüfungen, Importe | Übersicht + 2 Kernthemen online (lokal), Matrix = Relationen |
 | → | | **Folgetermin mit der Redaktion: Demo M1** | |
-| **M2 Mitglieder** | 4 Accounts | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
+| **M2 Mitglieder** | 4 Accounts ✅ (23.11.2026) | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
 | | 5 Personalisierung | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
 | **M3 KI** | 6 Ask-a-question | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
 | **M4 Login & Demo** | 7 edu-ID-Test | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
@@ -173,7 +173,7 @@ TeachingHub2/
 
 ## 15. Nächster Schritt
 
-Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht** – nächster Schritt: Demo für die Redaktion, danach M2 (Phase 4 Accounts). Briefing für die Redaktion (3.3a) bleibt offen.
+Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b-landingpages`). **Meilenstein M1 ist erreicht**, Phase 4 (Accounts) umgesetzt auf `phase-4-accounts`. Nächster Schritt: Phase 5 Personalisierung; Demo/Briefing für die Redaktion (3.3a) bleibt offen. Briefing für die Redaktion (3.3a) bleibt offen.
 
 **Hinweise aus Phase 3:**
 - Parität: 257/257 Altseiten erreichbar, alte URLs leiten per Regel (301) um (`npm run legacy:parity`).
@@ -186,3 +186,10 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - Neu im Modell: Status „folgt/live“ auch für Unterthemen; Pflichtkapitel und Anzahlen gelten erst beim Live-Schalten; Feld „Seiten entlang der Journey“ speist die Matrix (automatisch berechnet); Redaktionsregeln beim Live-Schalten: ≥ 5 Journey-Seiten, 3–8 Unterthemen.
 - Labels der kommentierten Links: neue Hochschul-Labels (z. B. „Universität Zürich“) werden beim Import angelegt.
 - Unterthemen-Seiten zeigen bisher Steckbrief und passende Methoden; ihre 9 Kapitel sind noch zu schreiben (Redaktion). Methodenseiten zeigen „Kommt vor in“.
+
+**Hinweise aus Phase 4:**
+- Mitgliederkonten mit Better Auth, getrennt von den CMS-Benutzer:innen; Tabellen im Schema `auth` (`npm run auth:migrate`), damit Payloads Schema-Push sie nicht anfasst.
+- Anmeldung per Magic Link (15 Min., einmalig, dreisprachige Mail) oder Passkey; Seiten `/anmelden` und `/konto` (Name, Passkeys, Abmelden, Konto löschen).
+- Zulassung im Admin unter „Mitgliederkonten“: Modus Einladung / Domains (Standard `unibe.ch`, ohne Subdomains) / offen; Einladungen als eigene Liste. Abgelehnte Adressen erhalten eine verständliche Meldung, es wird keine Mail verschickt.
+- Rate-Limit nur im Produktionsbetrieb (5 Links / 5 Min.); edu-ID vorbereitet (Generic OAuth, Knopf erscheint mit `EDUID_*`).
+- Konto-Export folgt mit den Daten aus Phase 5.
