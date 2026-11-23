@@ -59,10 +59,18 @@ jobs:
       - name: Migrationen auf leerer Datenbank anwenden
         run: npm run migrate
 
+      # Integrationstests auf eigener DB: sie passen das Schema im Dev-Modus an (Schema-Push).
+      # Die E2E-DB bleibt rein migriert – sonst fragt der Produktionsserver beim Start nach und hängt.
       - name: Integrationstests (Payload + PostgreSQL)
-        run: npm run test:int
+        env:
+          DATABASE_URL: postgres://teachinghub:teachinghub@localhost:5432/teachinghub2_int
+        run: |
+          node scripts/ci/create-db.mjs "$DATABASE_URL"
+          npm run test:int
 
       - name: Testinhalte für E2E einspielen
+        env:
+          NODE_ENV: production
         run: npm run e2e:fixtures
 
       - name: Build
