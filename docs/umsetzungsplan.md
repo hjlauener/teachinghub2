@@ -1,7 +1,7 @@
 # TeachingHub2 – Umsetzungsplan
 
-**Version:** 1.0 (nach grill-me)  
-**Stand:** 22.11.2026  
+**Version:** 1.1 (grill-me Phase 6)  
+**Stand:** 23.11.2026  
 **Grundlagen:** [analyse-teachinghub-unibe.md](analyse-teachinghub-unibe.md) · [entscheidungen.md](entscheidungen.md) (IDs in Klammern) · [konzept-landingpages/](konzept-landingpages/) · [referenz/feedback-dialog.png](referenz/feedback-dialog.png)
 
 ---
@@ -112,7 +112,7 @@ Neubau von teachinghub.unibe.ch als **Prototyp, der übergabefähig gebaut wird*
 | **Feedback** | Dialog nach Vorlage: annotierbarer Screenshot (Zeichnen, Rückgängig, Löschen, 3 Strichstärken, „Bild mitsenden“), Stelle, Art *Fehler · Verbesserung · Idee · Frage*, Freitext, eigenes Bild/Ctrl+V; **nur mit Login** (Gäste → Magic Link → zurück zur Stelle); Inbox *neu / in Arbeit / erledigt*, Antwort per Mail, eigenes Feedback löschbar; Alternative ohne Zeichnen (a11y) |
 | **Meine Methoden / Meine Tools** | private Sammlungen mit Notizen/Varianten; „Der Redaktion vorschlagen“ → Vorschlags-Inbox |
 | **Teilen** | öffentlich: Link, E-Mail, LinkedIn; „an Kolleg:in“ **nur an Mitglieder** (Inbox + Mail); Sammlungen lesen/bearbeiten, widerrufbar, Kopie übernehmen; keine geheimen Links |
-| **Ask-a-question** | eigener API-Key (verschlüsselt, AES-GCM, nur serverseitig, löschbar), Anbieter-Adapter, Retrieval über lokalen Index, **Antworten nur aus Hub-Inhalten** mit Quellenlinks; ohne Quelle: Hinweis + Suchvorschläge + „Inhalt fehlt melden“; Token-Anzeige, optionales Monatslimit; Verlauf in „Mein Hub“ |
+| **Ask-a-question** | **in der Suchseite** (Umschalter „Suchen / Fragen“, Wahl pro Mitglied gespeichert, 8.8); eigener API-Key (verschlüsselt, AES-GCM, nur serverseitig, löschbar), Anbieter-Adapter, Retrieval über lokalen Index (publizierte Inhalte DE + menschliche EN/FR-Übersetzungen, ohne „folgt“-Themen und News > 2 Jahre, Abschnitte nach h2, 8.9), **Antworten nur aus Hub-Inhalten** mit Quellenlinks; ohne Quelle: Hinweis + Suchvorschläge + „Inhalt fehlt melden“; Token-Anzeige, kein Limit im Hub (8.11), kein eigener Datenschutzhinweis (8.10); Verlauf in „Mein Hub“ ohne automatisches Löschen (8.12) |
 | **Mein Hub** | Dashboard: Likes, Bookmarks, Sammlungen, Geteiltes (Inbox), Feedback-Status, KI-Verlauf, KI-Einstellungen, Konto-Export/-Löschung |
 
 ## 10. Qualität (9.1)
