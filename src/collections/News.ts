@@ -26,7 +26,7 @@ export const News: CollectionConfig = {
       name: 'link',
       type: 'group',
       label: l('Link', 'Link', 'Lien'),
-      fields: [{ name: 'label', type: 'text', label: l('Linktext', 'Link text', 'Texte du lien'), localized: true }, ...linkFields()],
+      fields: [{ name: 'label', type: 'text', label: l('Linktext', 'Link text', 'Texte du lien'), localized: true }, ...linkFields({ optional: true })],
     },
     // Seitenleiste
     {

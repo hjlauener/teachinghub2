@@ -1,6 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { de } from '@payloadcms/translations/languages/de'
 import { en } from '@payloadcms/translations/languages/en'
 import { fr } from '@payloadcms/translations/languages/fr'
@@ -11,6 +10,8 @@ import { fileURLToPath } from 'url'
 
 import { Articles } from './collections/Articles'
 import { Contacts } from './collections/Contacts'
+import { LegacySnapshots } from './collections/LegacySnapshots'
+import { MigrationInbox } from './collections/MigrationInbox'
 import { Media } from './collections/Media'
 import { Methods } from './collections/Methods'
 import { News } from './collections/News'
@@ -21,11 +22,14 @@ import { Tools } from './collections/Tools'
 import { Topics } from './collections/Topics'
 import { Users } from './collections/Users'
 import { Navigation } from './globals/Navigation'
+import { editor } from './lib/editor'
 import { migrations } from './migrations'
 import { defaultLocale, locales } from './i18n/routing'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const weeklyDelta = process.env.LEGACY_DELTA_WEEKLY === 'true'
 
 const localeLabels: Record<(typeof locales)[number], string> = {
   de: 'Deutsch',
@@ -70,9 +74,28 @@ export default buildConfig({
     Media,
     // Verwaltung
     Users,
+    // Migration Altsite
+    MigrationInbox,
+    LegacySnapshots,
   ],
   globals: [Navigation],
-  editor: lexicalEditor(),
+  // Wöchentlicher Delta-Abgleich (Entscheidung 3.2), nur wenn LEGACY_DELTA_WEEKLY=true
+  jobs: {
+    tasks: [
+      {
+        slug: 'legacyDelta',
+        label: 'Delta-Abgleich Altsite',
+        schedule: weeklyDelta ? [{ cron: '0 6 * * 1', queue: 'weekly' }] : undefined,
+        handler: async ({ req }) => {
+          const { runDelta } = await import('./migration/delta')
+          await runDelta(req.payload)
+          return { output: {} }
+        },
+      },
+    ],
+    autoRun: weeklyDelta ? [{ cron: '*/15 * * * *', queue: 'weekly' }] : [],
+  },
+  editor,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

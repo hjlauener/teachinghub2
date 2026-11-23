@@ -37,6 +37,18 @@ docker build -t teachinghub2 .                   # Produktions-Image
 
 Neue Pakete: `docker compose exec app npm install <paket>` – `package.json` und `package-lock.json` werden im Projektordner aktualisiert.
 
+## Migration der Altsite (Phase 2)
+
+```bash
+docker compose exec app npm run legacy:crawl     # Altsite crawlen → data/legacy/ (nicht im Repo)
+docker compose exec app npm run legacy:import    # Erstimport (überspringt bereits Importiertes)
+docker compose exec app npm run legacy:delta     # Abgleich → Migrations-Inbox (LEGACY_NO_CRAWL=1: ohne neuen Crawl)
+```
+
+Im Admin unter **Migration Altsite → Migrations-Inbox**: Abgleich starten, Änderungen ansehen (Basis → neu, bei Konflikt zusätzlich die lokale Fassung) und **übernehmen · später · ignorieren**. Nichts wird automatisch überschrieben. `LEGACY_RECONVERT=1 npm run legacy:import` wandelt Importiertes nach Konverter-Verbesserungen neu um (lokal Geändertes bleibt).
+
+> Bei knappem Docker-Speicher den Import ohne laufenden Dev-Server ausführen: `docker compose stop app` und `docker compose run --rm --no-deps app npm run legacy:import`.
+
 ## Struktur
 
 ```
@@ -47,6 +59,8 @@ src/access/roles.ts            Rollen Admin · Redaktion · Übersetzer:in
 src/fields/, src/blocks/       Gemeinsame Felder, Abschnitte und Bausteine
 src/migrations/                Datenbank-Migrationen
 src/seed/                      Startdaten
+src/migration/                 Crawler, Extraktion, Import, Delta-Abgleich
+scripts/migration/             CLI für Crawl, Import, Delta
 src/components/                Layout-Komponenten (Header, Navigation, Footer, Prototyp-Hinweis)
 src/config/navigation.ts       Hauptnavigation (alte Pfade, Entscheidung 7.2)
 src/design/tokens.css          UniBE-CD als Design-Tokens

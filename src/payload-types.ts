@@ -78,7 +78,10 @@ export interface Config {
     contacts: Contact;
     media: Media;
     users: User;
+    'migration-inbox': MigrationInbox;
+    'legacy-snapshots': LegacySnapshot;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -96,7 +99,10 @@ export interface Config {
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'migration-inbox': MigrationInboxSelect<false> | MigrationInboxSelect<true>;
+    'legacy-snapshots': LegacySnapshotsSelect<false> | LegacySnapshotsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -117,7 +123,13 @@ export interface Config {
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      legacyDelta: TaskLegacyDelta;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -840,7 +852,13 @@ export interface Method {
       [k: string]: unknown;
     } | null;
   };
-  alternatives?: (number | Method)[] | null;
+  alternatives?:
+    | {
+        method: number | Method;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   contacts?: (number | Contact)[] | null;
   blocks?:
     | (
@@ -1628,7 +1646,7 @@ export interface News {
   image?: (number | null) | Media;
   link?: {
     label?: string | null;
-    linkType?: ('internal' | 'external') | null;
+    linkType?: ('none' | 'internal' | 'external') | null;
     internal?:
       | ({
           relationTo: 'articles';
@@ -1708,6 +1726,116 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "migration-inbox".
+ */
+export interface MigrationInbox {
+  id: number;
+  path: string;
+  changeType: 'new' | 'changed' | 'removed';
+  status: 'open' | 'later' | 'applied' | 'ignored';
+  summary?: string | null;
+  targetCollection?: string | null;
+  docId?: number | null;
+  legacyUrl?: string | null;
+  legacyDate?: string | null;
+  detectedAt?: string | null;
+  resolvedAt?: string | null;
+  resolvedBy?: (number | null) | User;
+  oldHash?: string | null;
+  newHash?: string | null;
+  changedFields?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  conflicts?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  diffs?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  proposed?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  source?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legacy-snapshots".
+ */
+export interface LegacySnapshot {
+  id: number;
+  path: string;
+  targetCollection: 'articles' | 'methods' | 'tools' | 'pages' | 'news';
+  docId?: number | null;
+  legacyUrl?: string | null;
+  legacyDate?: string | null;
+  /**
+   * Inhalts-Hash der Altsite-Seite
+   */
+  hash?: string | null;
+  importedAt?: string | null;
+  /**
+   * Feldwerte (DE) wie importiert
+   */
+  data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Hash je Feld – erkennt lokale Änderungen
+   */
+  fieldHashes?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1722,6 +1850,98 @@ export interface PayloadKv {
     | number
     | boolean
     | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'legacyDelta';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'legacyDelta') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1773,6 +1993,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'migration-inbox';
+        value: number | MigrationInbox;
+      } | null)
+    | ({
+        relationTo: 'legacy-snapshots';
+        value: number | LegacySnapshot;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -2078,7 +2306,13 @@ export interface MethodsSelect<T extends boolean = true> {
         guides?: T;
         support?: T;
       };
-  alternatives?: T;
+  alternatives?:
+    | T
+    | {
+        method?: T;
+        note?: T;
+        id?: T;
+      };
   contacts?: T;
   blocks?:
     | T
@@ -2535,11 +2769,85 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "migration-inbox_select".
+ */
+export interface MigrationInboxSelect<T extends boolean = true> {
+  path?: T;
+  changeType?: T;
+  status?: T;
+  summary?: T;
+  targetCollection?: T;
+  docId?: T;
+  legacyUrl?: T;
+  legacyDate?: T;
+  detectedAt?: T;
+  resolvedAt?: T;
+  resolvedBy?: T;
+  oldHash?: T;
+  newHash?: T;
+  changedFields?: T;
+  conflicts?: T;
+  diffs?: T;
+  proposed?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legacy-snapshots_select".
+ */
+export interface LegacySnapshotsSelect<T extends boolean = true> {
+  path?: T;
+  targetCollection?: T;
+  docId?: T;
+  legacyUrl?: T;
+  legacyDate?: T;
+  hash?: T;
+  importedAt?: T;
+  data?: T;
+  fieldHashes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2628,6 +2936,14 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskLegacyDelta".
+ */
+export interface TaskLegacyDelta {
+  input?: unknown;
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

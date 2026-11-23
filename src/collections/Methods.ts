@@ -40,10 +40,18 @@ export const Methods: CollectionConfig = {
         afterResources: [
           {
             name: 'alternatives',
-            type: 'relationship',
+            type: 'array',
             label: l('Alternative Methoden', 'Alternative methods', 'Méthodes alternatives'),
-            relationTo: C.methods,
-            hasMany: true,
+            labels: { singular: l('Alternative', 'Alternative', 'Alternative'), plural: l('Alternativen', 'Alternatives', 'Alternatives') },
+            fields: [
+              { name: 'method', type: 'relationship', relationTo: C.methods, required: true, label: l('Methode', 'Method', 'Méthode') },
+              {
+                name: 'note',
+                type: 'textarea',
+                label: l('Unterschied / wann besser geeignet', 'Difference / when better suited', 'Différence / quand préférable'),
+                localized: true,
+              },
+            ],
           },
         ],
       }),
