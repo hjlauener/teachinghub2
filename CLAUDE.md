@@ -23,6 +23,7 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - `docs/methodenkompass.csv` – Methodenkompass-Daten (Quelle: Altsite)
 - `docs/umsetzungsplan.md` – Umsetzungsplan (versioniert)
 - `docs/entscheidungen.md` – Entscheidungsprotokoll aus grill-me
+- `docs/befehle.md` – Spickzettel aller Befehle (bei neuen npm-Skripten nachführen)
 - `docs/konzept-landingpages/` – Konzept der Landingpages „Themen der Lehre“ (Kopie aus dem Ordner „Teaching Hub“)
 
 ## Arbeitsweise

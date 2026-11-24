@@ -21,6 +21,8 @@ Das Skript
 3. spielt Startdaten und die Themen der Lehre ein, importiert die Altsite (wenn gecrawlt) und
 4. baut den KI-Index für „Fragen“ auf (beim ersten Mal lädt Ollama das Modell `bge-m3`, ca. 1,2 GB).
 
+Alle Befehle auf einen Blick: [docs/befehle.md](docs/befehle.md).
+
 Nach `git pull` einfach wieder `./scripts/start-local.sh` aufrufen: Sind neue Pakete dazugekommen, startet das Skript die App neu und installiert sie.
 
 | Dienst | Adresse |
