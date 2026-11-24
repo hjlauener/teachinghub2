@@ -25,10 +25,8 @@
   },
   "Home": {
     "heading": "Ihr Hub für gute Lehre an der Universität Bern",
-    "lead": "Der Teaching Hub bietet Ihnen Unterstützung bei der Gestaltung und Administration Ihrer Lehre. Finden Sie Grundlagen, Methoden, Tools sowie Beratung und Förderangebote, schnell und passend zu Ihrem aktuellen Anliegen.",
-    "ctaJourney": "Journey starten",
-    "ctaTopics": "Themen entdecken",
-    "ctaSearch": "Inhalte suchen"
+    "vrlCourses": "Kurse am VRL",
+    "vrlEvents": "Fachveranstaltungen des VRL"
   },
   "Placeholder": {
     "heading": "Diese Seite ist in Vorbereitung",

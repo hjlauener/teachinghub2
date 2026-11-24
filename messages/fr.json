@@ -25,10 +25,8 @@
   },
   "Home": {
     "heading": "Votre hub pour un bon enseignement à l'Université de Berne",
-    "lead": "Le Teaching Hub vous accompagne dans la conception et l'administration de votre enseignement. Trouvez des bases, des méthodes, des outils ainsi que des offres de conseil et de soutien, rapidement et selon votre besoin du moment.",
-    "ctaJourney": "Commencer le parcours",
-    "ctaTopics": "Découvrir les thèmes",
-    "ctaSearch": "Rechercher des contenus"
+    "vrlCourses": "Cours du VRL",
+    "vrlEvents": "Manifestations spécialisées du VRL"
   },
   "Placeholder": {
     "heading": "Cette page est en préparation",

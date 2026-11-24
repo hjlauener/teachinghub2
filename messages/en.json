@@ -25,10 +25,8 @@
   },
   "Home": {
     "heading": "Your hub for good teaching at the University of Bern",
-    "lead": "The Teaching Hub supports you in designing and administering your teaching. Find foundations, methods, tools, advice and funding opportunities – quickly and matched to your current concern.",
-    "ctaJourney": "Start the journey",
-    "ctaTopics": "Explore topics",
-    "ctaSearch": "Search content"
+    "vrlCourses": "Courses at the VRL",
+    "vrlEvents": "Events of the VRL"
   },
   "Placeholder": {
     "heading": "This page is in preparation",
