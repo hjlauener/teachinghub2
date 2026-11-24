@@ -35,6 +35,7 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Importer verantwortet nur die Felder in `src/migration/fields.ts` (`importedFields`); alles andere pflegt die Redaktion.
 - Konverter muss dieselben Editor-Features nutzen wie die Website (`src/lib/editor.ts`), sonst gehen Tabellen verloren.
 - Hashes immer über `hashValue` (normalisiert null/fehlend, IDs, Schlüsselreihenfolge).
+- Crawler-Startpunkte: Startseite/Menü, Methodenkompass-CSV und alle Links der Suchliste (`searchIndexUrls`), weil manche Seiten nur über die Suche erreichbar sind. 404 zählt als Fehler im Manifest, bricht aber nicht ab.
 
 ## Website (Phase 3)
 - Inhalte per Pfad über `src/lib/content.ts` (`findByPath`, nur Publiziertes, DE-Fallback). Vorlagen in `src/components/content/views/`.

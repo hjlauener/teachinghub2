@@ -22,6 +22,8 @@ const fixture = (name: string) => readFileSync(path.resolve(__dirname, '../fixtu
 const articlePath = `/journey_der_lehre/lehre_konzipieren/didaktische_grundlagen/test_${run}`
 const methodPath = `/methodenkompass/test_${run}`
 const otherMethodPath = '/methodenkompass/andere_methode'
+// Angebotsseite unter Lehr|Impulse, die nur über die Suchliste gecrawlt wird
+const offerPath = `/journey_der_lehre/lehrimpulse__unibe/beratung__services/test_angebot_${run}`
 const paths = [articlePath, methodPath, otherMethodPath]
 
 function sources(articleHtml = fixture('article.html'), withMethods = true): Sources {
@@ -37,7 +39,7 @@ function sources(articleHtml = fixture('article.html'), withMethods = true): Sou
 }
 
 async function cleanup() {
-  for (const p of paths) {
+  for (const p of [...paths, offerPath]) {
     for (const collection of ['articles', 'methods', 'legacy-snapshots', 'migration-inbox'] as const) {
       await payload.delete({ collection, where: { path: { equals: p } }, overrideAccess: true }).catch(() => undefined)
     }
@@ -91,6 +93,26 @@ describe('Erstimport', () => {
     await importDocs(payload, src, ctx, report)
     expect(report.created).toEqual({})
     expect(report.skipped).toBe(3)
+  })
+})
+
+describe('Seiten aus der Suchliste', () => {
+  it('importiert eine nur über die Suche erreichbare Seite wie die übrigen Angebote (Rubrik Lehrimpulse)', async () => {
+    const doc = extractPage(fixture('article.html'), `${BASE}${offerPath}/index_ger.html`)
+    const search = new Map([[offerPath, [{ key: 'LEHRIMPULSE1758246', name: 'Lehrimpulse' }, { key: 'BERATUNG', name: 'Beratung & Services' }]]])
+    const src: Sources = { docs: [doc], teasers: [], search, csv: [] }
+    const report = emptyReport()
+    const ctx = await prepareContext(payload, src, report, undefined, { downloadAssets: false })
+    await importDocs(payload, src, ctx, report)
+    expect(report.errors).toEqual([])
+    expect(report.created).toEqual({ articles: 1 })
+
+    const offer = await findByPath('articles', offerPath)
+    expect(offer.kind).toBe('offer')
+    expect(offer._status).toBe('published')
+    const rubrics = await payload.find({ collection: 'taxonomies', where: { id: { in: offer.rubrics as number[] } }, depth: 0, locale: 'de', overrideAccess: true })
+    expect(rubrics.docs.map((d) => d.slug)).toEqual(['lehrimpulse__unibe'])
+    expect((offer.themes as number[]).length).toBe(1)
   })
 })
 

@@ -42,7 +42,7 @@ Node.js läuft nur im Container: npm-Befehle deshalb immer mit `docker compose e
 
 | Befehl | Wozu |
 |---|---|
-| `docker compose exec app npm run legacy:crawl` | Altsite herunterladen nach `data/legacy/` |
+| `docker compose exec app npm run legacy:crawl` | Altsite herunterladen nach `data/legacy/` (Startpunkte: Startseite/Menü, Methodenkompass-CSV, Suchliste) |
 | `docker compose exec app npm run legacy:import` | Gecrawlte Seiten ins CMS importieren |
 | `docker compose exec app npm run legacy:delta` | Altsite erneut abgleichen → Änderungen in die Migrations-Inbox |
 | `docker compose exec app npm run legacy:changes` | Offene Änderungen auflisten (auch als Datei in `data/legacy/`) |
