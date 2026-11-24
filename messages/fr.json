@@ -183,7 +183,14 @@
     "eduid": "Se connecter avec SWITCH edu-ID",
     "reauthToDelete": "La suppression du compte nécessite une connexion récente (24 heures au plus). Veuillez vous reconnecter, puis supprimer le compte.",
     "reauthButton": "Se reconnecter",
-    "nameInvalid": "Le nom ne doit pas dépasser 100 caractères."
+    "nameInvalid": "Le nom ne doit pas dépasser 100 caractères.",
+    "eduidDomain": "Avec edu-ID, un compte n’est possible dans ce prototype qu’avec une adresse de l’Université de Berne (@unibe.ch). Les adresses d’étudiant·e·s (@students.unibe.ch) sont exclues.",
+    "eduidInvite": "Un compte n’est actuellement possible que sur invitation.",
+    "eduidFailed": "La connexion avec edu-ID a échoué. Veuillez réessayer.",
+    "eduidHeading": "SWITCH edu-ID",
+    "eduidLinked": "Votre compte est lié à votre edu-ID. Vous pouvez vous connecter avec elle.",
+    "eduidNotLinked": "Liez votre compte à votre edu-ID pour vous connecter avec elle à l’avenir.",
+    "eduidLink": "Lier à edu-ID"
   },
   "Hub": {
     "nav": "Mon Hub",

@@ -1,0 +1,190 @@
+{
+  "realm": "eduid-test",
+  "displayName": "SWITCH edu-ID (Testumgebung)",
+  "enabled": true,
+  "sslRequired": "none",
+  "loginWithEmailAllowed": true,
+  "registrationAllowed": false,
+  "requiredActions": [
+    {
+      "alias": "VERIFY_PROFILE",
+      "name": "Verify Profile",
+      "providerId": "VERIFY_PROFILE",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 90,
+      "config": {}
+    }
+  ],
+  "components": {
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "providerId": "declarative-user-profile",
+        "subComponents": {},
+        "config": {
+          "kc.user.profile.config": [
+            "{\"attributes\": [{\"name\": \"username\", \"displayName\": \"${username}\", \"multivalued\": false, \"permissions\": {\"view\": [\"admin\", \"user\"], \"edit\": [\"admin\", \"user\"]}, \"validations\": {\"length\": {\"min\": 3, \"max\": 255}, \"username-prohibited-characters\": {}, \"up-username-not-idn-homograph\": {}}}, {\"name\": \"email\", \"displayName\": \"${email}\", \"multivalued\": false, \"permissions\": {\"view\": [\"admin\", \"user\"], \"edit\": [\"admin\", \"user\"]}, \"required\": {\"roles\": [\"user\"]}, \"validations\": {\"email\": {}, \"length\": {\"max\": 255}}}, {\"name\": \"firstName\", \"displayName\": \"${firstName}\", \"multivalued\": false, \"permissions\": {\"view\": [\"admin\", \"user\"], \"edit\": [\"admin\", \"user\"]}, \"required\": {\"roles\": [\"user\"]}, \"validations\": {\"length\": {\"max\": 255}, \"person-name-prohibited-characters\": {}}}, {\"name\": \"lastName\", \"displayName\": \"${lastName}\", \"multivalued\": false, \"permissions\": {\"view\": [\"admin\", \"user\"], \"edit\": [\"admin\", \"user\"]}, \"required\": {\"roles\": [\"user\"]}, \"validations\": {\"length\": {\"max\": 255}, \"person-name-prohibited-characters\": {}}}], \"groups\": [], \"unmanagedAttributePolicy\": \"ENABLED\"}"
+          ]
+        }
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "teachinghub2",
+      "name": "Teaching Hub 2 (Prototyp)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "teachinghub2-test-secret",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://app:3000/*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "protocolMappers": [
+        {
+          "name": "eduPersonScopedAffiliation",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "eduPersonScopedAffiliation",
+            "claim.name": "eduPersonScopedAffiliation",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        },
+        {
+          "name": "swissEduPersonUniqueID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "swissEduPersonUniqueID",
+            "claim.name": "swissEduPersonUniqueID",
+            "jsonType.label": "String",
+            "multivalued": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "dozentin",
+      "enabled": true,
+      "email": "dora.dozentin@unibe.ch",
+      "emailVerified": true,
+      "firstName": "Dora",
+      "lastName": "Dozentin",
+      "attributes": {
+        "eduPersonScopedAffiliation": [
+          "employee@unibe.ch",
+          "member@unibe.ch"
+        ],
+        "swissEduPersonUniqueID": [
+          "100001@eduid.ch"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "requiredActions": []
+    },
+    {
+      "username": "privat",
+      "enabled": true,
+      "email": "paul.privat@example.org",
+      "emailVerified": true,
+      "firstName": "Paul",
+      "lastName": "Privat",
+      "attributes": {
+        "eduPersonScopedAffiliation": [
+          "employee@unibe.ch",
+          "member@unibe.ch"
+        ],
+        "swissEduPersonUniqueID": [
+          "100002@eduid.ch"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "requiredActions": []
+    },
+    {
+      "username": "studentin",
+      "enabled": true,
+      "email": "sina.studentin@students.unibe.ch",
+      "emailVerified": true,
+      "firstName": "Sina",
+      "lastName": "Studentin",
+      "attributes": {
+        "eduPersonScopedAffiliation": [
+          "student@unibe.ch",
+          "member@unibe.ch"
+        ],
+        "swissEduPersonUniqueID": [
+          "100003@eduid.ch"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "requiredActions": []
+    },
+    {
+      "username": "bestehend",
+      "enabled": true,
+      "email": "bea.bestehend@unibe.ch",
+      "emailVerified": true,
+      "firstName": "Bea",
+      "lastName": "Bestehend",
+      "attributes": {
+        "eduPersonScopedAffiliation": [
+          "employee@unibe.ch",
+          "member@unibe.ch"
+        ],
+        "swissEduPersonUniqueID": [
+          "100004@eduid.ch"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "requiredActions": []
+    }
+  ]
+}

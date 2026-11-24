@@ -183,7 +183,14 @@
     "eduid": "Mit SWITCH edu-ID anmelden",
     "reauthToDelete": "Zum Löschen des Kontos ist eine frische Anmeldung nötig (höchstens 24 Stunden alt). Bitte melden Sie sich neu an und löschen Sie das Konto danach.",
     "reauthButton": "Neu anmelden",
-    "nameInvalid": "Der Name darf höchstens 100 Zeichen lang sein."
+    "nameInvalid": "Der Name darf höchstens 100 Zeichen lang sein.",
+    "eduidDomain": "Mit edu-ID ist ein Konto im Prototyp nur mit einer Adresse der Universität Bern (@unibe.ch) möglich. Adressen von Studierenden (@students.unibe.ch) sind ausgeschlossen.",
+    "eduidInvite": "Ein Konto ist derzeit nur mit Einladung möglich.",
+    "eduidFailed": "Die Anmeldung mit edu-ID hat nicht geklappt. Bitte versuchen Sie es erneut.",
+    "eduidHeading": "SWITCH edu-ID",
+    "eduidLinked": "Ihr Konto ist mit Ihrer edu-ID verknüpft. Sie können sich damit anmelden.",
+    "eduidNotLinked": "Verknüpfen Sie Ihr Konto mit Ihrer edu-ID, um sich künftig damit anzumelden.",
+    "eduidLink": "Mit edu-ID verknüpfen"
   },
   "Hub": {
     "nav": "Mein Hub",

@@ -67,3 +67,18 @@ describe('IP-Header für das Rate-Limit', () => {
     expect(ipAddressHeaders('bad header!,')).toEqual(['x-forwarded-for'])
   })
 })
+
+describe('edu-ID (Phase 7)', () => {
+  it('liest den Namen aus dem Profil', async () => {
+    const { nameFromProfile } = await import('@/auth/eduid')
+    expect(nameFromProfile({ name: ' Dora Dozentin ' })).toBe('Dora Dozentin')
+    expect(nameFromProfile({ given_name: 'Dora', family_name: 'Dozentin' })).toBe('Dora Dozentin')
+    expect(nameFromProfile({ name: 42 })).toBe('')
+  })
+
+  it('lässt über edu-ID dieselben Adressen zu wie beim Anmeldelink (Entscheidung 6.3)', () => {
+    expect(mayRegister('dora.dozentin@unibe.ch', DEFAULT_SETTINGS, false)).toEqual({ allowed: true })
+    expect(mayRegister('sina.studentin@students.unibe.ch', DEFAULT_SETTINGS, false)).toMatchObject({ allowed: false, reason: 'domain' })
+    expect(mayRegister('paul.privat@example.org', DEFAULT_SETTINGS, false)).toMatchObject({ allowed: false, reason: 'domain' })
+  })
+})

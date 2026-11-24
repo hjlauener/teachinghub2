@@ -3,7 +3,7 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–6 gemergt (M3 erreicht), Sicherheits-/Architektur-Review direkt auf `main`. Nächste Phase: 7 (edu-ID-Test).
+- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–6 gemergt (M3), Review auf `main`; **Phase 7 (edu-ID-Test)** auf `phase-7-eduid`. Nächste Phase: 8 (Online-Demo).
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
@@ -85,3 +85,9 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Anmeldelinks: höchstens 5 pro Adresse in 15 Minuten (unabhängig von der IP); IP-Header für Better Auth über `AUTH_IP_HEADERS` (vom Proxy des Hosters gesetzt).
 - „OpenAI-kompatible“ Anbieter nur über `providerFetch` (undici-Agent mit Namensauflösung, die interne Adressen sperrt).
 - Uploads über `UPLOADS_DIR` (Docker: Volume `/app/uploads`); Mail-Sprache wird bei der Registrierung gesetzt, nicht beim Seitenaufruf.
+
+## edu-ID (Phase 7)
+- OIDC über Better Auths `genericOAuth` (Anbieter-ID `eduid`), Anmeldung mit `authClient.signIn.social({ provider: 'eduid' })`, Verknüpfung mit `authClient.linkSocial` (`src/auth/client.ts`); Rückkehr unter `/api/auth/callback/eduid`.
+- Zulassung wie beim Anmeldelink (Entscheidung 6.3): nur Adressen der zugelassenen Domain (@unibe.ch, keine @students.unibe.ch), geprüft im `databaseHooks.user.create.before` für alle Anmeldewege; Affiliation wird nicht ausgewertet.
+- Gleiche E-Mail → automatische Verknüpfung (`trustedProviders: ['eduid']`); bewusste Verknüpfung im Konto darf eine andere Adresse haben (`allowDifferentEmails`).
+- Test-Anmeldedienst Keycloak: Realm `docker/keycloak/eduid-test-realm.json` (Testpersonen dozentin, privat, studentin, bestehend; Passwort „test“); lokal `docker compose --profile eduid up -d`, CI startet ihn per `docker run`; E2E nur mit `E2E_EDUID=1`.

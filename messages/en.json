@@ -183,7 +183,14 @@
     "eduid": "Sign in with SWITCH edu-ID",
     "reauthToDelete": "Deleting your account requires a recent sign-in (at most 24 hours old). Please sign in again and then delete your account.",
     "reauthButton": "Sign in again",
-    "nameInvalid": "The name may be at most 100 characters long."
+    "nameInvalid": "The name may be at most 100 characters long.",
+    "eduidDomain": "With edu-ID, accounts in this prototype are only available with a University of Bern address (@unibe.ch). Student addresses (@students.unibe.ch) are excluded.",
+    "eduidInvite": "Accounts are currently by invitation only.",
+    "eduidFailed": "Signing in with edu-ID did not work. Please try again.",
+    "eduidHeading": "SWITCH edu-ID",
+    "eduidLinked": "Your account is linked to your edu-ID. You can sign in with it.",
+    "eduidNotLinked": "Link your account to your edu-ID to sign in with it in future.",
+    "eduidLink": "Link with edu-ID"
   },
   "Hub": {
     "nav": "My Hub",

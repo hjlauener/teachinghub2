@@ -8,10 +8,13 @@ import { authClient, signInWithEduid } from '@/auth/client'
 /** Anmeldung per Magic Link oder Passkey (Entscheidung 6.1). */
 export function SignInForm({
   linkInvalid = false,
+  eduidError = null,
   eduid = false,
   returnTo,
 }: {
   linkInvalid?: boolean
+  /** Fehlercode nach einer abgelehnten edu-ID-Anmeldung (z. B. REGISTRATION_DOMAIN) */
+  eduidError?: string | null
   eduid?: boolean
   /** Geprüfter lokaler Pfad, auf den die Anmeldung zurückführt (z. B. die Seite, auf der „Merken“ geklickt wurde). */
   returnTo: string
@@ -20,8 +23,11 @@ export function SignInForm({
   const locale = useLocale()
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle')
-  const [error, setError] = useState<string | null>(linkInvalid ? t('linkInvalid') : null)
+  const eduidMessage =
+    eduidError === null ? null : eduidError.startsWith('REGISTRATION_DOMAIN') ? t('eduidDomain') : eduidError.startsWith('REGISTRATION_INVITE') ? t('eduidInvite') : t('eduidFailed')
+  const [error, setError] = useState<string | null>(eduidMessage ?? (linkInvalid ? t('linkInvalid') : null))
   const errorURL = `/${locale}/anmelden?fehler=link&zurueck=${encodeURIComponent(returnTo)}`
+  const eduidErrorURL = `/${locale}/anmelden?fehler=eduid&zurueck=${encodeURIComponent(returnTo)}`
 
   async function sendLink(event: React.FormEvent) {
     event.preventDefault()
@@ -86,7 +92,7 @@ export function SignInForm({
             type="button"
             className="button button--primary"
             onClick={async () => {
-              const err = await signInWithEduid(returnTo, errorURL)
+              const err = await signInWithEduid(returnTo, eduidErrorURL)
               if (err) setError(t('error'))
             }}
           >

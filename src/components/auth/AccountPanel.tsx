@@ -3,18 +3,18 @@
 import { useLocale, useTranslations } from 'next-intl'
 import React, { useEffect, useState } from 'react'
 
-import { authClient } from '@/auth/client'
+import { authClient, linkEduid } from '@/auth/client'
 import { useRouter } from '@/i18n/navigation'
 
 type Passkey = { id: string; name?: string | null; createdAt: string | Date }
 
 /** „Mein Konto“: Name, Passkeys, Abmelden, Konto löschen (Entscheidung 9.1). */
-export function AccountPanel({ email, initialName }: { email: string; initialName: string }) {
+export function AccountPanel({ email, initialName, eduid = null }: { email: string; initialName: string; eduid?: { linked: boolean; failed?: boolean } | null }) {
   const t = useTranslations('Auth')
   const locale = useLocale()
   const router = useRouter()
   const [name, setName] = useState(initialName)
-  const [message, setMessage] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(eduid?.failed ? t('eduidFailed') : null)
   const [passkeys, setPasskeys] = useState<Passkey[]>([])
   const [reauth, setReauth] = useState(false)
 
@@ -106,6 +106,29 @@ export function AccountPanel({ email, initialName }: { email: string; initialNam
           {t('addPasskey')}
         </button>
       </section>
+
+      {eduid && (
+        <section aria-labelledby="eduid-heading" className="content-section">
+          <h2 id="eduid-heading">{t('eduidHeading')}</h2>
+          {eduid.linked ? (
+            <p>{t('eduidLinked')}</p>
+          ) : (
+            <>
+              <p>{t('eduidNotLinked')}</p>
+              <button
+                type="button"
+                className="button button--secondary"
+                onClick={async () => {
+                  const err = await linkEduid(`/${locale}/konto`, `/${locale}/konto?fehler=eduid`)
+                  if (err) setMessage(t('eduidFailed'))
+                }}
+              >
+                {t('eduidLink')}
+              </button>
+            </>
+          )}
+        </section>
+      )}
 
       <p>
         <button type="button" className="button button--secondary" onClick={signOut}>

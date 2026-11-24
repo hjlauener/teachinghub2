@@ -7,7 +7,7 @@ import { auth, isEduidConfigured } from '@/auth/server'
 import { SignInForm } from '@/components/auth/SignInForm'
 import { safeReturnPath } from '@/hub/rules'
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ fehler?: string; zurueck?: string }> }
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ fehler?: string; zurueck?: string; error?: string }> }
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +32,12 @@ export default async function SignInPage({ params, searchParams }: Props) {
         <h1 id="page-heading">{t('signInHeading')}</h1>
         <p className="lead">{t('signInLead')}</p>
       </header>
-      <SignInForm linkInvalid={query.fehler === 'link'} eduid={isEduidConfigured()} returnTo={returnTo} />
+      <SignInForm
+        linkInvalid={query.fehler === 'link'}
+        eduidError={query.fehler === 'eduid' ? String(query.error ?? 'unknown').slice(0, 60) : null}
+        eduid={isEduidConfigured()}
+        returnTo={returnTo}
+      />
     </article>
   )
 }
