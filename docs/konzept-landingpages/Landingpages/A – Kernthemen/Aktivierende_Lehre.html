@@ -1,0 +1,173 @@
+<title>Aktivierende Lehre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Aktivierende Lehre">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Aktivierende Lehre</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Aktivierende Lehre</h1>
+        <p class="lead">Studierende lernen mehr, wenn sie selbst denken, sprechen und ausprobieren, statt nur zuzuhören. Aktivierende Lehre baut deshalb Phasen ein, in denen Studierende Fragen beantworten, sich austauschen oder gemeinsam an Aufgaben arbeiten, auch in grossen Vorlesungen. Diese Seite führt zu Methoden, Tools und Unterstützung an der Universität Bern.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>Schon kurze Aktivierungen von wenigen Minuten, etwa ein Think-Pair-Share oder eine Abstimmung, unterbrechen das Zuhören und zeigen, was verstanden wurde.</li>
+          <li>Aktivierende Methoden wirken, wenn sie zu Lernziel, Gruppengrösse und Lehrformat passen.</li>
+          <li>Der Methodenkompass des Teaching Hub ordnet 67 Methoden nach Zweck, Modalität, Sozialform und Aufwand.</li>
+          <li>Abstimmungen und Live-Feedback lassen sich auch in grossen Gruppen mit Mentimeter umsetzen.</li>
+          <li>Für Planung und Erprobung gibt es Kurse, individuelles Coaching und die Flying Hochschuldidaktik.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/think_pair_share/index_ger.html">Think-Pair-Share</a></span><span>Wie Studierende erst allein nachdenken, sich dann zu zweit austauschen und die Ergebnisse ins Plenum tragen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/peer_instruction/index_ger.html">Peer-Instruction</a></span><span>Wie eine Verständnisfrage mit Doppelabstimmung und Diskussion unter Studierenden Fehlvorstellungen sichtbar macht.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/buzzgroups/index_ger.html">Buzzgroups</a></span><span>Wie kurze Murmelrunden mit den Sitznachbarn auch im vollen Hörsaal für Austausch sorgen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/gruppenpuzzle/index_ger.html">Gruppenpuzzle</a></span><span>Wie Studierende sich in Expertengruppen einarbeiten und ihr Wissen danach gegenseitig vermitteln.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/moderierte_diskussion/index_ger.html">Moderierte Diskussion</a></span><span>Wie Sie ein Gespräch im kleinen Kreis anstossen, strukturieren und zu einem Ergebnis führen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/concept_map/index_ger.html">Concept Map</a></span><span>Wie Studierende Begriffe und ihre Beziehungen als Netz darstellen und so Zusammenhänge erkennen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/quiz/index_ger.html">Quiz</a></span><span>Wie ein kurzer Wissenstest zwischendurch zeigt, wo die Gruppe steht, und das Erinnern stärkt.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/mentimeter/index_ger.html">Mentimeter</a></td><td>Abstimmungen, Live-Feedback und Visualisierungen in Echtzeit</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ilias/index_ger.html">ILIAS</a></td><td>Aufgaben, Tests und Foren zwischen den Sitzungen</td><td>Dozierende und Studierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/itools/index_ger.html">iTools</a></td><td>Kollaborative Arbeitsumgebungen in ILIAS</td><td>Dozierende und Studierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/zoom/index_ger.html">Zoom</a></td><td>Virtuelle Präsenz und interaktive Lehre</td><td>Dozierende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Weitere Werkzeuge finden Sie in der Tool-Übersicht des Teaching Hub. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 24.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehrformate/vorlesung/index_ger.html">Vorlesung</a></span><span>Planen Sie Inputphasen so, dass sie Überblick geben und Raum für kurze Aktivierungen lassen.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__lernszenarien/kollaboratives_lernen/index_ger.html">Kollaboratives Lernen</a></span><span>Legen Sie Gruppenarbeit so an, dass alle Beiträge für das gemeinsame Ergebnis nötig sind.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__lernszenarien/spielbasiertes_lernen/index_ger.html">Spielbasiertes Lernen</a></span><span>Nutzen Sie Spielmechanismen, um Studierende zum Mitmachen und Üben zu motivieren.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehrformate/workshop/index_ger.html">Workshop</a></span><span>Wählen Sie ein Format, in dem die Anwendung im Zentrum steht und nicht der Vortrag.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/einstimmen_und_orientierung_geben/index_ger.html">Einstimmen und Orientierung geben</a></span><span>Holen Sie die Studierenden zu Beginn mit einem klugen Einstieg ab.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/vorwissen_aktivieren/index_ger.html">Vorwissen aktivieren</a></span><span>Knüpfen Sie Neues an das an, was Studierende schon wissen, und machen Sie es sichtbar.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/verarbeitung_von_inhalten_ermoeglichen/index_ger.html">Verarbeitung von Inhalten ermöglichen</a></span><span>Geben Sie Studierenden Gelegenheit, Inhalte aktiv anzuwenden, statt sie nur zu hören.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehr__und_lernmaterialien/lehrvortrag/index_ger.html">Lehrvortrag</a></span><span>Gestalten Sie Ihren Vortrag so, dass er gezielt erklärt und Fragen anstösst.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenfeedback/index_ger.html">Zwischenfeedback</a></span><span>Fragen Sie während des Semesters nach, welche Aktivierungen den Studierenden beim Lernen helfen.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/flying_hochschuldidaktik/index_ger.html">Flying Hochschuldidaktik</a></span><span>Workshops und Beratung direkt in Ihrem Institut, etwa zu aktivierenden Methoden.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/individuelles_coaching/index_ger.html">Individuelles Coaching</a></span><span>Persönliche Begleitung, wenn Sie Ihre Lehrveranstaltung aktivierender gestalten möchten.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/lehrfeedback_durch_hospitation/index_ger.html">Lehrfeedback durch Hospitation</a></span><span>Eine Fachperson besucht Ihre Veranstaltung und gibt Ihnen Rückmeldung zu Stärken und Entwicklungsmöglichkeiten.</span></li>
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/hochschuldidaktische_weiterbildung/index_ger.html">Hochschuldidaktische Weiterbildung</a></span><span>Einzelkurse bis zum CAS Hochschullehre, auch zu Methoden und Lehrformaten.</span></li>
+          <li><span class="lbl">Veranstaltung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/fachveranstaltungen/tag_der_lehre/index_ger.html">Tag der Lehre</a></span><span>Impulse und Austausch über gute Lehrpraxis an der Universität Bern.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">Leuphana Universität Lüneburg</span><span class="t"><a href="https://www.leuphana.de/lehre/gestalten/konzipieren/aktivierung-in-grossveranstaltungen.html">Aktivierung in Grossveranstaltungen</a></span><span>Ansätze, wie Studierende auch in grossen Veranstaltungen Teile der Lehrendenrolle übernehmen.</span></li>
+          <li><span class="lbl">Universität Graz</span><span class="t"><a href="https://lehre.uni-graz.at/en/news/didaktischer-tipp-studierende-in-grosslehrveranstaltungen-aktivieren/">Studierende in Grosslehrveranstaltungen aktivieren</a></span><span>Ein kompakter didaktischer Tipp zur Motivation in grossen Gruppen.</span></li>
+          <li><span class="lbl">Universität Bremen</span><span class="t"><a href="https://www.uni-bremen.de/inspiration-lehre-an-der-universitaet-bremen/lehre-gestalten/durchfuehrung/lernen-aktivieren">Lernen aktivieren</a></span><span>Warum aktivierende Methoden zu Format, Gruppengrösse und Lernzielen passen müssen, mit Beispielen.</span></li>
+          <li><span class="lbl">Universität Bremen</span><span class="t"><a href="https://www.uni-bremen.de/inspiration-lehre-an-der-universitaet-bremen/lehre-gestalten/vorbereitung/lehr-lern-methoden-kennenlernen">Lehr-Lern-Methoden kennenlernen</a></span><span>Ein Einstieg in Methoden für die Vorbereitung, mit Hinweisen auf Methodensammlungen.</span></li>
+          <li><span class="lbl">TU München</span><span class="t"><a href="https://www.tum.de/studium/lehre/didaktik/lehre-gestalten/lehrformate">Lehrformate</a></span><span>Wie sich Vorlesung, Übung und Seminar mit aktivierenden Elementen gestalten lassen.</span></li>
+          <li><span class="lbl">TU Darmstadt</span><span class="t"><a href="https://www.einfachlehren.tu-darmstadt.de/media/einfachlehren/artikel/lehre_didaktisch_planen/221006_Methodensammlung_Allgemein.pdf">Methodensammlung (PDF)</a></span><span>Aktivierende Methoden für kleine bis grosse Gruppen auf einen Blick.</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </article>
+</div>

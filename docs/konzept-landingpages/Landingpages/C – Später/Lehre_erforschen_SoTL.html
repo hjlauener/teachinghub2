@@ -1,0 +1,165 @@
+<title>Lehre erforschen (SoTL)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Lehre erforschen (SoTL)">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Lehre erforschen (SoTL)</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Lehre erforschen (SoTL)</h1>
+        <p class="lead">Scholarship of Teaching and Learning (SoTL) bedeutet, die eigene Lehre und das Lernen der Studierenden mit wissenschaftlichen Methoden zu untersuchen und die Ergebnisse zu teilen. So wird aus einer Lehrinnovation gesichertes Wissen. Diese Seite führt zu Evaluation, Förderung und Austausch an der Universität Bern.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>SoTL beginnt mit einer Frage aus der eigenen Lehre und folgt dann den Schritten eines Forschungsprojekts.</li>
+          <li>Standardisierte Evaluationen und Zwischenfeedbacks liefern Daten, die sich für SoTL-Fragen nutzen lassen.</li>
+          <li>Expertinnen und Experten des Vizerektorats Lehre helfen, Evaluationsergebnisse fundiert zu interpretieren.</li>
+          <li>Förderprogramme wie IMPULS : LEHRE unterstützen Lehrprojekte, deren Wirkung sich untersuchen lässt.</li>
+          <li>Der Tag der Lehre bietet eine Bühne, um Erkenntnisse aus der eigenen Lehre zu teilen.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/good_practice_katalog/index_ger.html">Good Practice Katalog</a></span><span>Beispiele guter Lehre an der Universität Bern als Ausgangspunkt für eigene Fragen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/one_minute_paper/index_ger.html">One-Minute-Paper</a></span><span>Wie kurze schriftliche Rückmeldungen Einblick in das Lernen der Studierenden geben.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/kollegiale_hospitation/index_ger.html">Kollegiale Hospitation</a></span><span>Wie gegenseitige Lehrbeobachtung neue Fragen und Einsichten anstösst.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/umfragen/index_ger.html">Umfragen</a></span><span>Wie Sie die Meinung der Studierenden systematisch erheben.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/preisgekroente_lehre/uni_bern_teacher_of_the_year/index_ger.html">Uni Bern Teacher of the Year</a></span><span>Wie die Fakultäten überzeugende Lehre auszeichnen.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ilias/index_ger.html">ILIAS</a></td><td>Umfragen und Tests für die Erhebung von Daten</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/mentimeter/index_ger.html">Mentimeter</a></td><td>Rückmeldungen in der Sitzung sammeln</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/selevor/index_ger.html">SELEVOR</a></td><td>Selbstanalyse für Lehr- und Fachvorträge</td><td>Dozierende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Für Erhebungen mit Studierenden gelten die Regeln zum Datenschutz. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 24.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenevaluation/index_ger.html">Zwischenevaluation</a></span><span>Nutzen Sie das Standardverfahren, um während des Semesters Daten zu erheben.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenfeedback/index_ger.html">Zwischenfeedback</a></span><span>Stellen Sie gezielte Fragen zu einer neuen Lehrform.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/standardisierte_evaluationen/schlussevaluation/index_ger.html">Schlussevaluation</a></span><span>Vergleichen Sie Rückmeldungen über mehrere Semester.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/standardisierte_evaluationen/evaluation_der_leistungskontrolle/index_ger.html">Evaluation der Leistungskontrolle</a></span><span>Untersuchen Sie, ob Lehre und Prüfung zusammenpassen.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/didaktische_grundlagen/didaktische_kohaerenz/index_ger.html">Didaktische Kohärenz</a></span><span>Formulieren Sie, welche Wirkung eine Lehrinnovation haben soll.</span></li>
+          <li><span class="lbl">Curriculum entwickeln</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/curriculum_entwickeln/studienprogramme_evaluieren/index_ger.html">Studienprogramme evaluieren</a></span><span>Betrachten Sie die Wirkung von Lehre auch auf Ebene des Studiengangs.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/lernen_aus_evaluationsergebnissen/index_ger.html">Lernen aus Evaluationsergebnissen</a></span><span>Vertrauliche Besprechung Ihrer Evaluationsergebnisse mit Fachpersonen.</span></li>
+          <li><span class="lbl">Förderung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/foerderprogramme/impuls__lehre/index_ger.html">IMPULS : LEHRE</a></span><span>Förderung für Lehrprojekte, deren Wirkung Sie untersuchen können.</span></li>
+          <li><span class="lbl">Förderung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/foerderprogramme/belearn_foerderungen/index_ger.html">BeLEARN Förderungen</a></span><span>Digitale Lehr- und Lernformate gemeinsam mit BeLEARN weiterentwickeln.</span></li>
+          <li><span class="lbl">Veranstaltung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/fachveranstaltungen/tag_der_lehre/index_ger.html">Tag der Lehre</a></span><span>Erkenntnisse aus der eigenen Lehre vorstellen und diskutieren.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">Universität Potsdam</span><span class="t"><a href="https://www.uni-potsdam.de/de/zfq/lehre-und-medien/services/scholarship-of-teaching-and-learning">Scholarship of Teaching and Learning</a></span><span>Die Schritte eines ersten SoTL-Projekts von der Frage bis zur Reflexion.</span></li>
+          <li><span class="lbl">Universität Hamburg</span><span class="t"><a href="https://www.hul.uni-hamburg.de/en/forschung/sotl.html">Scholarship of Teaching and Learning</a></span><span>Was SoTL ist und wie Lehrende ihre Lehre forschend weiterentwickeln.</span></li>
+          <li><span class="lbl">Universität Hamburg</span><span class="t"><a href="https://www.hul.uni-hamburg.de/selbstlernmaterialien/dokumente/hul-sotl-ueberblick.pdf">SoTL im Überblick (PDF)</a></span><span>Herkunft und Grundidee von SoTL kompakt erklärt.</span></li>
+          <li><span class="lbl">Universität Paderborn</span><span class="t"><a href="https://www.uni-paderborn.de/fileadmin/bildungsinnovationen-hochschuldidaktik/03_NRW-Zertifikat/PUZ-2018_SOTL.pdf">SoTL im Zertifikatsprogramm (PDF)</a></span><span>Wie SoTL in eine hochschuldidaktische Weiterbildung eingebettet ist.</span></li>
+          <li><span class="lbl">peDOCS</span><span class="t"><a href="https://www.pedocs.de/volltexte/2025/33910/pdf/Bohndick_Kordts_2025_Scholarship_of_Teaching.pdf">Bohndick &amp; Kordts (2025): Scholarship of Teaching and Learning (PDF)</a></span><span>Einordnung und Abgrenzung von verwandten Begriffen.</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </article>
+</div>

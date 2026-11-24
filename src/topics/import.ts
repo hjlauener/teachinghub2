@@ -6,6 +6,7 @@ import { slugify } from '@/lib/validation'
 
 import {
   type DraftLink,
+  type DraftTopic,
   parseCrossReferences,
   parseOverview,
   parseTopicDraft,
@@ -16,8 +17,8 @@ import {
 
 /**
  * Import des Landingpage-Konzepts (Phase 3b): Kernthemen, Unterthemen, Matrix-Seiten, Methoden-Bezug,
- * Entwürfe „KI in Lehre und Studium“ und „Digitale und hybride Lehre“. Idempotent (Schlüssel: Pfad).
- * Themen mit vollständigem Entwurf und ≥ 5 Journey-Seiten werden live, alle anderen „folgt“.
+ * Entwürfe aller Kernthemen aus Landingpages/<Ordner>/*.html. Idempotent (Schlüssel: Pfad).
+ * Themen mit vollständigem Entwurf und ≥ 5 Journey-Seiten (Matrix + „Entlang der Journey“) werden live, alle anderen „folgt“.
  */
 export type TopicsReport = { topics: number; live: number; subtopics: number; warnings: string[] }
 
@@ -46,9 +47,19 @@ const paragraph = (text: string) => ({
   },
 })
 
-const DRAFTS: Record<string, string> = {
-  'KI in Lehre und Studium': 'Landingpages/A – Kernthemen/KI_in_Lehre_und_Studium.html',
-  'Digitale und hybride Lehre': 'Landingpages/A – Kernthemen/Digitale_und_hybride_Lehre.html',
+/** Entwürfe der Kernthemen: alle HTML-Dateien in Landingpages/<Ordner>/, zugeordnet über den Titel (h1#c1). */
+async function findDrafts(conceptDir: string): Promise<Map<string, DraftTopic>> {
+  const drafts = new Map<string, DraftTopic>()
+  const base = path.join(conceptDir, 'Landingpages')
+  for (const entry of await fs.readdir(base, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    for (const file of await fs.readdir(path.join(base, entry.name))) {
+      if (!file.endsWith('.html')) continue
+      const draft = parseTopicDraft(await fs.readFile(path.join(base, entry.name, file), 'utf-8'))
+      if (draft.title) drafts.set(draft.title, draft)
+    }
+  }
+  return drafts
 }
 
 export async function importTopics(payload: Payload, conceptDir: string, log: (msg: string) => void = () => undefined): Promise<TopicsReport> {
@@ -58,6 +69,7 @@ export async function importTopics(payload: Payload, conceptDir: string, log: (m
   const structure = parseTopicStructure(markdown)
   const crossRefs = parseCrossReferences(markdown)
   const overview = parseOverview(await read('Landingpages/Startseite_Landingpages.html'))
+  const drafts = await findDrafts(conceptDir)
 
   // Nachschlagetabellen
   const find = async <T>(collection: 'articles' | 'tools' | 'pages' | 'methods' | 'taxonomies') =>
@@ -107,15 +119,18 @@ export async function importTopics(payload: Payload, conceptDir: string, log: (m
 
   // Kernthemen
   const topicIds = new Map<string, number>()
+  const liveTopics = new Set<string>()
   for (const topic of structure) {
     const p = topicPath(topic.title)
-    const matrix = overview.matrixPaths.get(topic.title) ?? []
-    const journeyPages = [...new Set(matrix.flat())]
+    const draft = drafts.get(topic.title) ?? null
+    // Journey-Seiten: Matrix der Übersicht plus die internen Links unter „Entlang der Journey“
+    const matrix = (overview.matrixPaths.get(topic.title) ?? []).flat()
+    const fromDraft = (draft?.journeyLinks ?? []).map((l) => l.href).filter((h) => h.startsWith('/'))
+    const journeyPages = [...new Set([...matrix, ...fromDraft])]
       .map((mp) => byPath.get(mp))
       .filter((r): r is Ref => Boolean(r) && (r!.relationTo === 'articles' || r!.relationTo === 'tools'))
-    const draftFile = DRAFTS[topic.title]
-    const draft = draftFile ? parseTopicDraft(await read(draftFile)) : null
     const live = Boolean(draft) && journeyPages.length >= 5
+    if (live) liveTopics.add(topic.title)
     if (draft && !live) report.warnings.push(`${topic.title}: Entwurf vorhanden, aber nur ${journeyPages.length} Journey-Seiten → „folgt“`)
     const summary =
       overview.descriptions.get(topic.title) ?? `${topic.subtopics.map((s) => s.title).join(', ')}.`
@@ -202,11 +217,10 @@ export async function importTopics(payload: Payload, conceptDir: string, log: (m
   }
   for (const topic of structure) {
     const id = topicIds.get(topic.title)
-    const draftFile = DRAFTS[topic.title]
-    if (!id || !draftFile) continue
-    const draft = parseTopicDraft(await read(draftFile))
+    const draft = drafts.get(topic.title)
+    if (!id || !draft) continue
     const seeAlso = draft.seeAlso.map((t) => topicIds.get(t)).filter((x): x is number => Boolean(x))
-    const isLive = (overview.matrixPaths.get(topic.title) ?? []).flat().filter((mp) => byPath.has(mp)).length >= 5
+    const isLive = liveTopics.has(topic.title)
     try {
       await payload.update({ collection: 'topics', id, data: { seeAlso, ...(isLive ? { pageStatus: 'live' } : {}) } as never, locale: 'de', overrideAccess: true })
     } catch (error) {

@@ -1,8 +1,9 @@
 // @vitest-environment node
-import { readFileSync } from 'fs'
+import { readdirSync, readFileSync } from 'fs'
 import path from 'path'
 import { describe, expect, it } from 'vitest'
 
+import { pickRandom } from '@/components/topics/pick'
 import { parseCrossReferences, parseOverview, parseTopicDraft, parseTopicStructure, topicPath } from '@/topics/parse'
 
 const concept = (name: string) => readFileSync(path.resolve(__dirname, '../../docs/konzept-landingpages', name), 'utf-8')
@@ -59,6 +60,57 @@ describe('Übersicht und Entwürfe', () => {
     expect(draft.offerLinks[0].label).toBe('Veranstaltung')
     expect(draft.externalLinks[0].label).toBe('Universität Zürich')
     expect(draft.seeAlso).toContain('Digitale und hybride Lehre')
+  })
+})
+
+describe('Entwürfe aller Kernthemen (Entscheidung 7.8)', () => {
+  const structure = parseTopicStructure(concept('Themenstruktur_gesamt.md'))
+  const dir = path.resolve(__dirname, '../../docs/konzept-landingpages/Landingpages')
+  const drafts = readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .flatMap((d) => readdirSync(path.join(dir, d.name)).filter((f) => f.endsWith('.html')).map((f) => parseTopicDraft(concept(`Landingpages/${d.name}/${f}`))))
+  const phases = ['Lehre konzipieren', 'Lehre administrieren', 'Lehre durchführen', 'Prüfungen gestalten', 'Lehre evaluieren', 'Curriculum entwickeln']
+
+  it('hat für jedes der 14 Kernthemen genau einen Entwurf', () => {
+    expect(drafts.map((d) => d.title).sort()).toEqual(structure.map((t) => t.title).sort())
+  })
+
+  it.each(structure.map((t) => t.title))('„%s“ hält die Kapitelregeln der Vorlage ein', (title) => {
+    const draft = drafts.find((d) => d.title === title)!
+    expect(draft.intro.length).toBeGreaterThan(100)
+    expect(draft.keyPoints.length).toBeGreaterThanOrEqual(3)
+    expect(draft.keyPoints.length).toBeLessThanOrEqual(5)
+    expect(draft.relatedLinks.length).toBeGreaterThanOrEqual(5)
+    expect(draft.relatedLinks.length).toBeLessThanOrEqual(10)
+    expect(draft.tools.length).toBeGreaterThan(0)
+    expect(draft.tools.every((t) => t.name && t.purpose)).toBe(true)
+    expect(draft.journeyLinks.length).toBeGreaterThanOrEqual(5)
+    expect(draft.journeyLinks.length).toBeLessThanOrEqual(10)
+    // Journey-Links zeigen auf Hub-Seiten und tragen die Phase als Label (zählen für „live“)
+    expect(draft.journeyLinks.every((l) => l.href.startsWith('/journey_der_lehre/') && phases.includes(l.label ?? ''))).toBe(true)
+    expect(draft.offerLinks.length).toBeGreaterThanOrEqual(3)
+    expect(draft.offerLinks.length).toBeLessThanOrEqual(6)
+    expect(draft.externalLinks.length).toBeGreaterThanOrEqual(4)
+    expect(draft.externalLinks.length).toBeLessThanOrEqual(8)
+    expect(draft.externalLinks.every((l) => l.href.startsWith('https://') && l.label)).toBe(true)
+    for (const link of [...draft.relatedLinks, ...draft.journeyLinks, ...draft.offerLinks, ...draft.externalLinks]) {
+      expect(link.title, title).not.toBe('')
+      expect(link.sentence, `${title}: ${link.title}`).toMatch(/\.$/)
+    }
+  })
+})
+
+describe('Zufällige Auswahl der Hinweise anderer Hochschulen', () => {
+  it('zeigt höchstens 4, jeden höchstens einmal, und mischt', () => {
+    const items = [1, 2, 3, 4, 5, 6]
+    const picked = pickRandom(items, 4)
+    expect(picked).toHaveLength(4)
+    expect(new Set(picked).size).toBe(4)
+    expect(picked.every((i) => items.includes(i))).toBe(true)
+    expect(pickRandom([1, 2], 4)).toHaveLength(2)
+    // deterministischer Zufall: random() = 0 vertauscht jeweils mit dem ersten Element
+    expect(pickRandom([1, 2, 3], 3, () => 0)).toEqual([2, 3, 1])
+    expect(items).toEqual([1, 2, 3, 4, 5, 6])
   })
 })
 
