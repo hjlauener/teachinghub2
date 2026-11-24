@@ -120,6 +120,7 @@ Wichtig: Die **Themen-Ebene** (z. B. „Didaktische Grundlagen“) ist keine eig
   - **Thema (25):** Admintools · Anlaufstellen · Beratung & Services · Didaktische Grundlagen · Fachveranstaltungen · Förderprogramme · Kurse · Lehr- und Lernmaterialien · Lehr- und Lernräume · Lehr- und Lernszenarien · Lehrbegleitendes Feedback · Lehrformate · Lehrmethoden · Lehrtools · Praxisimpulse · Preisgekrönte Lehre · Prüfungen durchführen · Prüfungen entwickeln · Prüfungsadministration · Prüfungstools · Qualitätssicherungstools · Standardisierte Evaluationen · Studienprogramme · Unterrichtsformen · Veranstaltungsadministration
 - Ergebnis: Karten mit Titel, Lead, Rubrik-/Thema-Tags, Trefferzahl (225 ohne Filter); enthält auch die Methoden (Thema „Lehrmethoden“) – Korrektur 23.11.2026
 - Alle 225 Einträge mit Schlagwörtern in einer Abfrage: `/e1701260/e1758441/collection_view?lang=ger&id=e1758441&q=&offset=0&size=500`
+- Einige Seiten sind **nur über die Suche** erreichbar (z. B. vrl_newsletter, ecoaches, Nachhaltigkeitsangebote unter Lehr|Impulse); der Crawler nimmt deshalb alle Links der Suchliste als Startpunkte auf (Ergänzung 24.11.2026)
 - Gleiche Komponente („ontology collection“) wird auf den Rubrikseiten je Tab vorgefiltert eingesetzt
 - Ein Artikel kann **mehreren Rubriken und Themen** zugeordnet sein (z. B. ILIAS: 4 Rubriken, 3 Themen)
 

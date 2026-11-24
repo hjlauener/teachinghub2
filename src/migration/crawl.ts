@@ -1,5 +1,6 @@
 import { createHash } from 'crypto'
 import { promises as fs } from 'fs'
+import { JSDOM } from 'jsdom'
 import path from 'path'
 
 import {
@@ -57,6 +58,20 @@ export function methodUrlsFromCsv(csv: string): string[] {
 }
 
 /**
+ * Seiten aus der Suchliste (Analyse 5.2) – manche sind nur über die Suche erreichbar,
+ * weder über Startseite/Menü noch über die Methodenkompass-CSV.
+ */
+export function searchIndexUrls(html: string): string[] {
+  const urls = new Set<string>()
+  for (const article of new JSDOM(html).window.document.querySelectorAll('article.mdl-article_filter')) {
+    const href = article.querySelector('a[href]')?.getAttribute('href')
+    const normalized = href ? normalizeLegacyUrl(href) : null
+    if (normalized && isCrawlablePage(normalized)) urls.add(normalized)
+  }
+  return [...urls]
+}
+
+/**
  * Höflicher Breitensuche-Crawl der Altsite: robots.txt-Regeln, Pause zwischen Anfragen, neutraler User-Agent.
  */
 export async function crawl(options: { maxPages?: number; delayMs?: number; log?: (msg: string) => void } = {}): Promise<Manifest> {
@@ -71,19 +86,33 @@ export async function crawl(options: { maxPages?: number; delayMs?: number; log?
   // Methodenkompass-CSV zuerst, damit auch nur dort verlinkte Methoden in die Warteschlange kommen
   const methodsPage = await get(`${new URL(LEGACY_START).origin}/methodenkompass/index_ger.html`)
   const methodsHtml = await methodsPage.text()
+  await sleep(delayMs)
   const csvMatch = methodsHtml.match(/["']([^"']+\.csv)["']/)
   if (csvMatch) {
     const csvUrl = normalizeLegacyUrl(csvMatch[1])
     if (csvUrl) {
       const csv = await (await get(csvUrl)).text()
       await fs.writeFile(METHODS_CSV_FILE, csv)
-      queue.push(...methodUrlsFromCsv(csv))
-      log(`Methodenkompass-CSV: ${methodUrlsFromCsv(csv).length} Methoden`)
+      const methodUrls = methodUrlsFromCsv(csv)
+      queue.push(...methodUrls)
+      log(`Methodenkompass-CSV: ${methodUrls.length} Methoden`)
+      await sleep(delayMs)
     }
   }
 
-  // Such-Index mit allen Rubrik-/Thema-Zuordnungen
-  await fs.writeFile(SEARCH_FILE, await (await get(SEARCH_INDEX_URL)).text())
+  // Such-Index mit allen Rubrik-/Thema-Zuordnungen; seine Links sind zusätzliche Startpunkte
+  // (Seiten, die nur über die Suche erreichbar sind). Fehlerhafte Einträge (z. B. 404) zählen
+  // später im Durchlauf als Fehler, brechen aber nicht ab.
+  const searchResponse = await get(SEARCH_INDEX_URL)
+  const searchHtml = await searchResponse.text()
+  if (searchResponse.ok) {
+    await fs.writeFile(SEARCH_FILE, searchHtml)
+    const searchUrls = searchIndexUrls(searchHtml)
+    queue.push(...searchUrls)
+    log(`Suchliste: ${searchUrls.length} Einträge`)
+  } else {
+    manifest.errors.push({ url: SEARCH_INDEX_URL, error: `HTTP ${searchResponse.status}` })
+  }
   await sleep(delayMs)
 
   while (queue.length > 0 && manifest.pages.length < maxPages) {
