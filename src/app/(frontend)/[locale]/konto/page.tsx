@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 
-import { auth } from '@/auth/server'
+import { auth, isEduidConfigured } from '@/auth/server'
 import { AccountPanel } from '@/components/auth/AccountPanel'
 import { Link, redirect } from '@/i18n/navigation'
 
-type Props = { params: Promise<{ locale: string }> }
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ fehler?: string }> }
 
 export const dynamic = 'force-dynamic'
 
@@ -17,11 +17,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** „Mein Konto“ – nur angemeldet; Einstellungen zu „Mein Hub“. */
-export default async function AccountPage({ params }: Props) {
+export default async function AccountPage({ params, searchParams }: Props) {
   const { locale } = await params
   setRequestLocale(locale)
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return redirect({ href: { pathname: '/anmelden', query: { zurueck: `/${locale}/konto` } }, locale })
+  // Anmeldewege des Kontos (edu-ID verknüpft? Entscheidung 6.2)
+  const accounts = await auth.api.listUserAccounts({ headers: await headers() }).catch(() => [])
+  const eduidLinked = accounts.some((a) => a.providerId === 'eduid')
   const t = await getTranslations('Auth')
   const hub = await getTranslations('Hub')
   const format = await getFormatter()
@@ -34,7 +37,7 @@ export default async function AccountPage({ params }: Props) {
         </p>
         <p className="meta">{t('memberSince', { date: format.dateTime(new Date(session.user.createdAt), { dateStyle: 'long' }) })}</p>
       </header>
-      <AccountPanel email={session.user.email} initialName={session.user.name ?? ''} />
+      <AccountPanel email={session.user.email} initialName={session.user.name ?? ''} eduid={isEduidConfigured() ? { linked: eduidLinked, failed: (await searchParams).fehler === 'eduid' } : null} />
     </article>
   )
 }

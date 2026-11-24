@@ -50,6 +50,23 @@ services:
     volumes:
       - ollama:/root/.ollama
 
+  keycloak:
+    # Test-Anmeldedienst, der die SWITCH edu-ID nachahmt (Phase 7, Entscheidung 6.2); nur mit --profile eduid.
+    # Testpersonen und Passwort „test“: docker/keycloak/eduid-test-realm.json; Verwaltung http://localhost:8080 (admin/admin)
+    profiles: ['eduid']
+    image: quay.io/keycloak/keycloak:26.8.1
+    command: start-dev --import-realm --http-port 8080
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      # Browser erreicht Keycloak über localhost, die App über den Dienstnamen
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: 'true'
+    volumes:
+      - ./docker/keycloak:/opt/keycloak/data/import:ro
+    ports:
+      - '127.0.0.1:8080:8080'
+
   mailpit:
     # Fängt alle ausgehenden Mails ab (Magic Links ab Phase 4, Entscheidung 6.1)
     image: axllent/mailpit:v1.34.0

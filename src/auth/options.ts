@@ -10,6 +10,7 @@ import { deleteMemberData } from '../hub/payload-data'
 import { savePreferences } from '../hub/repo-collections'
 
 import { authDatabase, AUTH_TABLES } from './database'
+import { nameFromProfile } from './eduid'
 import { magicLinkEmail } from './email'
 import {
   DEFAULT_SETTINGS,
@@ -109,7 +110,9 @@ export const authOptions = {
     },
   },
   session: { modelName: AUTH_TABLES.session },
-  account: { modelName: AUTH_TABLES.account, accountLinking: { enabled: true, trustedProviders: ['eduid'] } },
+  // edu-ID mit bestehendem Konto gleicher E-Mail automatisch verknüpfen (6.2); im Konto auch bewusst verknüpfbar,
+  // dann darf die edu-ID-Adresse abweichen (die Person ist bereits angemeldet)
+  account: { modelName: AUTH_TABLES.account, accountLinking: { enabled: true, trustedProviders: ['eduid'], allowDifferentEmails: true } },
   verification: { modelName: AUTH_TABLES.verification },
   // Schutz vor Missbrauch (Entscheidung 9.1)
   // Client-IP nur aus dem Header, den der Proxy des Hosters setzt (z. B. AUTH_IP_HEADERS=x-real-ip);
@@ -134,7 +137,7 @@ export const authOptions = {
   databaseHooks: {
     user: {
       create: {
-        // Zweite Absicherung, unabhängig vom Anmeldeweg
+        // Zweite Absicherung, unabhängig vom Anmeldeweg (Magic Link, Passkey, edu-ID): nur zugelassene Adressen (6.3)
         before: async (user) => {
           await assertMayRegister(user.email, 'de')
           return { data: { ...user, email: normalizeEmail(user.email), name: checkedName(user.name) } }
@@ -177,8 +180,13 @@ export const authOptions = {
                 discoveryUrl: process.env.EDUID_DISCOVERY_URL as string,
                 clientId: process.env.EDUID_CLIENT_ID as string,
                 clientSecret: process.env.EDUID_CLIENT_SECRET as string,
-                scopes: ['openid', 'email', 'profile'],
+                // Echte edu-ID: zusätzliche Scopes per EDUID_SCOPES
+                scopes: (process.env.EDUID_SCOPES ?? 'openid email profile').split(/\s+/).filter(Boolean),
                 pkce: true,
+                mapProfileToUser: (profile) => ({
+                  name: nameFromProfile(profile),
+                  email: typeof profile.email === 'string' ? normalizeEmail(profile.email) : undefined,
+                }),
               },
             ],
           }),

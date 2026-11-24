@@ -57,6 +57,14 @@ jobs:
           node-version: 24
           cache: npm
 
+      # Test-Anmeldedienst für edu-ID (Phase 7) früh starten; die E2E-Tests warten unten auf ihn
+      - name: Test-Anmeldedienst (Keycloak) starten
+        run: |
+          docker run -d --name keycloak -p 8080:8080 \
+            -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
+            -v "$PWD/docker/keycloak:/opt/keycloak/data/import:ro" \
+            quay.io/keycloak/keycloak:26.8.1 start-dev --import-realm --http-port 8080
+
       - name: Abhängigkeiten installieren
         run: npm ci --no-audit --no-fund
 
@@ -97,7 +105,21 @@ jobs:
       - name: Playwright-Browser installieren
         run: npx playwright install --with-deps chromium
 
+      - name: Auf den Test-Anmeldedienst warten
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:8080/realms/eduid-test/.well-known/openid-configuration >/dev/null && exit 0
+            sleep 3
+          done
+          docker logs keycloak
+          exit 1
+
       - name: E2E- und Barrierefreiheitstests (axe)
+        env:
+          EDUID_DISCOVERY_URL: http://localhost:8080/realms/eduid-test/.well-known/openid-configuration
+          EDUID_CLIENT_ID: teachinghub2
+          EDUID_CLIENT_SECRET: teachinghub2-test-secret
+          E2E_EDUID: '1'
         run: npm run test:e2e
 
       - name: Playwright-Bericht sichern

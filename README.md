@@ -32,6 +32,7 @@ docker compose --profile e2e run --rm e2e        # Playwright + axe gegen die la
 docker compose exec app npm run seed             # Schlagwörter + Navigation einspielen (idempotent)
 docker compose exec app npm run auth:migrate     # Tabellen der Mitgliederkonten (Schema auth) und ihrer Daten (Schema hub); läuft beim Start automatisch
 docker compose exec app npm run ai:reindex       # KI-Index für Ask-a-question aufbauen/abgleichen (lädt beim ersten Mal bge-m3)
+docker compose --profile eduid up -d             # Test-Anmeldedienst für edu-ID (Keycloak, http://localhost:8080); EDUID_* in .env setzen
 docker compose exec app npm run ai:rotate-keys   # KI-Schlüssel nach Wechsel von AI_KEY_SECRET neu verschlüsseln
 docker compose exec app npm run generate:types   # nach Änderungen an Collections
 docker compose exec app npm run migrate:create -- <name>  # Migration für Produktion erzeugen

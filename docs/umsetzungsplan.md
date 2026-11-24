@@ -132,7 +132,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | **M2 Mitglieder** | 4 Accounts ✅ (23.11.2026) | Magic Link, Passkey, Domain-Regel, Profil, Rollen, OIDC-Vorbereitung | E2E Auth grün |
 | | 5 Personalisierung (Teil 1 ✅, Teil 2 ✅ 23.11.2026) | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
 | **M3 KI** | 6 Ask-a-question (✅ 23.11.2026) | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
-| **M4 Login & Demo** | 7 edu-ID-Test | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
+| **M4 Login & Demo** | 7 edu-ID-Test (✅ 24.11.2026) | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
 | | 8 Online-Demo | Schweizer Hoster (1.2a), Zugangsschutz, `noindex`, Backup, Testpersonen | 3–5 Dozierende testen |
 
 ## 12. Projektstruktur
@@ -223,3 +223,10 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - Sicherheit: keine SVG-Uploads (ältere SVGs isoliert ausgeliefert); Content-Security-Policy mit Nonce; Videos nur von Tobira/Opencast (unibe.ch), YouTube (nocookie), Vimeo, SWITCHtube; Anmeldelinks höchstens 5 pro Adresse in 15 Minuten; App startet im Produktionsbetrieb nicht mit Platzhalter-Geheimnissen; KI-Schlüssel rotierbar; eigene Anbieter-Adressen gegen DNS-Rebinding geschützt; CSRF-Liste für den Admin.
 - Architektur: versionierte SQL-Migrationen für `hub`/`ai`; Index-Aufträge als Payload-Jobs statt Timer; Rate-Limits in der Datenbank; Transaktionen für mehrstufige Schreibvorgänge; Uploads über `UPLOADS_DIR` (Volume im Docker-Image); robuster Antwortstrom bei Abbruch; Mail-Sprache als Einstellung (bei Registrierung gesetzt).
 - Für die Online-Demo (Phase 8): Proxy des Hosters muss die Client-IP setzen (`AUTH_IP_HEADERS`), Volume für `/app/uploads`, echte Geheimnisse (`openssl rand -hex 32`).
+
+**Hinweise aus Phase 7 (edu-ID-Test):**
+- Anmeldung über einen lokalen Test-Anmeldedienst (Keycloak 26.8.1, Realm `eduid-test`), der die edu-ID nachahmt (eindeutige ID, E-Mail, Name, Zugehörigkeit). Knopf „Mit SWITCH edu-ID anmelden“ erscheint, sobald `EDUID_*` gesetzt ist.
+- Zulassung (6.3, geändert vom User): wie beim Anmeldelink nur @unibe.ch-Adressen, @students.unibe.ch nicht; die Zugehörigkeit der edu-ID wird nicht ausgewertet. Abgelehnte Personen sehen eine verständliche Meldung, es entsteht kein Konto.
+- Bestehende Konten mit gleicher Adresse werden automatisch verknüpft; unter „Mein Konto“ zeigt der Hub die Verknüpfung und erlaubt, eine edu-ID bewusst zu verknüpfen (auch mit anderer Adresse).
+- Behoben: Better Auth spricht OIDC-Anbieter über `signIn.social` an (der alte Endpunkt `/sign-in/oauth2` aus Phase 4 existiert nicht mehr).
+- Echte edu-ID = Konfigurationswechsel (Discovery-URL, Client-ID/-Secret, ggf. `EDUID_SCOPES`), sobald die UniBE die Registrierung bei SWITCH vornimmt (6.2a, offen).
