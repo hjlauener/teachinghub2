@@ -25,7 +25,7 @@ export type GenerateInput = {
 
 export class ProviderError extends Error {
   constructor(
-    public readonly code: 'auth' | 'model' | 'rate' | 'network' | 'blocked' | 'other',
+    public readonly code: 'auth' | 'model' | 'rate' | 'quota' | 'network' | 'blocked' | 'other',
     message: string,
   ) {
     super(message)
@@ -37,7 +37,13 @@ export const OPENAI_BASE = 'https://api.openai.com/v1'
 /** Modelle, die die serverseitigen Refusal-Fallbacks kennen (sonst würde der Parameter abgelehnt). */
 const FALLBACK_MODELS = /^claude-(fable-5|mythos-5|opus-5|sonnet-5-5)/
 
+/** Kein Guthaben beim Anbieter (OpenAI: 429 insufficient_quota, Anthropic: 400 „credit balance is too low“). */
+export function isQuotaError(body: string): boolean {
+  return /insufficient_quota|credit balance is too low/i.test(body)
+}
+
 function anthropicError(error: unknown): ProviderError {
+  if (error instanceof Anthropic.APIError && isQuotaError(error.message)) return new ProviderError('quota', 'Kein Guthaben beim Anbieter')
   if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) return new ProviderError('auth', 'Schlüssel abgelehnt')
   if (error instanceof Anthropic.NotFoundError) return new ProviderError('model', 'Modell nicht gefunden')
   if (error instanceof Anthropic.RateLimitError) return new ProviderError('rate', 'Limit beim Anbieter erreicht')
@@ -112,7 +118,12 @@ async function providerFetch(provider: Provider, url: string, init: RequestInit)
   }
 }
 
-function httpError(status: number): ProviderError {
+async function httpError(response: Response): Promise<ProviderError> {
+  const status = response.status
+  const body = await response.text().catch(() => '')
+  // Meldung des Anbieters ins Server-Protokoll (enthält nie den Schlüssel), damit Fehler nachvollziehbar sind
+  console.warn(`KI-Anbieter antwortet ${status}: ${body.replace(/\s+/g, ' ').slice(0, 300)}`)
+  if (isQuotaError(body)) return new ProviderError('quota', 'Kein Guthaben beim Anbieter')
   if (status === 401 || status === 403) return new ProviderError('auth', 'Schlüssel abgelehnt')
   if (status === 404) return new ProviderError('model', 'Modell oder Adresse nicht gefunden')
   if (status === 429) return new ProviderError('rate', 'Limit beim Anbieter erreicht')
@@ -137,7 +148,7 @@ async function openaiGenerate(input: GenerateInput): Promise<Generation> {
       ],
     }),
   })
-  if (!response.ok || !response.body) throw httpError(response.status)
+  if (!response.ok || !response.body) throw await httpError(response)
 
   let text = ''
   let usage = { prompt_tokens: 0, completion_tokens: 0 }
@@ -218,5 +229,5 @@ export async function verifyKey(input: { provider: Provider; model: string; apiK
     signal: AbortSignal.timeout(20_000),
     headers: { Authorization: `Bearer ${input.apiKey}` },
   })
-  if (!response.ok) throw httpError(response.status)
+  if (!response.ok) throw await httpError(response)
 }

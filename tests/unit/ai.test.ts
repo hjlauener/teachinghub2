@@ -239,3 +239,12 @@ describe('KI: Verbindung nur zu öffentlichen Adressen (DNS-Rebinding)', () => {
     expect(error?.code).toBe('EBLOCKED')
   })
 })
+
+describe('Fehlendes Guthaben beim Anbieter', () => {
+  it('erkennt OpenAI insufficient_quota und Anthropic „credit balance is too low“, aber kein gewöhnliches Limit', async () => {
+    const { isQuotaError } = await import('@/ai/providers')
+    expect(isQuotaError('{"error":{"message":"You exceeded your current quota","type":"insufficient_quota","code":"insufficient_quota"}}')).toBe(true)
+    expect(isQuotaError('400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API."}}')).toBe(true)
+    expect(isQuotaError('{"error":{"message":"Rate limit reached for requests","type":"requests","code":"rate_limit_exceeded"}}')).toBe(false)
+  })
+})
