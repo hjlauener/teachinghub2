@@ -83,6 +83,18 @@ for i in $(seq 1 120); do
   sleep 5
 done
 
+# Nach git pull: neue Pakete? Dann App neu starten (installiert sie beim Start) und erneut warten
+if ! docker compose exec -T app sh -c 'sha1sum -c node_modules/.lock-hash >/dev/null 2>&1'; then
+  step "Neue Pakete erkannt – App wird neu gestartet (1–2 Minuten)"
+  docker compose restart app
+  sleep 10
+  for i in $(seq 1 120); do
+    if curl -sf -o /dev/null http://localhost:3000/de; then echo "Website erreichbar."; break; fi
+    [ "$i" = 120 ] && { echo "Die Website antwortet nicht. Protokoll: docker compose logs app"; exit 1; }
+    sleep 5
+  done
+fi
+
 run() { docker compose exec -T app npm run "$@"; }
 
 step "Startdaten (Schlagwörter, Navigation)"
