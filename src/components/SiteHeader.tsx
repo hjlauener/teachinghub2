@@ -1,7 +1,5 @@
 import { getTranslations } from 'next-intl/server'
-import Image from 'next/image'
 
-import { externalLinks } from '@/config/navigation'
 import { Link } from '@/i18n/navigation'
 
 import { AccountLink } from './auth/AccountLink'
@@ -14,17 +12,8 @@ export async function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container site-header__top">
+        {/* Nur der Schriftzug, ohne UniBE-Logo (Entscheidung 1.3b) */}
         <div className="site-header__brand">
-          <a href={externalLinks.portal}>
-            <Image
-              className="site-logo"
-              src="/brand/logo_unibern@2x.png"
-              alt={t('logoAlt')}
-              width={180}
-              height={138}
-              priority
-            />
-          </a>
           <Link href="/" className="site-title">
             {t('title')}
           </Link>

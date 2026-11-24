@@ -1561,3 +1561,33 @@ img {
   border: 1px solid var(--color-grey-mid-darker);
   background: var(--color-white);
 }
+
+/* Startseite: Einstiege als Pfeil-Links (Entscheidung 1.3b) */
+.arrow-links {
+  list-style: none;
+  margin: var(--space-24) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-12);
+}
+
+.arrow-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-12);
+  font-size: var(--font-size-24);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.arrow-links a::before {
+  content: '⟶' / ''; /* Pfeil nur visuell, nicht vorgelesen */
+  font-size: var(--font-size-33);
+  line-height: 1;
+}
+
+.arrow-links a:hover,
+.arrow-links a:focus-visible {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
