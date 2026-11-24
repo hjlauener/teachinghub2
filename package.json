@@ -23,6 +23,7 @@
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "legacy:crawl": "tsx scripts/migration/crawl.ts",
     "legacy:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/import.ts",
+    "legacy:changes": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/changes.ts",
     "legacy:delta": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/delta.ts",
     "legacy:rehash": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/rehash.ts",
     "search:reindex": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/migration/reindex.ts",

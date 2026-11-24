@@ -48,6 +48,7 @@ Neue Pakete: `docker compose exec app npm install <paket>` – `package.json` un
 docker compose exec app npm run legacy:crawl     # Altsite crawlen → data/legacy/ (nicht im Repo)
 docker compose exec app npm run legacy:import    # Erstimport (überspringt bereits Importiertes)
 docker compose exec app npm run legacy:delta     # Abgleich → Migrations-Inbox (LEGACY_NO_CRAWL=1: ohne neuen Crawl)
+docker compose exec app npm run legacy:changes   # offene Änderungen der Altsite als Liste (auch in data/legacy/aenderungen-<datum>.md)
 ```
 
 Im Admin unter **Migration Altsite → Migrations-Inbox**: Abgleich starten, Änderungen ansehen (Basis → neu, bei Konflikt zusätzlich die lokale Fassung) und **übernehmen · später · ignorieren**. Nichts wird automatisch überschrieben. `LEGACY_RECONVERT=1 npm run legacy:import` wandelt Importiertes nach Konverter-Verbesserungen neu um (lokal Geändertes bleibt).
