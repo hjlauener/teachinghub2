@@ -1591,3 +1591,34 @@ img {
   color: var(--color-accent-hover);
   text-decoration: underline;
 }
+
+/* Startseite: Titel links, Links zum VRL als eigener Bereich rechts; schmal untereinander */
+.home-intro {
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-36);
+  align-items: center;
+}
+
+.home-intro h1 {
+  margin: 0;
+}
+
+.home-intro__aside.arrow-links {
+  margin: 0;
+  padding-left: var(--space-36);
+  border-left: var(--border-width-default) solid var(--color-border);
+}
+
+@media (max-width: 760px) {
+  .home-intro {
+    grid-template-columns: 1fr;
+    gap: var(--space-24);
+  }
+
+  .home-intro__aside.arrow-links {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

@@ -17,10 +17,10 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <section className="intro" aria-labelledby="home-heading">
+      <section className="intro home-intro" aria-labelledby="home-heading">
         <h1 id="home-heading">{t('heading')}</h1>
-        {/* Einstiege zu den Angeboten des VRL (Entscheidung 1.3b); Journey, Themen und Suche sind im Hauptmenü */}
-        <ul className="arrow-links">
+        {/* Einstiege zu den Angeboten des VRL als eigener Bereich rechts (Entscheidung 1.3b) */}
+        <ul className="arrow-links home-intro__aside" aria-label={t('vrlLabel')}>
           <li>
             <Link href="/journey_der_lehre/lehrimpulse__unibe#kurse">{t('vrlCourses')}</Link>
           </li>

@@ -26,7 +26,8 @@
   "Home": {
     "heading": "Votre hub pour un bon enseignement à l'Université de Berne",
     "vrlCourses": "Cours du VRL",
-    "vrlEvents": "Manifestations spécialisées du VRL"
+    "vrlEvents": "Manifestations spécialisées du VRL",
+    "vrlLabel": "Offres du VRL"
   },
   "Placeholder": {
     "heading": "Cette page est en préparation",

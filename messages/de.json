@@ -26,7 +26,8 @@
   "Home": {
     "heading": "Ihr Hub für gute Lehre an der Universität Bern",
     "vrlCourses": "Kurse am VRL",
-    "vrlEvents": "Fachveranstaltungen des VRL"
+    "vrlEvents": "Fachveranstaltungen des VRL",
+    "vrlLabel": "Angebote des VRL"
   },
   "Placeholder": {
     "heading": "Diese Seite ist in Vorbereitung",
