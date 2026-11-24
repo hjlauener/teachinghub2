@@ -7,20 +7,33 @@ Prototyp-Neubau von [teachinghub.unibe.ch](https://teachinghub.unibe.ch) – **k
 
 ## Lokal starten
 
-Voraussetzung: nur **Docker Desktop**. Node.js wird auf dem Mac nicht benötigt.
+Voraussetzung: nur **Docker Desktop** (läuft). Node.js wird auf dem Mac nicht benötigt.
 
 ```bash
-cp .env.example .env          # einmalig; PAYLOAD_SECRET setzen (openssl rand -hex 32)
-docker compose up             # App, Datenbank, Mailpit
+./scripts/start-local.sh             # alles in einem Schritt (wiederholbar)
+./scripts/start-local.sh --altsite   # zusätzlich die Inhalte der Altsite crawlen und importieren (einmalig, dauert)
+./scripts/start-local.sh --eduid     # zusätzlich die Anmeldung mit edu-ID testen (Keycloak)
 ```
+
+Das Skript
+1. legt `.env` an bzw. ergänzt fehlende Einträge und erzeugt zufällige Geheimnisse (vorhandene Werte bleiben),
+2. startet die Container (App, Datenbank, Mailpit, Ollama; mit `--eduid` auch Keycloak),
+3. spielt Startdaten und die Themen der Lehre ein, importiert die Altsite (wenn gecrawlt) und
+4. baut den KI-Index für „Fragen“ auf (beim ersten Mal lädt Ollama das Modell `bge-m3`, ca. 1,2 GB).
+
+Nach `git pull` einfach wieder `./scripts/start-local.sh` aufrufen: Sind neue Pakete dazugekommen, startet das Skript die App neu und installiert sie.
 
 | Dienst | Adresse |
 |---|---|
 | Website | http://localhost:3000 (→ `/de`, `/en`, `/fr`) |
 | CMS (Payload Admin) | http://localhost:3000/admin – beim ersten Aufruf Admin-Konto anlegen |
 | Mailpit (abgefangene Mails, z. B. Anmeldelinks) | http://localhost:8025 |
-| Anmelden (Mitgliederkonto) | http://localhost:3000/de/anmelden |
+| Anmelden (Mitgliederkonto, @unibe.ch) | http://localhost:3000/de/anmelden |
+| edu-ID-Test (nur mit `--eduid`) | http://localhost:8080 – Testpersonen `dozentin`, `privat`, `studentin`, `bestehend`, Passwort `test` |
 | PostgreSQL | `localhost:5433`, Benutzer/Passwort `teachinghub` |
+
+Für „Fragen“ braucht jedes Mitglied einen eigenen KI-Schlüssel (z. B. von console.anthropic.com), hinterlegt unter „Mein Hub → KI-Einstellungen“.
+Stoppen mit `docker compose stop`; Daten bleiben in den Docker-Volumes erhalten.
 
 ## Befehle (im Container)
 

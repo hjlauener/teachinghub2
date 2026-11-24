@@ -3,11 +3,11 @@
 Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web-Applikation.
 
 ## Stand
-- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–6 gemergt (M3), Review auf `main`; **Phase 7 (edu-ID-Test)** auf `phase-7-eduid`. Nächste Phase: 8 (Online-Demo).
+- Plan: `docs/umsetzungsplan.md` v1.1. Phasen 0–7 gemergt; Online-Demo (Phase 8) zurückgestellt – vorerst lokaler Betrieb mit `./scripts/start-local.sh` (Entscheidung 1.2b).
 - Jede Phase auf eigenem Branch, Abnahmekriterien aus Abschnitt 11 des Plans.
 
 ## Entwicklung
-- **Kein Node.js auf dem Host.** Alle npm-Befehle im Container: `docker compose exec app npm …` (Stack mit `docker compose up -d`).
+- **Kein Node.js auf dem Host.** Alle npm-Befehle im Container: `docker compose exec app npm …` (Stack mit `docker compose up -d`). Erststart/Aktualisierung: `./scripts/start-local.sh` (macOS-Bash 3.2-kompatibel halten, wiederholbar).
 - Prüfen vor jedem Commit: `npm run lint`, `npm run typecheck`, `npm test` (im Container); E2E: `docker compose --profile e2e run --rm e2e`.
 - Nach Änderungen an Collections: `npm run generate:types`, `npm run generate:importmap` und eine Migration `npm run migrate:create -- <name>` (lokal Schema-Push, Produktion Migrationen).
 - Startdaten (Schlagwörter, Navigation): `npm run seed` (idempotent).

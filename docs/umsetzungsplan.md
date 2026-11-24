@@ -133,7 +133,7 @@ WCAG 2.1 AA · CI bei jedem PR: Unit-Tests, Playwright-E2E der Kernflüsse, axe 
 | | 5 Personalisierung (Teil 1 ✅, Teil 2 ✅ 23.11.2026) | Like, Bookmark, Feedback-Dialog, Sammlungen, Vorschläge, Teilen, Mein Hub | E2E aller Flüsse grün |
 | **M3 KI** | 6 Ask-a-question (✅ 23.11.2026) | Ollama-Embeddings, Index, Adapter, BYOK, Quellenpflicht | Antworten nur mit Quellen; Key nie im Browser |
 | **M4 Login & Demo** | 7 edu-ID-Test (✅ 24.11.2026) | Keycloak, Kontoverknüpfung, Affiliation | Login via Test-IdP |
-| | 8 Online-Demo | Schweizer Hoster (1.2a), Zugangsschutz, `noindex`, Backup, Testpersonen | 3–5 Dozierende testen |
+| | 8 Online-Demo (zurückgestellt, 1.2b) | Schweizer Hoster (1.2a), Zugangsschutz, `noindex`, Backup, Testpersonen | 3–5 Dozierende testen |
 
 ## 12. Projektstruktur
 
@@ -230,3 +230,8 @@ Phasen 0–3b sind umgesetzt (Phase 3 auf `phase-3-site`, Phase 3b auf `phase-3b
 - Bestehende Konten mit gleicher Adresse werden automatisch verknüpft; unter „Mein Konto“ zeigt der Hub die Verknüpfung und erlaubt, eine edu-ID bewusst zu verknüpfen (auch mit anderer Adresse).
 - Behoben: Better Auth spricht OIDC-Anbieter über `signIn.social` an (der alte Endpunkt `/sign-in/oauth2` aus Phase 4 existiert nicht mehr).
 - Echte edu-ID = Konfigurationswechsel (Discovery-URL, Client-ID/-Secret, ggf. `EDUID_SCOPES`), sobald die UniBE die Registrierung bei SWITCH vornimmt (6.2a, offen).
+
+**Stand 24.11.2026 – lokaler Betrieb (Entscheidung 1.2b):**
+- Phasen 0–7 umgesetzt und gemergt (M1–M3, Login-Teil von M4). Die Online-Demo (Phase 8) ist zurückgestellt; der Prototyp läuft zuerst lokal, ohne Registrierung bei SWITCH.
+- Start mit `./scripts/start-local.sh` (Einstellungen mit zufälligen Geheimnissen, Container, Startdaten, Themen, Altsite-Import, KI-Index); Optionen `--altsite` und `--eduid`.
+- Später für die Online-Demo: Hoster (1.2a), Proxy mit Client-IP (`AUTH_IP_HEADERS`), Volume für `/app/uploads`, tägliches Backup, Zugangsschutz; echte edu-ID nach Registrierung (6.2a).
