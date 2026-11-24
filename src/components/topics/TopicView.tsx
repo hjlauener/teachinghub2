@@ -6,6 +6,8 @@ import { localizeHref, RichText } from '@/components/content/RichText'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { findMany } from '@/lib/content'
+
+import { EXTERNAL_SHOWN, pickRandom } from './pick'
 import type { Article, Method, Subtopic, Taxonomy, Tool, Topic } from '@/payload-types'
 
 type AnnotatedLink = NonNullable<Topic['relatedLinks']>[number]
@@ -77,7 +79,7 @@ function MethodNames({ methods }: { methods: Subtopic['methods'] }) {
   )
 }
 
-/** Kernthema (Landingpage Ebene 1) mit den 9 Kapiteln der Vorlage. */
+/** Kernthema (Landingpage Ebene 1) mit den Kapiteln der Vorlage; ohne „Siehe auch“ (Entscheidung 7.8). */
 export async function TopicView({ doc, locale }: { doc: Topic; locale: Locale }) {
   const t = await getTranslations('Topics')
   const format = await getFormatter()
@@ -107,7 +109,6 @@ export async function TopicView({ doc, locale }: { doc: Topic; locale: Locale })
     )
   }
 
-  const seeAlso = (doc.seeAlso ?? []).filter((s): s is Topic => typeof s === 'object' && s !== null)
   return (
     <article className="content-page topic-page" aria-labelledby="page-heading">
       <PageHeader title={doc.title} />
@@ -189,21 +190,10 @@ export async function TopicView({ doc, locale }: { doc: Topic; locale: Locale })
       ) : null}
       {doc.externalLinks?.length ? (
         <ContentSection id="andere-hochschulen" title={t('external')}>
-          <AnnotatedLinks links={doc.externalLinks} locale={locale} />
+          <AnnotatedLinks links={pickRandom(doc.externalLinks, EXTERNAL_SHOWN)} locale={locale} />
         </ContentSection>
       ) : null}
       <SubtopicList topicId={doc.id} locale={locale} />
-      {seeAlso.length > 0 && (
-        <ContentSection id="siehe-auch" title={t('seeAlso')}>
-          <ul className="chips chips--links">
-            {seeAlso.map((s) => (
-              <li key={s.id}>
-                {s.pageStatus === 'live' ? <Link href={s.path}>{s.title}</Link> : <span>{s.title}</span>}
-              </li>
-            ))}
-          </ul>
-        </ContentSection>
-      )}
     </article>
   )
 }
