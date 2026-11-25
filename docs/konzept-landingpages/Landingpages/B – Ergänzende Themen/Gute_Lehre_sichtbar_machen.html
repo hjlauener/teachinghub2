@@ -1,0 +1,166 @@
+<title>Gute Lehre sichtbar machen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Gute Lehre sichtbar machen">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Gute Lehre sichtbar machen</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Gute Lehre sichtbar machen</h1>
+        <p class="lead">Gute Lehre geschieht oft im Verborgenen. Rückmeldungen, Auszeichnungen und geteilte Beispiele machen sie sichtbar, für die Lehrenden selbst, für Kolleginnen und Kollegen und für die Universität. Diese Seite führt zu Evaluation, Lehrpreisen und Gelegenheiten, die eigene Lehre zu zeigen.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>Mit dem Teacher of the Year ehren die Fakultäten der Universität Bern jährlich herausragende Lehrleistungen.</li>
+          <li>ALL würdigt hervorragende Lehrveranstaltungen; massgeblich sind die Ergebnisse der Schlussevaluation.</li>
+          <li>Der Good Practice Katalog fasst umgesetzte Lehrprojekte zusammen und macht sie durchsuchbar.</li>
+          <li>Der Tag der Lehre ist seit 2013 die jährliche Tagung der Universität Bern zu Fragen der Hochschullehre.</li>
+          <li>Evaluationsergebnisse und Hospitationen liefern eine fundierte Grundlage, um die eigene Lehre zu reflektieren und zu belegen.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/preisgekroente_lehre/uni_bern_teacher_of_the_year/index_ger.html">Uni Bern Teacher of the Year</a></span><span>Wie die Fakultäten herausragende Lehre auszeichnen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/preisgekroente_lehre/all/index_ger.html">ALL</a></span><span>Anerkennung hervorragender Lehrveranstaltungen auf Grundlage der Schlussevaluation.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/preisgekroente_lehre/enlight_teaching_and_learning_award/index_ger.html">ENLIGHT Teaching and Learning Award</a></span><span>Auszeichnung für Lehrformate mit internationalem und interkulturellem Lernen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/praxisimpulse/good_practice_katalog/index_ger.html">Good Practice Katalog</a></span><span>Umgesetzte Lehrprojekte der Universität Bern zum Stöbern.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/methodenkompass/kollegiale_hospitation/index_ger.html">Kollegiale Hospitation</a></span><span>Wie Lehrende sich gegenseitig beobachten und Rückmeldung geben.</span></li>
+          <li><span class="t"><a href="https://www.unibe.ch/universitaet/portraet/selbstverstaendnis/qualitaet/kernaufgaben/lehre/index_ger.html#pane708997">Selbstverständnis der Universität Bern zur Lehre</a></span><span>Wie die Universität gute Lehre und ihre Qualitätssicherung versteht.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/selevor/index_ger.html">SELEVOR</a></td><td>Selbstanalyse für Lehr- und Fachvorträge</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/mentimeter/index_ger.html">Mentimeter</a></td><td>Rückmeldungen der Studierenden direkt in der Sitzung</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/tobira/index_ger.html">Tobira</a></td><td>Lehrvideos und Beispiele öffentlich zeigen</td><td>Mitarbeitende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Die standardisierten Evaluationen organisiert die Abteilung Qualitätssicherung und -entwicklung. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 24.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/standardisierte_evaluationen/schlussevaluation/index_ger.html">Schlussevaluation</a></span><span>Nutzen Sie die Ergebnisse als Grundlage für Reflexion und als Nachweis Ihrer Lehrqualität.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenevaluation/index_ger.html">Zwischenevaluation</a></span><span>Holen Sie in der ersten Semesterhälfte strukturierte Rückmeldungen ein.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/lehrbegleitendes_feedback/zwischenfeedback/index_ger.html">Zwischenfeedback</a></span><span>Fragen Sie gezielt nach, was in Ihrer Lehre gut funktioniert.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/standardisierte_evaluationen/evaluation_der_leistungskontrolle/index_ger.html">Evaluation der Leistungskontrolle</a></span><span>Zeigen Sie, dass Lehre und Prüfung zusammenpassen.</span></li>
+          <li><span class="lbl">Lehre durchführen</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_durchfuehren/lehrmethoden/reflexion_unterstuetzen/index_ger.html">Reflexion unterstützen</a></span><span>Reflektieren Sie auch die eigene Rolle als Lehrperson.</span></li>
+          <li><span class="lbl">Curriculum entwickeln</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/curriculum_entwickeln/studienprogramme_evaluieren/index_ger.html">Studienprogramme evaluieren</a></span><span>Gute Lehre zeigt sich auch auf Ebene des ganzen Studiengangs.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Veranstaltung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/fachveranstaltungen/tag_der_lehre/index_ger.html">Tag der Lehre</a></span><span>Praxisbeiträge, Keynotes und Austausch; die Teilnahme ist kostenfrei.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/lehrfeedback_durch_hospitation/index_ger.html">Lehrfeedback durch Hospitation</a></span><span>Rückmeldung einer Fachperson zu Stärken und Entwicklungsmöglichkeiten.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/lernen_aus_evaluationsergebnissen/index_ger.html">Lernen aus Evaluationsergebnissen</a></span><span>Vertrauliches Gespräch, um Evaluationsergebnisse fundiert zu interpretieren.</span></li>
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/hochschuldidaktische_weiterbildung/index_ger.html">Hochschuldidaktische Weiterbildung</a></span><span>Mit dem CAS Hochschullehre eine fundierte didaktische Qualifikation nachweisen.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">TU München</span><span class="t"><a href="https://www.tum.de/studium/lehre/chancen-fuer-die-lehre/lehrpreise">Lehrpreise</a></span><span>Wie Lehrpreise und Lehrportfolio Teil der Lehrkultur und der Laufbahn werden.</span></li>
+          <li><span class="lbl">Universität Greifswald</span><span class="t"><a href="https://www.uni-greifswald.de/storages/uni-greifswald/2_Studium/2.1_Studienangebot/2.1.4_Qualitaet_in_Studium_und_Lehre/Hochschuldidaktik/Dateien_fuer_die_Internetseite/Leitfaden_Lehrportfolio.pdf">Leitfaden Lehrportfolio (PDF)</a></span><span>Wie Sie Ihre Lehre systematisch dokumentieren und reflektieren.</span></li>
+          <li><span class="lbl">Universität Duisburg-Essen</span><span class="t"><a href="https://www.uni-due.de/imperia/md/content/wissenschaftskarriere/werkstattreihe_lehrportfolio_final.pdf">Werkstattreihe Lehrportfolio (PDF)</a></span><span>Warum ein reflektiertes Portfolio mehr zeigt als Evaluationen und Lehrerfahrung.</span></li>
+          <li><span class="lbl">TH Köln</span><span class="t"><a href="https://www.th-koeln.de/mam/downloads/deutsch/hochschule/profil/lehre/gerber_ziele_nehmen_gestalt_an.pdf">Ziele nehmen Gestalt an (PDF)</a></span><span>Wie ein Lehrportfolio begründet, wie und warum die Lehre gestaltet ist.</span></li>
+          <li><span class="lbl">Universität Tübingen</span><span class="t"><a href="https://uni-tuebingen.de/en/20467">Lehrpreise der Universität Tübingen</a></span><span>Wie Lehrpreise Engagement würdigen und Lehrkonzepte sichtbar machen.</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </article>
+</div>

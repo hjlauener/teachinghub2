@@ -209,6 +209,19 @@ export async function importTopics(payload: Payload, conceptDir: string, log: (m
   }
   log(`${report.subtopics} Unterthemen`)
 
+  // Unterthemen, die im Konzept nicht mehr (oder unter einem anderen Kernthema) stehen: nur Platzhalter
+  // („folgt“) entfernen; ausgearbeitete Seiten bleiben und werden gemeldet (Entscheidung 7.9)
+  const currentPaths = new Set(structure.flatMap((t) => t.subtopics.map((s) => subtopicPath(t.title, s.title))))
+  const stale = await payload.find({ collection: 'subtopics', where: { path: { not_in: [...currentPaths] } }, limit: 0, pagination: false, depth: 0, overrideAccess: true })
+  for (const doc of stale.docs as { id: number; path: string; pageStatus?: string }[]) {
+    if (doc.pageStatus === 'planned') {
+      await payload.delete({ collection: 'subtopics', id: doc.id, overrideAccess: true })
+      log(`Unterthema ${doc.path} entfernt (nicht mehr im Konzept)`)
+    } else {
+      report.warnings.push(`Unterthema ${doc.path} steht nicht mehr im Konzept, ist aber ausgearbeitet – bitte von Hand prüfen`)
+    }
+  }
+
   // Querverweise und Live-Schaltung
   for (const [title, refs] of crossRefs) {
     const id = subtopicIds.get(norm(title))

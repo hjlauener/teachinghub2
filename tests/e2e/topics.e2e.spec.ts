@@ -12,7 +12,7 @@ test('Themenübersicht: Kernthemen, ergänzende Themen und Matrix', async ({ pag
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Themen der Lehre')
   await expect(page.getByRole('heading', { level: 2, name: /Kernthemen/ })).toBeVisible()
   await expect(page.getByRole('heading', { level: 2, name: /Ergänzende Themen/ })).toBeVisible()
-  await expect(page.locator('.topic-list li')).toHaveCount(12)
+  await expect(page.locator('.topic-list li')).toHaveCount(18) // 8 A + 10 B (Entscheidung 7.9)
   expect((await axe(page)).violations).toEqual([])
 
   await page.getByRole('tab', { name: 'Themen × Journey' }).click()

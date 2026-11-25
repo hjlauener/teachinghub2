@@ -1,0 +1,169 @@
+<title>Digitales Prüfen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Digitales Prüfen">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Digitales Prüfen</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Digitales Prüfen</h1>
+        <p class="lead">Digitale Prüfungen sparen Zeit bei der Auswertung, ermöglichen multimediale Aufgaben und lassen sich gut auf Kompetenzen höherer Stufen ausrichten. Damit das gelingt, braucht es passende Fragetypen, die richtige Plattform und eine sorgfältige Vorbereitung. Diese Seite führt zu Werkzeugen, Fragetypen und Schulungen an der Universität Bern.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>iliasEXAM ist die digitale Prüfungsplattform der Universität Bern und eignet sich für Prüfungen mit vielen Teilnehmenden oder multimedialen Inhalten.</li>
+          <li>Mit evaexam werden Papierprüfungen gescannt und Fragen im Antwort-Wahl-Format automatisch ausgewertet.</li>
+          <li>Der Teaching Hub beschreibt 19 Fragetypen, von Single Choice und Kprim bis zur Formelfrage und STACK für Mathematik.</li>
+          <li>Technisch abgesicherte Durchführungen erschweren unerlaubte Hilfsmittel; Open-Book-Prüfungen prüfen höhere Taxonomiestufen.</li>
+          <li>Für iliasEXAM gibt es in der Regel zweimal pro Semester eine Schulung, für evaexam ein Selbstlernmodul.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/pruefungsfragen_formulierungsregeln/index_ger.html">Prüfungsfragen Formulierungsregeln</a></span><span>Wie Sie verständlich fragen und valide prüfen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/kprim/index_ger.html">Kprim</a></span><span>Die kontrollierte Multiple Choice mit vier Aussagen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/offene_frage/index_ger.html">Offene Frage</a></span><span>Antworten in eigenen Worten, auch digital.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/formelfrage/index_ger.html">Formelfrage</a></span><span>Rechenaufgaben mit Zufallsvariablen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/stack/index_ger.html">STACK</a></span><span>Komplexe Mathematik mit automatischer Auswertung und adaptivem Feedback.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungsfragen/hotspot_imagemap/index_ger.html">Hotspot/Imagemap</a></span><span>Den richtigen Bereich in einem Bild markieren.</span></li>
+          <li><span class="t"><a href="https://ilias.unibe.ch/go/crs/2910205">Selbstlernmodul: Prüfen mit evaexam</a></span><span>Der Einstieg in papierbasierte Scanprüfungen in ILIAS.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/iliasexam/index_ger.html">iliasEXAM</a></td><td>Online-Prüfungen für kompetenzorientiertes Prüfen</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/evaexam/index_ger.html">evaexam</a></td><td>Papierbasierte Scanprüfungen mit automatisierter Auswertung</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ilias/index_ger.html">ILIAS</a></td><td>Übungstests und Selbsttests während des Semesters</td><td>Dozierende und Studierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/presenceassist/index_ger.html">PresenceAssist</a></td><td>Digitalisierte Präsenz- und Zugangskontrollen</td><td>Dozierende und Administration</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/notenwizard/index_ger.html">Notenwizard</a></td><td>Notenberechnung</td><td>Dozierende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Für iliasEXAM gibt es eine Anleitung zum Nachteilsausgleich und eine Checkliste für die Einstellungen. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 24.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/schriftliche_pruefungen/index_ger.html">Schriftliche Prüfungen</a></span><span>Wählen Sie Format, Hilfsmittel und Ort: vor Ort, remote oder take home.</span></li>
+          <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption/index_ger.html">Prüfungskonzeption</a></span><span>Leiten Sie die Fragen aus den Learning Outcomes ab.</span></li>
+          <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_entwickeln/pruefungskonzeption/ki_robust_pruefen/index_ger.html">KI-robust prüfen</a></span><span>Sichern Sie die Eigenleistung, auch bei Open-Book-Prüfungen.</span></li>
+          <li><span class="lbl">Prüfungen gestalten</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/pruefungen_gestalten/pruefungen_durchfuehren/pruefungsaufsicht/index_ger.html">Prüfungsaufsicht</a></span><span>Planen Sie die Aufsicht bei Prüfungen am Bildschirm.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/pruefungsadministration/pruefungen_in_ksl_administrieren/index_ger.html">Prüfungen in KSL administrieren</a></span><span>Erfassen Sie Prüfungen und geben Sie Noten frei.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/pruefungsadministration/pruefungseinsicht/index_ger.html">Prüfungseinsicht</a></span><span>Planen Sie, wie Studierende digitale Prüfungen einsehen können.</span></li>
+          <li><span class="lbl">Lehre evaluieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_evaluieren/standardisierte_evaluationen/evaluation_der_leistungskontrolle/index_ger.html">Evaluation der Leistungskontrolle</a></span><span>Holen Sie Rückmeldungen zur Prüfung ein.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Kurs</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/kurse/schulungen_zu_pruefungstools/index_ger.html">Schulungen zu Prüfungstools</a></span><span>Hands-on-Einstieg in iliasEXAM und evaexam.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/beratung_zu_e_learning/index_ger.html">Beratung zu E-Learning</a></span><span>Unterstützung bei digital unterstützten Prüfungsformaten mit iliasEXAM und evaexam.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/hilfestellung_bei_pruefungskonzepten/index_ger.html">Hilfestellung bei Prüfungskonzepten</a></span><span>Didaktische Beratung, damit die digitale Prüfung das Richtige misst.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">Universität Freiburg i. Br.</span><span class="t"><a href="https://www.hochschuldidaktik.uni-freiburg.de/leitfaden-digital-pruefen.pdf">Leitfaden digital prüfen (PDF)</a></span><span>Didaktischer Leitfaden zur Gestaltung digitaler Prüfungsszenarien.</span></li>
+          <li><span class="lbl">Universität Bielefeld</span><span class="t"><a href="https://www.uni-bielefeld.de/einrichtungen/zab/projekte/shuffle/Leitfaden-digital-barrierefreie-E-Prufungen.pdf">Digital barrierefreie E-Prüfungen (PDF)</a></span><span>Checklisten für vor, während und nach der Prüfung.</span></li>
+          <li><span class="lbl">Universität Göttingen</span><span class="t"><a href="https://www.uni-goettingen.de/de/potenziale+von+e-klausuren/705989.html">Potenziale von E-Klausuren</a></span><span>Was E-Klausuren bringen und welchen Vorbereitungsaufwand sie bedeuten.</span></li>
+          <li><span class="lbl">TU Dresden</span><span class="t"><a href="https://tu-dresden.de/mz/ressourcen/dateien/services/e_learning/eAssessPLUS_Leitfaden_allgemein_Einsatzszenarien_final.pdf?lang=de">eAssessPLUS: Einsatzszenarien (PDF)</a></span><span>Organisatorische und technische Szenarien für E-Prüfungen.</span></li>
+          <li><span class="lbl">Bergische Universität Wuppertal</span><span class="t"><a href="https://zim.uni-wuppertal.de/en/e-learning/e-exams/information-for-teaching-staff/e-exams-home/">E-Exams@home: Information for teaching staff</a></span><span>Hinweise für Lehrende zu Online-Prüfungen ausserhalb der Universität.</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </article>
+</div>

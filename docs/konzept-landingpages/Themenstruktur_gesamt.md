@@ -4,6 +4,8 @@ Stand: 19.11.2026 · Konsolidiert [Landingpages_Themenvorschlaege.md](Landingpag
 
 **Umfang:** 14 Kernthemen (8 A, 4 B, 2 C) mit 59 Unterthemen. 21 Unterthemen werden aus dem Methodenkompass gefüllt, die übrigen brauchen eigene Inhalte. Jede der 67 Methoden kommt mindestens einmal vor.
 
+**Ergänzung 25.11.2026 (Entscheidung 7.9):** sechs weitere Kernthemen in Priorität B (Nr. 15–20). «Lehr- und Lernvideos» und «E-Prüfungen» sind von «Digitale und hybride Lehre» zu den neuen Kernthemen «Videos und Podcasts in der Lehre» bzw. «Digitales Prüfen» umgezogen. Neu: 20 Kernthemen (8 A, 10 B, 2 C) mit 76 Unterthemen.
+
 ## Regeln, damit es stimmig bleibt
 
 1. **Drei Ebenen, drei Wortarten.**
@@ -57,10 +59,8 @@ Bezug zur Journey: Lehre durchführen · Tools
 |---|---|---|
 | **Flipped Classroom** | Inhalte vorab im Selbststudium, Präsenzzeit zum Vertiefen | Quiz, Muddiest Point, Doppeldecker-Lesejournal, Forumsbeiträge, Studentische Prüfungsfragen, Peer Instruction, Application Cards |
 | **Blended Learning** | Präsenz- und Onlinephasen sinnvoll kombinieren | Forumsbeiträge |
-| **Lehr- und Lernvideos** | Produzieren und einsetzen, Podcast und Livestreaming | – eigene Inhalte nötig |
 | **Hybride Lehre** | Gleichzeitig vor Ort und online unterrichten | – eigene Inhalte nötig |
 | **ILIAS-Kurse gestalten** | Struktur, Aktivitäten, Kommunikation | – eigene Inhalte nötig |
-| **E-Prüfungen** | Online- und Computerprüfungen, Prüfungstools | – eigene Inhalte nötig |
 
 ### 3. Aktivierende Lehre
 
@@ -173,6 +173,68 @@ Bezug zur Journey: Curriculum entwickeln
 | **Wissenschaftliches Arbeiten** | Recherchieren, belegen, argumentieren | Rezension schreiben, Wissenschafts-Journal |
 | **Kritisches Denken** | Argumente prüfen und abwägen | Pro- und Kontra-Tabelle, Begründetes Keyword, Prinzipien-Check |
 | **Daten- und Digitalkompetenzen** | Umgang mit Daten, Quellen und digitalen Werkzeugen | – eigene Inhalte nötig |
+
+
+### 15. Lehr- und Lernräume
+
+Bezug zur Journey: Lehre konzipieren · Lehre administrieren
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **Raumwahl und Raumtechnik** | Den passenden Raum finden, Technik für Aufzeichnung und Streaming | – eigene Inhalte nötig |
+| **Innovative Lernräume** | Ideenlabor, LabSpace und flexible Räume für kreative Lehre | Galeriegang, Brainstorm |
+| **Selbstlernräume** | Orte zum Lernen und für Gruppenarbeit ausserhalb der Lehrveranstaltung | – eigene Inhalte nötig |
+
+### 16. Vortragen und Präsentieren
+
+Bezug zur Journey: Lehre durchführen · Prüfungen gestalten
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **Verständlich erklären** | Lehrvortrag mit Struktur, Beispielen und Pausen | Advance Organizer, Anker setzen, Storytelling |
+| **Folien und Visualisierung** | Folien und Grafiken, die lenken statt ablenken | Concept Map, Strukturlegetechnik |
+| **Präsentieren lernen** | Studierende präsentieren und erhalten Rückmeldung | (Poster-)Präsentation, Peer-Feedback |
+
+### 17. Gute Lehre sichtbar machen
+
+Bezug zur Journey: Lehre evaluieren · Lehr|Impulse
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **Lehrpreise und Auszeichnungen** | Teacher of the Year, ALL, ENLIGHT Award | – eigene Inhalte nötig |
+| **Hospitation und kollegiales Feedback** | Lehre beobachten lassen und gemeinsam reflektieren | Kollegiale Hospitation |
+| **Good Practice teilen** | Beispiele zeigen, am Tag der Lehre vortragen | – eigene Inhalte nötig |
+
+### 18. Videos und Podcasts in der Lehre
+
+Bezug zur Journey: Lehre durchführen · Tools
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **Lehr- und Lernvideos** | Produzieren und einsetzen, Podcast und Livestreaming | – eigene Inhalte nötig |
+| **Videos selbst produzieren** | Screencast, Pencast und Talking Head mit eigener Ausrüstung | – eigene Inhalte nötig |
+| **Vorlesungsaufzeichnung und Livestream** | Veranstaltungen aufzeichnen, übertragen und nachbearbeiten | – eigene Inhalte nötig |
+
+### 19. Digitales Prüfen
+
+Bezug zur Journey: Prüfungen gestalten · Tools
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **E-Prüfungen** | Online- und Computerprüfungen, Prüfungstools | – eigene Inhalte nötig |
+| **Fragetypen** | Von Single Choice bis STACK: passende Fragetypen wählen | – eigene Inhalte nötig |
+| **Scanprüfungen** | Papierprüfungen automatisch auswerten | – eigene Inhalte nötig |
+| **Digitale Selbsttests** | Übungen und Selbsttests mit Rückmeldung während des Semesters | Quiz, Confidence-based Assessment |
+
+### 20. Digitale Zusammenarbeit
+
+Bezug zur Journey: Lehre durchführen · Tools
+
+| Unterthema | Worum es geht | Methoden aus dem Methodenkompass |
+|---|---|---|
+| **Gemeinsam schreiben und gestalten** | Texte, Wikis und Produkte gemeinsam erarbeiten | Begriffsglossar |
+| **Online diskutieren** | Foren und asynchrone Diskussionen moderieren | Forumsbeiträge |
+| **Zusammenarbeit mit Externen** | Partnerhochschulen und Praxispartner einbinden | – eigene Inhalte nötig |
 
 
 ## Priorität C – Später
