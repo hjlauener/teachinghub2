@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { NewsTeasers } from '@/components/content/views/PageView'
+import { TEST_TOPIC_PATH } from '@/components/topics/test/TestTopicView'
 import { Link } from '@/i18n/navigation'
 import { isLocale } from '@/i18n/routing'
 
@@ -14,6 +15,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Home')
+  const tt = await getTranslations('TopicTest')
 
   return (
     <>
@@ -29,6 +31,10 @@ export default async function HomePage({ params }: Props) {
           </li>
         </ul>
       </section>
+      {/* Zugang zur Test-Landingpage (Entscheidung 7.10) */}
+      <p className="meta home-test-link">
+        <Link href={TEST_TOPIC_PATH}>{tt('homeLink')}</Link>
+      </p>
       {isLocale(locale) && <NewsTeasers locale={locale} />}
     </>
   )

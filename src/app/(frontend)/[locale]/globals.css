@@ -1622,3 +1622,13 @@ img {
     border-left: 0;
   }
 }
+
+/* Test-Landingpage (Entscheidung 7.10) */
+.test-topic {
+  margin-top: var(--space-48);
+  padding-top: var(--space-18);
+  border-top: 1px solid var(--color-border);
+}
+.home-test-link {
+  margin-top: 0;
+}

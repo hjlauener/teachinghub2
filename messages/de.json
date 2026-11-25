@@ -486,5 +486,13 @@
     "sharedQuestion": "Mit Ihnen geteilt",
     "meta": "Modell {model} · {tokens} Tokens",
     "disclaimer": "Automatisch aus Inhalten des Teaching Hub erstellt. Massgebend sind die verlinkten Quellen."
+  },
+  "TopicTest": {
+    "prefix": "Test",
+    "notice": "Testseite: Hier werden neue Ideen für die Themenseiten ausprobiert. Der Inhalt ist eine Kopie von „Digitales Prüfen“; Änderungen gelten nur für diese Seite.",
+    "listHeading": "Testseite",
+    "listLink": "Test: Digitales Prüfen",
+    "listText": "Hier werden neue Ideen für die Themenseiten ausprobiert, bevor sie auf alle übertragen werden.",
+    "homeLink": "Test-Themenseite"
   }
 }

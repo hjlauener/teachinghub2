@@ -12,6 +12,7 @@ import { ToolView } from '@/components/content/views/ToolView'
 import { ContentActions } from '@/components/hub/ContentActions'
 import { SearchPage } from '@/components/search/SearchPage'
 import { TopicsOverview } from '@/components/topics/TopicsOverview'
+import { TEST_TOPIC_PATH, TestTopicPage } from '@/components/topics/test/TestTopicView'
 import { SubtopicView, TopicView } from '@/components/topics/TopicView'
 import { mainNavigation } from '@/config/navigation'
 import { hubDatabase } from '@/hub/database'
@@ -73,6 +74,14 @@ export default async function ContentRoute({ params, searchParams }: Props) {
   if (path === '/methodenkompass') return <MethodsCompass locale={locale} />
   if (path === '/suche') return <SearchPage locale={locale} searchParams={await searchParams} />
   if (path === '/themen') return <TopicsOverview locale={locale} />
+  // Test-Landingpage: eigene Kopie der Ansicht zum Ausprobieren (Entscheidung 7.10)
+  if (path === TEST_TOPIC_PATH)
+    return (
+      <>
+        <Breadcrumb items={await crumbs('/themen', locale)} />
+        <TestTopicPage locale={locale} />
+      </>
+    )
 
   const found = (await findByPath(path, locale)) as ContentDoc | null
   if (!found) {
