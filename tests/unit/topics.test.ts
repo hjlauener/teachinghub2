@@ -4,6 +4,7 @@ import path from 'path'
 import { describe, expect, it } from 'vitest'
 
 import { pickRandom } from '@/components/topics/pick'
+import { countSentences } from '@/lib/validation'
 import { parseCrossReferences, parseOverview, parseTopicDraft, parseTopicStructure, topicPath } from '@/topics/parse'
 
 const concept = (name: string) => readFileSync(path.resolve(__dirname, '../../docs/konzept-landingpages', name), 'utf-8')
@@ -11,12 +12,17 @@ const concept = (name: string) => readFileSync(path.resolve(__dirname, '../../do
 describe('Themenstruktur (Konzept)', () => {
   const topics = parseTopicStructure(concept('Themenstruktur_gesamt.md'))
 
-  it('liest 14 Kernthemen (8 A, 4 B, 2 C) mit 59 Unterthemen', () => {
-    expect(topics).toHaveLength(14)
+  it('liest 20 Kernthemen (8 A, 10 B, 2 C) mit 76 Unterthemen (Entscheidung 7.9)', () => {
+    expect(topics).toHaveLength(20)
     expect(topics.filter((t) => t.category === 'A')).toHaveLength(8)
-    expect(topics.filter((t) => t.category === 'B')).toHaveLength(4)
+    expect(topics.filter((t) => t.category === 'B')).toHaveLength(10)
     expect(topics.filter((t) => t.category === 'C')).toHaveLength(2)
-    expect(topics.flatMap((t) => t.subtopics)).toHaveLength(59)
+    expect(topics.flatMap((t) => t.subtopics)).toHaveLength(76)
+    // jedes Kernthema hat 3–8 Unterthemen, jedes Unterthema genau ein Zuhause
+    expect(topics.every((t) => t.subtopics.length >= 3 && t.subtopics.length <= 8)).toBe(true)
+    const titles = topics.flatMap((t) => t.subtopics.map((s) => s.title))
+    expect(new Set(titles).size).toBe(titles.length)
+    expect(topics.find((t) => t.title === 'Digitales Prüfen')?.subtopics.map((s) => s.title)).toContain('E-Prüfungen')
   })
 
   it('übernimmt Journey-Bezug und Methoden', () => {
@@ -71,7 +77,7 @@ describe('Entwürfe aller Kernthemen (Entscheidung 7.8)', () => {
     .flatMap((d) => readdirSync(path.join(dir, d.name)).filter((f) => f.endsWith('.html')).map((f) => parseTopicDraft(concept(`Landingpages/${d.name}/${f}`))))
   const phases = ['Lehre konzipieren', 'Lehre administrieren', 'Lehre durchführen', 'Prüfungen gestalten', 'Lehre evaluieren', 'Curriculum entwickeln']
 
-  it('hat für jedes der 14 Kernthemen genau einen Entwurf', () => {
+  it('hat für jedes Kernthema genau einen Entwurf', () => {
     expect(drafts.map((d) => d.title).sort()).toEqual(structure.map((t) => t.title).sort())
   })
 
@@ -96,6 +102,8 @@ describe('Entwürfe aller Kernthemen (Entscheidung 7.8)', () => {
     for (const link of [...draft.relatedLinks, ...draft.journeyLinks, ...draft.offerLinks, ...draft.externalLinks]) {
       expect(link.title, title).not.toBe('')
       expect(link.sentence, `${title}: ${link.title}`).toMatch(/\.$/)
+      // gleiche Regel wie im CMS (validateOneSentence), sonst scheitert das Live-Schalten
+      expect(countSentences(link.sentence), `${title}: ${link.title}`).toBe(1)
     }
   })
 })

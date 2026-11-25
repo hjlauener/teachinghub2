@@ -1,0 +1,168 @@
+<title>Lehr- und Lernräume</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: eine Spalte, Kapitel untereinander, Lesebreite rund 660px (gleich wie «KI in Lehre und Studium») */
+:root {
+  --bg: #eef1f4;
+  --page: #ffffff;
+  --ink: #18212b;
+  --muted: #566170;
+  --line: #d6dce3;
+  --accent: #0d6b6e;
+  --chip: #e3f0f0;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --page: #1a2129; --ink: #e6ebf0; --muted: #a2adba; --line: #2e3843; --accent: #5cc4c4; --chip: #1e3333;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 820px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { background: var(--page); border: 1px solid var(--line); border-radius: 10px; padding-block: 28px 36px; }
+.page-inner { padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 40px; }
+.crumb { color: var(--muted); font-size: 13px; }
+
+.ch { display: grid; gap: 14px; max-width: 660px; min-width: 0; }
+h2.chap { font-size: 21px; font-weight: 650; line-height: 1.3; }
+
+.hero h1 { font-size: 34px; line-height: 1.15; font-weight: 700; }
+.hero .lead { font-size: 18px; line-height: 1.55; }
+
+.glance { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+.links { list-style: none; margin: 0; padding: 0; display: grid; }
+.links li { display: grid; gap: 3px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.links li:first-child { border-top: 1px solid var(--line); }
+.links .t { font-weight: 600; }
+.links .t a { text-decoration: none; }
+.links .t a:hover { text-decoration: underline; }
+.links .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+.more { font-size: 13.5px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.tools { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 460px; }
+.tools th, .tools td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tools th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.tools tr:last-child td { border-bottom: 0; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.case { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 16.5px; font-weight: 600; }
+.case .meta { font-size: 13.5px; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; font-size: 14.5px; }
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 27px; }
+  .hero .lead { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <article class="page" aria-label="Lehr- und Lernräume">
+    <div class="page-inner">
+
+      <div class="crumb">Teaching Hub › Themen › Lehr- und Lernräume</div>
+
+      <section class="ch hero" aria-labelledby="c1">
+        <h1 id="c1">Lehr- und Lernräume</h1>
+        <p class="lead">Der Raum lehrt mit: Er lenkt Aufmerksamkeit, ermöglicht oder verhindert Austausch und bestimmt, welche Methoden überhaupt funktionieren. Das gilt für den Hörsaal ebenso wie für den ILIAS-Kurs und die Orte, an denen Studierende zwischen den Sitzungen lernen. Diese Seite führt zu Räumen, Technik und Beratung an der Universität Bern.</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c2">
+        <h2 class="chap" id="c2">Auf einen Blick</h2>
+        <ul class="glance">
+          <li>Physische und digitale Lehrräume prägen, wie Lehre gestaltet wird und wie sie bei Studierenden ankommt.</li>
+          <li>Welcher Raum passt, hängt von Lehrformat, Methoden und Gruppengrösse ab. Gesucht und reserviert wird im KSL.</li>
+          <li>Für kreative und ko-kreative Formate stehen das Ideenlabor am vonRoll Campus und der LabSpace der PHBern zur Verfügung.</li>
+          <li>Viele Räume sind stark ausgelastet. Reservationen, die Sie nicht mehr brauchen, sollten Sie zurückgeben.</li>
+          <li>Lernräume ausserhalb der Lehrveranstaltung wirken, wenn Lehrende sie mitdenken, etwa mit Aufgaben für Gruppenarbeit.</li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c3">
+        <h2 class="chap" id="c3">Passend zum Thema</h2>
+        <ul class="links">
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__und_lernraeume/lehrraeume_gestalten/ideenlabor/index_ger.html">Ideenlabor</a></span><span>Zwei flexibel gestaltbare Räume am vonRoll Campus für kreative, interaktive und projektorientierte Formate.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__und_lernraeume/lehrraeume_gestalten/labspace/index_ger.html">LabSpace</a></span><span>Offener Arbeitsraum der PHBern mit Video- und Tonstudio, MakerSpace und Geräteverleih.</span></li>
+          <li><span class="t"><a href="https://www.ub.unibe.ch/service/arbeitsplaetze/index_ger.html">Arbeitsplatzsuche der Universitätsbibliothek</a></span><span>Wo Studierende Arbeitsplätze zum Lernen und für Gruppenarbeit finden.</span></li>
+          <li><span class="t"><a href="https://www.unibe.ch/universitaet/campus__und__infrastruktur/lageplaene__und__hoerraeume/gebaeudeplaene/index_ger.html">Gebäudepläne der Universität Bern</a></span><span>Übersicht über Gebäude und Räume der Universität.</span></li>
+          <li><span class="t"><a href="https://www.ksl.unibe.ch/KSL/hoerraumSuche?2">Hörraumsuche im KSL</a></span><span>Räume nach Grösse und Ausstattung suchen.</span></li>
+          <li><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/blended_learning/synchron_hybride_lehre/index_ger.html">Synchron hybride Lehre</a></span><span>Wie Sie gleichzeitig im Raum und online unterrichten und alle einbinden.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c4">
+        <h2 class="chap" id="c4">Tools</h2>
+        <div class="tablebox">
+          <table class="tools">
+            <thead><tr><th>Tool</th><th>Wofür</th><th>Für wen</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ksl/index_ger.html">KSL</a></td><td>Hörsäle und Seminarräume suchen und reservieren</td><td>Dozierende und Administration</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/ilias/index_ger.html">ILIAS</a></td><td>Den digitalen Kursraum strukturieren, nicht nur als Dateiablage</td><td>Dozierende und Studierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/zoom/index_ger.html">Zoom</a></td><td>Virtuelle Räume für Online- und Hybridlehre</td><td>Dozierende</td></tr>
+              <tr><td><a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/opencast/index_ger.html">Opencast</a></td><td>Aufzeichnungen aus podcastfähigen Hörsälen bereitstellen</td><td>Dozierende</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Weitere Werkzeuge finden Sie in der Tool-Übersicht des Teaching Hub. <a href="https://teachinghub.unibe.ch/journey_der_lehre/tools/index_ger.html">Alle Tools</a></p>
+        <p class="more">Stand: 24.11.2026</p>
+      </section>
+
+      <section class="ch" aria-labelledby="c5">
+        <h2 class="chap" id="c5">Entlang der Journey</h2>
+        <ul class="links">
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__und_lernraeume/lehrraeume_gestalten/index_ger.html">Lehrräume gestalten</a></span><span>Stimmen Sie den physischen und den digitalen Raum auf Ihre Learning Outcomes ab.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehr__und_lernraeume/lernraeume_anbieten/index_ger.html">Lernräume anbieten</a></span><span>Denken Sie mit, wo und wie Studierende ausserhalb der Sitzungen weiterlernen.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/unterrichtsformen/praesenzlehre/index_ger.html">Präsenzlehre</a></span><span>Nutzen Sie die gemeinsame Zeit im Raum für Dialog und unmittelbare Rückmeldung.</span></li>
+          <li><span class="lbl">Lehre konzipieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_konzipieren/lehrformate/workshop/index_ger.html">Workshop</a></span><span>Wählen Sie für praxisnahe Formate einen Raum mit beweglichem Mobiliar.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/raumauswahl_und_raumreservation/index_ger.html">Raumauswahl und Raumreservation</a></span><span>Klären Sie zuerst Format und Gruppengrösse, dann suchen Sie im KSL den passenden Raum.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden/podcastfaehige_hoersaele/index_ger.html">Podcastfähige Hörsäle</a></span><span>Prüfen Sie, welche Hörsäle für Aufzeichnung und Livestream ausgerüstet sind.</span></li>
+          <li><span class="lbl">Lehre administrieren</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehre_administrieren/veranstaltungsadministration/podcast_an___abmelden/index_ger.html">Podcast an- &amp; abmelden</a></span><span>Bestellen Sie Aufzeichnungen und Livestreams vor Semesterbeginn.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c7">
+        <h2 class="chap" id="c7">Angebote</h2>
+        <ul class="links">
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/beratung_zu_zukunftsfaehigen_lehr__lernraeumen/index_ger.html">Beratung zu zukunftsfähigen Lehr-/Lernräumen</a></span><span>Die Innovationsgruppe Lehre begleitet Sie bei Raumkonzepten für neue Lehrformen.</span></li>
+          <li><span class="lbl">Service</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/materialausleihe/index_ger.html">Materialausleihe</a></span><span>Mobile Aufzeichnungssets, Kameras und Mikrofone für Räume ohne feste Technik.</span></li>
+          <li><span class="lbl">Service</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/podcast__livestreaming_service/index_ger.html">Podcast &amp; Livestreaming Service</a></span><span>Automatische Aufzeichnung und Übertragung in allen podcastfähigen Hörsälen.</span></li>
+          <li><span class="lbl">Beratung</span><span class="t"><a href="https://teachinghub.unibe.ch/journey_der_lehre/lehrimpulse__unibe/beratung__services/beratung_zu_e_learning/index_ger.html">Beratung zu E-Learning</a></span><span>Unterstützung, wenn Sie Ihren ILIAS-Kurs als Lernraum gestalten möchten.</span></li>
+        </ul>
+      </section>
+
+      <section class="ch" aria-labelledby="c8">
+        <h2 class="chap" id="c8">Hinweise anderer Hochschulen</h2>
+        <ul class="links">
+          <li><span class="lbl">Universität Bremen</span><span class="t"><a href="https://www.uni-bremen.de/informationsportal-hochschullehre/lehre-gestalten/phase-2-vorbereitung/lehr-lern-raeume-gestalten">Lehr-Lern-Räume gestalten</a></span><span>Wie physische und virtuelle Räume die Planung der Lehre unterstützen.</span></li>
+          <li><span class="lbl">Universität für Weiterbildung Krems</span><span class="t"><a href="https://donau-uni.ac.at/dam/jcr:7b69ca1a-c50d-405d-b9bb-2452f81becb1/04%20NIILS%20PR5%20Brochure%20for%20Lecturers_DE.pdf">Informelle Lernräume: Broschüre für Lehrende (PDF)</a></span><span>Empfehlungen, wie Lehrende Flure, Cafeterien und Bibliotheken als Lernorte einbeziehen.</span></li>
+          <li><span class="lbl">Stifterverband</span><span class="t"><a href="https://stifterverband.org/sites/default/files/2025-02/raumlabore_handbuch_studierendenpartizipation_in_der_lernraumgestaltung.pdf">Raumlabore: Studierende gestalten Lernräume mit (PDF)</a></span><span>Handbuch mit Beispielen aus mehreren Hochschulen.</span></li>
+          <li><span class="lbl">Hochschulforum Digitalisierung</span><span class="t"><a href="https://hochschulforumdigitalisierung.de/wp-content/uploads/2024/08/SD04-05-Lernraeume-fuer-die-Zukunft-gestalten.pdf">Lernräume für die Zukunft gestalten (PDF)</a></span><span>Wie Räume synchrone, asynchrone und hybride Lehre unterstützen.</span></li>
+          <li><span class="lbl">Hochschule München</span><span class="t"><a href="https://mediapool.hm.edu/media/dachmarke/dm_lokal/bologna/lehrraum_der_zukunft/Konzeptstudie_Lehrraum-der-Zukunft.pdf">Konzeptstudie Lehrraum der Zukunft (PDF)</a></span><span>Wie ein Lehrraum aussehen kann, der verschiedene Lehrformen zulässt.</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </article>
+</div>

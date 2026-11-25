@@ -47,7 +47,7 @@ Neubau von https://teachinghub.unibe.ch (heute ZMS-CMS der UniBE) als eigene Web
 - Quelle: `docs/konzept-landingpages/` (Eigentum des Users, im Repo); Import `npm run topics:import`, Parser in `src/topics/parse.ts`.
 - Status `pageStatus` (folgt/live): Pflichtangaben nur für live (`validateRequiredWhenLive`, `validateCountWhenLive`); Feldname nie `status`.
 - Matrix aus `journeyPages` über `src/topics/matrix.ts` (rein, testbar) – Phase aus dem Pfad.
-- Entwürfe aller 14 Kernthemen in `docs/konzept-landingpages/Landingpages/<A|B|C …>/*.html` (Zuordnung über den Titel `h1#c1`); Unit-Test prüft die Kapitelregeln. Live = Entwurf + ≥ 5 Journey-Seiten (Matrix + „Entlang der Journey“). Kein „Siehe auch“ auf Kernthemen; „Hinweise anderer Hochschulen“ zeigt pro Aufruf 4 zufällige (`src/components/topics/pick.ts`, Entscheidung 7.8).
+- Entwürfe aller 20 Kernthemen (Entscheidungen 7.8, 7.9) in `docs/konzept-landingpages/Landingpages/<A|B|C …>/*.html` (Zuordnung über den Titel `h1#c1`); Unit-Test prüft die Kapitelregeln. Live = Entwurf + ≥ 5 Journey-Seiten (Matrix + „Entlang der Journey“). Import entfernt Unterthemen, die nicht mehr im Konzept stehen, nur im Status „folgt“. Kein „Siehe auch“ auf Kernthemen; „Hinweise anderer Hochschulen“ zeigt pro Aufruf 4 zufällige (`src/components/topics/pick.ts`, Entscheidung 7.8).
 
 ## Mitgliederkonten (Phase 4)
 - Better Auth: Konfiguration `src/auth/options.ts` (ohne `server-only`, auch für CLI), Instanz `src/auth/server.ts`, Client `src/auth/client.ts`.
