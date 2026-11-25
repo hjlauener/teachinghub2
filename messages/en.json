@@ -486,5 +486,13 @@
     "sharedQuestion": "Shared with you",
     "meta": "Model {model} · {tokens} tokens",
     "disclaimer": "Generated automatically from Teaching Hub content. The linked sources are authoritative."
+  },
+  "TopicTest": {
+    "prefix": "Test",
+    "notice": "Test page: new ideas for the topic pages are tried out here. The content is a copy of “Digital assessment”; changes apply to this page only.",
+    "listHeading": "Test page",
+    "listLink": "Test: Digital assessment",
+    "listText": "New ideas for the topic pages are tried out here before they are applied to all of them.",
+    "homeLink": "Test topic page"
   }
 }

@@ -38,3 +38,15 @@ test('Unterthema zeigt passende Methoden', async ({ page }) => {
   if (real) await expect(page.locator('#passende-methoden .card').first()).toBeVisible()
   expect((await axe(page)).violations).toEqual([])
 })
+
+test('Test-Landingpage: Kopie von „Digitales Prüfen“, verlinkt auf Übersicht und Startseite (Entscheidung 7.10)', async ({ page }) => {
+  await page.goto('/de/themen')
+  await page.waitForLoadState('networkidle')
+  await page.getByRole('link', { name: 'Test: Digitales Prüfen' }).click()
+  await expect(page).toHaveURL(/\/de\/themen\/test$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Test: /)
+  await expect(page.getByText(/^Testseite: Hier werden neue Ideen/)).toBeVisible()
+  expect((await axe(page)).violations).toEqual([])
+  await page.goto('/de')
+  await expect(page.getByRole('link', { name: 'Test-Themenseite' })).toBeVisible()
+})

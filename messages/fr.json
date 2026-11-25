@@ -486,5 +486,13 @@
     "sharedQuestion": "Partagée avec vous",
     "meta": "Modèle {model} · {tokens} tokens",
     "disclaimer": "Générée automatiquement à partir du Teaching Hub. Les sources liées font foi."
+  },
+  "TopicTest": {
+    "prefix": "Test",
+    "notice": "Page de test : de nouvelles idées pour les pages thématiques y sont testées. Le contenu est une copie de « Évaluation numérique » ; les modifications ne concernent que cette page.",
+    "listHeading": "Page de test",
+    "listLink": "Test : évaluation numérique",
+    "listText": "De nouvelles idées pour les pages thématiques y sont testées avant d’être appliquées à toutes.",
+    "homeLink": "Page thématique de test"
   }
 }
